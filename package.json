@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "gridify": "git+https://github.com/unstableconfiguration/gridify.git",
     "lite": "git+https://github.com/unstableconfiguration/lite.git"
   },
   "devDependencies": {
