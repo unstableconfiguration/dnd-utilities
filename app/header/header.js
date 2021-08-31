@@ -3,8 +3,8 @@ import html from './header.html'
 
 export let header = lite.extend({
     container : document.getElementById('header-container'),
-    initialize : function() { 
-        this.content = html;
+    content : html,
+    initialize : function() {
         // Need onContentbound event back
         this.addEventListeners();
     },
