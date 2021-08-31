@@ -1,5 +1,5 @@
 import { routes } from './app/scripts/routes.js'
-import { router } from 'woti'
+import { router } from 'lite'
 
 window.router = router;
 router.addRoutes(routes);

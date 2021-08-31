@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "woti": "git+https://github.com/unstableconfiguration/woti.git"
+    "lite": "git+https://github.com/unstableconfiguration/lite.git"
   },
   "devDependencies": {
     "rollup": "^2.56.3",

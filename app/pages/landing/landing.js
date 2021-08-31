@@ -1,5 +1,5 @@
-import { woti } from 'woti';
+import { lite } from 'lite';
 
-export let vm = woti.extend({
+export let vm = lite.extend({
     content : '<span>hello there</span>',
 });
