@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cirrus-ui": "^0.6.2-patch-1",
     "gridify": "git+https://github.com/unstableconfiguration/gridify.git",
     "lite": "git+https://github.com/unstableconfiguration/lite.git"
   },
@@ -25,6 +26,7 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-html": "^0.2.1",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^2.4.1",
     "rollup-plugin-serve": "^1.1.0"
   }
 }

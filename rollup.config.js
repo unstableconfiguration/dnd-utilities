@@ -4,6 +4,7 @@ import del from 'rollup-plugin-delete'
 import html from 'rollup-plugin-html'
 import resolve from 'rollup-plugin-node-resolve'
 import serve from 'rollup-plugin-serve'
+import postcss from 'rollup-plugin-postcss'
 
 export default {
     input : 'index.js',
@@ -20,10 +21,13 @@ export default {
                 { src : 'favicon.ico', dest :'dist' }
             ]
         }),
-        resolve(),
         html({
 			include: '**/*.html'
 		}),
+        postcss({
+            plugins: []
+        }),
+        resolve(),
         serve({ 
             contentBase : 'dist',
             port : 10001,
