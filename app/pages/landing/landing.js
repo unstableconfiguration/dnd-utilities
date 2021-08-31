@@ -11,7 +11,7 @@ export let vm = lite.extend({
             data : [{ a : 1, b : 2 }]
         });
 
-        import('../../../5e/spells/spells.js')
+        import('../../../5e/spells.js')
             .then(lib => {
                 console.log(lib.spells);
             });

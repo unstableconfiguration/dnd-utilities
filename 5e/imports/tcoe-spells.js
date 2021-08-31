@@ -1,5 +1,5 @@
 
-  {
+export let tcoeSpells =  {
   "Spells.08m1tru4": {
     "Id": "08m1tru4",
     "Version": "2.16.0",
