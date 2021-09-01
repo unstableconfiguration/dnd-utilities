@@ -25,8 +25,8 @@ export let table = lite.extend({
                     field : 'Name', 
                     header : 'Name',
                     style : 'width:200px; text-align:left; text-decoration:underline;',
-                    //sort : true,
-                    //filter : true,
+                    sort : true,
+                    filter : true,
                     click : (e) => {
                         new Modal({
                             container: document.getElementById('modal-container')
@@ -37,12 +37,12 @@ export let table = lite.extend({
                         }).attach();
                     } 
                 },
-                { field : 'Level', header : 'Level' }, // filter : true, sort : true, style: 'width:50px; text-align:right;' },
-                { field : 'School', header : 'School'}, // filter : true, sort : true, style : 'width:125px'},
-                { field : 'CastingTime', header : 'Casting Time'}, // filter : true, sort:true, style: 'width:125px;' },
-                { field : 'Ritual', header : 'Ritual'}, //filter : null/*view.getRitualFilter()*/, style : 'width:50px; text-align:center;'},
-                { field : 'Range', header : 'Range'}, //filter : true, sort : true, style: 'width:100px; overflow:hidden;' },
-                { field : 'Duration', header : 'Duration'}, //filter : true, sort : true, style: 'width:100px;' } 
+                { field : 'Level', header : 'Level', filter : true }, // filter : true, sort : true, style: 'width:50px; text-align:right;' },
+                { field : 'School', header : 'School', filter : true }, // filter : true, sort : true, style : 'width:125px'},
+                { field : 'CastingTime', header : 'Casting Time', filter : true }, // filter : true, sort:true, style: 'width:125px;' },
+                { field : 'Ritual', header : 'Ritual', filter : true }, //filter : null/*view.getRitualFilter()*/, style : 'width:50px; text-align:center;'},
+                { field : 'Range', header : 'Range', filter : true }, //filter : true, sort : true, style: 'width:100px; overflow:hidden;' },
+                { field : 'Duration', header : 'Duration', filter : true }, //filter : true, sort : true, style: 'width:100px;' } 
             ],
 
             paging : true,
