@@ -3,6 +3,7 @@ import html from './spells.html';
 import { spells } from '../../../../../5e/spells.js';
 import { Gridify } from 'gridify';
 import { pagination } from '../../pagination/pagination.js';
+import { modal } from '../../../../components/modal/modal.js';
 
 export let table = lite.extend({
     content : html,
@@ -30,13 +31,8 @@ export let table = lite.extend({
                     sort : true,
                     filter : true,
                     click : (e) => {
-                        new Modal({
-                            container: document.getElementById('modal-container')
-                        }).attach();
-                        new SpellBox({
-                            data : spells[e.target.innerHTML],
-                            container : document.getElementById('modal-content')
-                        }).attach();
+                        console.log(e.target.innerHTML)
+                        new modal();
                     } 
                 },
                 { field : 'Level', header : 'Level', filter : true, sort : true, style: 'width:100px;' },
