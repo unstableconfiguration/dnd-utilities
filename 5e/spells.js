@@ -22,7 +22,7 @@ let convertPhb = function() {
         let spell = new Spell({
             CastingTime : s.Cast_Time,
             Components : s.Components,
-            Description : s.Description + '<br>' + s.Description_Higher_Levels,
+            Description : s.Description_Higher_Levels,
             Duration : s.Duration,
             Level : s.Level,
             Name : s.Name,
