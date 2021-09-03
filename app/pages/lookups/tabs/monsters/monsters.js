@@ -1,7 +1,9 @@
 import { Gridify } from 'gridify';
 import { lite } from 'lite';
 import { monsters } from '../../../../../5e/monsters';
-import { pagination } from '../../pagination/pagination'
+import { pagination } from '../../pagination/pagination';
+import { modal } from '../../../../components/modal/modal';
+import { MonsterBox } from '../../../../components/monsterbox/monsterbox';
 
 export let table = lite.extend({
     content : '<div id="monsters-grid">Test 2</div>', 
@@ -30,7 +32,11 @@ export let table = lite.extend({
                     style : 'width: 200px; text-decoration:underline',
                     sort : true,
                     click : (e) => {
-                            // new monsterbox modal
+                        new modal({ 
+                            body : new MonsterBox({
+                                data : monsters[e.target.innerHTML]
+                            })
+                        });
                     }
                 }
                 , { field : 'ChallengeRating', header : 'CR', 
