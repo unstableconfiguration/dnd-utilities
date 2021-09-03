@@ -15,7 +15,9 @@ export let table = lite.extend({
     prepareSpells : function(spells) {
         let spellsArray = [];
         for(let k in spells) {
-            spellsArray.push(spells[k]);
+            let spell = spells[k];
+            spell.Ritual = !!spell.Ritual ? 'Yes' : 'No';
+            spellsArray.push(spell);
         }
         return spellsArray;
     },
@@ -74,7 +76,7 @@ export let table = lite.extend({
 
         let compare = function(columnValue, filterValue) {
             return filterValue == 'true'
-                ? columnValue == 1
+                ? columnValue == 'Yes'
                 : true;
         }
 
