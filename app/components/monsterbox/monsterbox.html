@@ -3,145 +3,127 @@
 #monsterbox { 
     text-align: left
 }
+/* Override of cirrus divider for red-800 color and margin*/
+#monsterbox .divider { 
+    margin: .25rem 0 .25rem 0;
+    border-top: .1rem solid rgba(155,19, 19, 1);
+    height: .1rem;
+    position: relative;
+}
 
-.monster-name {
-    color : darkred;
+#monsterbox .font-size-l {
     font-size : large;
-    font-weight:bold;
 }
 
-.monster-red-left {
-    color : darkred;
-    font-weight:bold;
-}
 
-.monster-grey-left {
-    font-style:italic;
-    font-weight:bold;
-}
-
-.monster-divider {
-    border-top:solid thin darkred;
-    margin-top : 5px;
-    padding-bottom : 5px;
-}
-
-.monster-stat-label {
-    color :darkred;
+.monster-stat {
+    color :rgba(155, 19, 19, 1);
     display:inline-block;
-    font-weight:bold;
     text-align:center;
     width: 60px;
-}
-
-.monster-stat-value {
-    color : darkred;
-    display:inline-block;
-    text-align:center;
-    width:60px;
 }
 
 </style>
 
 <div id='monsterbox'>
 	<div>
-		<span id='Name' class='monster-name' data-field></span>
+		<span id='Name' class='font-size-l font-bold text-red-800' data-field></span>
 	</div>
 	<div style='font-style:italic;'>
 		<span id='Size' data-field></span>
 		<span id='Type' data-field></span><span>,</span>
 		<span id='Alignment' data-field></span>
 	</div>
-	<div class='monster-divider'></div>
+	<div class='divider'></div>
 	<div>
-		<span class='monster-red-left'>Armor Class </span>
+		<span class='font-bold text-red-800'>Armor Class </span>
 		<span id='Ac' data-field='Defenses.AC'>
 	</div>
 	<div>
-		<span class='monster-red-left'>Hit Points </span>
+		<span class='font-bold text-red-800'>Hit Points </span>
 		<span id='Hp' data-field='Defenses.HP'></span>
 	</div>
 	<div>
-		<span class='monster-red-left'>Speed </span>
+		<span class='font-bold text-red-800'>Speed </span>
 		<span id='Speed' data-field></span>
 	</div>
-	<div class='monster-divider'></div>
-	<div>
+	<div class='divider'></div>
+	<div class='text-red-800'>
 		<div>
-			<span class='monster-stat-label'>STR</span>
-			<span class='monster-stat-label'>DEX</span>
-			<span class='monster-stat-label'>CON</span>
-			<span class='monster-stat-label'>INT</span>
-			<span class='monster-stat-label'>WIS</span>
-			<span class='monster-stat-label'>CHA</span>	
+			<span class='monster-stat font-bold'>STR</span>
+			<span class='monster-stat font-bold'>DEX</span>
+			<span class='monster-stat font-bold'>CON</span>
+			<span class='monster-stat font-bold'>INT</span>
+			<span class='monster-stat font-bold'>WIS</span>
+			<span class='monster-stat font-bold'>CHA</span>	
 		</div>
 		<div>
-			<span id='Str' data-field='Stats.Str' class='monster-stat-value'></span>
-			<span id='Dex' data-field='Stats.Dex' class='monster-stat-value'></span>
-			<span id='Con' data-field='Stats.Con' class='monster-stat-value'></span>
-			<span id='Int' data-field='Stats.Int' class='monster-stat-value'></span>
-			<span id='Wis' data-field='Stats.Wis' class='monster-stat-value'></span>
-			<span id='Cha' data-field='Stats.Cha' class='monster-stat-value'></span>
+			<span id='Str' data-field='Stats.Str' class='monster-stat'></span>
+			<span id='Dex' data-field='Stats.Dex' class='monster-stat'></span>
+			<span id='Con' data-field='Stats.Con' class='monster-stat'></span>
+			<span id='Int' data-field='Stats.Int' class='monster-stat'></span>
+			<span id='Wis' data-field='Stats.Wis' class='monster-stat'></span>
+			<span id='Cha' data-field='Stats.Cha' class='monster-stat'></span>
 		</div>
 	</div>
-	<div class='monster-divider'></div>
+	<div class='divider'></div>
 	<div>
-		<span class='monster-red-left'>Saving Throws </span>
-		<span id='Save' data-field='Defenses.Save'>
+		<span class='font-bold text-red-800'>Saving Throws </span>
+		<span id='Saves' data-field='Defenses.Saves'>
 	</div>
 	<div>
-		<span class='monster-red-left'>Skills</span>
+		<span class='font-bold text-red-800'>Skills</span>
 		<span id='Skills' data-field></span>
 	</div>
 	<div>
-		<span class='monster-red-left'>Damage Vulnerabilities</span>
-		<span id='Vulnerabilities' data-field='Defenses.Vulnerabilities'></span>
+		<span class='font-bold text-red-800'>Damage Vulnerabilities</span>
+		<span id='Vulnerable' data-field='Defenses.Vulnerable'></span>
 	</div>
 	<div> 
-		<span class='monster-red-left'>Damage Resistances</span>
-		<span id='Resistances' data-field='Defenses.Resist'></span>
+		<span class='font-bold text-red-800'>Damage Resistances</span>
+		<span id='Resist' data-field='Defenses.Resist'></span>
 	</div>
 	<div>
-		<span class='monster-red-left'>Damage Immunities </span>
+		<span class='font-bold text-red-800'>Damage Immunities </span>
 		<span id='Immune' data-field='Defenses.Immune'>
 	</div>
 	<div>
-		<span class='monster-red-left'>Condition Immunities </span>
+		<span class='font-bold text-red-800'>Condition Immunities </span>
 		<span id='ConditionImmune' data-field='Defenses.ConditionImmune'>
 	</div>
 	<div>
-		<span class='monster-red-left'>Senses </span>
+		<span class='font-bold text-red-800'>Senses </span>
 		<span id='Senses' data-field></span>
 	</div>
 	<div>
-		<span class='monster-red-left'>Languages </span>
+		<span class='font-bold text-red-800'>Languages </span>
 		<span id='Languages' data-field></span>
 	</div>
 	<div>
-		<span class='monster-red-left'>Challenge </span>
-		<span id='Cr' data-field='Challenge'></span>
+		<span class='font-bold text-red-800'>Challenge </span>
+		<span id='ChallengeRating' data-field='ChallengeRating'></span>
 	</div>
-	<div class='monster-divider'></div>
+	<div class='divider'></div>
 	<div id='monster-traits'>
 	</div>
 	<div id='monster-actions'>
-		<span class='monster-red-left'>Actions</span>
-		<div class='monster-divider'></div>
+		<span class='font-bold text-red-800'>Actions</span>
+		<div class='divider'></div>
 	</div>
 	<div id='monster-reactions'>
-		<span class='monster-red-left'>Reactions</span>
-		<div class='monster-divider'></div>
+		<span class='font-bold text-red-800'>Reactions</span>
+		<div class='divider'></div>
 	</div>
-	<div id='monster-legendary'>
-		<span class='monster-red-left'>Legendary Actions</span>
-		<div class='monster-divider'></div>
+	<div id='monster-legendary-actions'>
+		<span class='font-bold text-red-800'>Legendary Actions</span>
+		<div class='divider'></div>
 		<span>They can take 3 legendary actions, choosing from the
 options below. Only one legendary action option can be used
 at a time and only at the end of another creature's turn. They regain spent legendary actions at the start of their turn.</span>
 	</div>
 	<div id='monster-items'>
-		<span class='monster-red-left'>Items</span>
-		<div class='monster-divider'></div>
+		<span class='font-bold text-red-800'>Items</span>
+		<div class='divider'></div>
 		<span>The creature carries these items on top of any mundane items mentioned in its description.</span>
 	</div>
 	

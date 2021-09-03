@@ -34,6 +34,7 @@ let Monster = function(data){
     this.LegendaryActions = data.LegendaryActions || [];
     this.Reactions = data.Reactions || [];
     this.Traits = data.Traits || [];
+    this.Items = data.Items || [];
 }
     
 let preparePhbMonsters = function() { 
@@ -62,7 +63,7 @@ let preparePhbMonsters = function() {
             Str : phbMonster.str,
             Dex : phbMonster.dex,
             Con : phbMonster.con,
-            Int : phbMonster.Int,
+            Int : phbMonster.int,
             Wis : phbMonster.wis,
             Cha : phbMonster.cha,
             Skills : phbMonster.skill,
@@ -72,8 +73,6 @@ let preparePhbMonsters = function() {
             Actions : phbMonster.action.map(a => { return { Name : a.name, Text : a.text }}),
             Reactions : phbMonster.reaction.map(r => { return { Name : r.name, Text : r.text }}),
             LegendaryActions : phbMonster.legendary.map(l => { return { Name : l.name, Text : l.text }})
-              
-            
         });
     }
 }
