@@ -1,5 +1,4 @@
 import { lite } from 'lite';
-import html from './spells.html';
 import { spells } from '../../../../../5e/spells.js';
 import { Gridify } from 'gridify';
 import { pagination } from '../../pagination/pagination.js';
@@ -7,7 +6,7 @@ import { modal } from '../../../../components/modal/modal.js';
 import { SpellBox } from '../../../../components/spellbox/spellbox';
 
 export let table = lite.extend({
-    content : html,
+    content : '<div id="spells-grid">Test</div>',
     initialize : function() { 
         let spellsArray = this.prepareSpells(spells);
         this.buildGrid(spellsArray);
