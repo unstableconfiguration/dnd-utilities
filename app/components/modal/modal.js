@@ -7,7 +7,7 @@ export let modal = lite.extend({
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <div class="modal-header"></div>
-            <div class="modal-body">what look like</div>
+            <div class="modal-body" style="max-height:80vh"></div>
             <div class="modal-footer"></div>
         </div>
     </div>
