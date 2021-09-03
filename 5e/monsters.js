@@ -4,7 +4,7 @@ export const monsters = {}
 
 let Monster = function(data){
     this.Alignment = data.Alignment;
-    this.Challenge = data.Challenge;
+    this.ChallengeRating = data.ChallengeRating;
     this.Defenses = {
         AC : data.AC,
         ConditionImmune : data.ConditionImmune,
@@ -44,8 +44,6 @@ let preparePhbMonsters = function() {
         if(!Array.isArray(phbMonster.action)) { phbMonster.action = phbMonster.action ? [phbMonster.action] : []; }
         if(!Array.isArray(phbMonster.legendary)) { phbMonster.legendary = phbMonster.legendary ? [phbMonster.legendary] : []; }
         if(!Array.isArray(phbMonster.reaction)) { phbMonster.reaction = phbMonster.reaction ?[phbMonster.reaction] : []; }
-        
-
 
         monsters[m] = new Monster({
             Name : phbMonster.name,
@@ -70,7 +68,7 @@ let preparePhbMonsters = function() {
             Cha : phbMonster.cha,
             Skills : phbMonster.skill,
             Languages : phbMonster.languages,
-            CR : phbMonster.cr,
+            ChallengeRating : phbMonster.cr,
             Traits : phbMonster.trait.map(t => { return { Name : t.name, Text : t.text }}),
             Actions : phbMonster.action.map(a => { return { Name : a.name, Text : a.text }}),
             Reactions : phbMonster.reaction.map(r => { return { Name : r.name, Text : r.text }}),
