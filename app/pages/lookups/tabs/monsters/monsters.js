@@ -1,7 +1,6 @@
 import { lite } from 'lite';
-import html from './monsters.html';
 
 export let table = lite.extend({
-    content : html, 
+    content : '<div id="monsters-grid">Test 2</div>', 
     initialize : function() { }
 });
