@@ -35,8 +35,7 @@ let Monster = function(data){
     this.Reactions = data.Reactions || [];
     this.Traits = data.Traits || [];
 }
-console.log(JSON.stringify(phbMonsters["Aarakocra"], 0, 2));
-          
+    
 let preparePhbMonsters = function() { 
     for(let m in phbMonsters) {
         let phbMonster = phbMonsters[m];
@@ -55,7 +54,7 @@ let preparePhbMonsters = function() {
                 'H' : 'Huge',
                 'G' : 'Gargantuan'
             }[phbMonster.size],
-            Type : phbMonster.type,
+            Type : phbMonster.type.split(',')[0],
             Alignment : phbMonster.alignment,
             AC : phbMonster.ac,
             HP : phbMonster.hp,
