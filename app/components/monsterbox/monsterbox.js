@@ -24,7 +24,7 @@ export let vm = lite.extend({
         if(!data.Defenses.Saves) hide('Saves');
         if(!data.Senses) hide('Senses');
         if(!data.Skills) hide('Skills');
-        if(!data.Defenses.Vulnerabilities) hide('Vulnerable');
+        if(!data.Defenses.Vulnerable) hide('Vulnerable');
         if(!data.Defenses.Immune) hide('Immune');
         if(!data.Defenses.Resist) hide('Resist');
         if(!data.Defenses.ConditionImmune) hide('ConditionImmune');
