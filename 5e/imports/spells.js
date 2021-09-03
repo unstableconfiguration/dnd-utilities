@@ -6259,7 +6259,7 @@ export let phbSpells = [
    "Level": 3,
    "School": "Transmutation",
    "Level_School": "3rd-level Transmutation",
-   "Cast_Time": "1 action or 8 hours",
+   "Cast_Time": "1 action",
    "Range": "150 feet",
    "Duration": "Instantaneous",
    "Components": "V,S",

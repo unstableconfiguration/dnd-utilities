@@ -30,7 +30,7 @@ export let table = lite.extend({
                 { 
                     field : 'Name', 
                     header : "Name",
-                    style : 'width:200px; text-align:left; text-decoration:underline;',
+                    style : 'width:200px; text-align:left; text-decoration:underline; white-space:nowrap; overflow:hidden;',
                     sort : true,
                     filter : true,
                     click : (e) => {
@@ -41,17 +41,21 @@ export let table = lite.extend({
                         });
                     } 
                 },
-                { field : 'Level', header : 'Level', filter : true, sort : true, style: 'width:100px;' },
-                { field : 'School', header : 'School', filter : true, sort : true, style : 'width:125px; text-align:left;'},
-                { field : 'CastingTime', header : 'Cast Time', filter : true, sort : true, style: 'width:150px; text-align:left;' },
-                { field : 'Ritual', header : 'Ritual', filter : vm.getRitualFilter(), style : 'width:50px;'},
-                { field : 'Range', header : 'Range', filter : true, sort : true, style: 'width:100px; text-align:left;' },
-                { field : 'Duration', header : 'Duration', filter : true, sort : true, style: 'width:100px;; text-align:left;' } 
+                { field : 'Level', header : 'Level', filter : true, sort : true, style: 'width:80px;' },
+                { field : 'School', header : 'School', filter : true, sort : true, style : 'width:100px; text-align:left;'},
+                { field : 'CastingTime', header : 'Cast Time', filter : true, sort : true, style: 'width:125px; text-align:left;' },
+                { field : 'Ritual', header : "Ritual", filter : vm.getRitualFilter(), style : 'width:50px;' },
+                { field : 'Range', header : 'Range', filter : true, sort : true, style: 'width:100px; text-align:left; white-space:nowrap; overflow:hidden;' },
+                { field : 'Duration', header : 'Duration', filter : true, sort : true, style: 'width:125px; text-align:left; white-space:nowrap; overflow:hidden;' } 
             ],
             paging : { rows : 10 },
             className : 'table small',
+            style : 'table-layout:fixed',
             onTableCellCreated(td, options) {
-                if(td.style.overflow === 'hidden') { td.title = td.innerText; }
+                if(td.style.overflow === 'hidden') { 
+                    td.title = td.innerText; 
+                    td.innerText = td.innerText.replace('Concentration, up to', 'Concen...');
+                }
             },
             onHeaderCreated(thead, options) {
                 thead.querySelectorAll('input[type="text"]')
