@@ -4,12 +4,13 @@ import { spells } from '../../../../../5e/spells.js';
 import { Gridify } from 'gridify';
 import { pagination } from '../../pagination/pagination.js';
 import { modal } from '../../../../components/modal/modal.js';
+import { SpellBox } from '../../../../components/spellbox/spellbox';
 
 export let table = lite.extend({
     content : html,
     initialize : function() { 
-        let spellsData = this.prepareSpells(spells);
-        this.buildGrid(spellsData);
+        let spellsArray = this.prepareSpells(spells);
+        this.buildGrid(spellsArray);
     },
     prepareSpells : function(spells) {
         let spellsArray = [];
@@ -18,11 +19,11 @@ export let table = lite.extend({
         }
         return spellsArray;
     },
-    buildGrid : function(spells) { 
+    buildGrid : function(spellsArray) { 
         let vm = this;
         vm.grid = new Gridify({
             container : 'spells-grid',
-            data : spells,
+            data : spellsArray,
             columns : [
                 { 
                     field : 'Name', 
@@ -31,8 +32,11 @@ export let table = lite.extend({
                     sort : true,
                     filter : true,
                     click : (e) => {
-                        console.log(e.target.innerHTML)
-                        new modal();
+                        new modal({ 
+                            body : new SpellBox({
+                                data : spells[e.target.innerHTML]
+                            })
+                        });
                     } 
                 },
                 { field : 'Level', header : 'Level', filter : true, sort : true, style: 'width:100px;' },

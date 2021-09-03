@@ -3,7 +3,7 @@ import { lite } from 'lite'
 export let modal = lite.extend({
     container : 'modal-container',
     content : `
-    <div class="modal shown" id="modal">
+    <div class="modal modal-large shown" id="modal">
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <div class="modal-header"></div>
