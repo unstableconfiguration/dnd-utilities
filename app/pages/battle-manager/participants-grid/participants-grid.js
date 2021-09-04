@@ -19,7 +19,7 @@ export let view = lite.extend({
                 { field : 'init', header : 'Init', sort : vm.numberSort,
                     style : 'width:75px; text-align:right;' },
                 { field : 'id', header : 'Id',
-                    style : 'width:100px;' },
+                    style : 'width:150px;' },
                 { field : 'name', header : 'Name', click : vm.onNameClick,
                     style : 'width:150px; text-align:center; text-decoration:underline' },
                 { field : 'hp', header : 'HP', 
