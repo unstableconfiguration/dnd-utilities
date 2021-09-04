@@ -13,15 +13,15 @@ export let modal = lite.extend({
     </div>
     `,
     initialize : function() {
-        this.setControls();
+        this.setElements();
         this.addEventListeners();
         this.setHeader();
         this.setBody();
         this.setFooter();
     },
-    setControls : function() { 
+    setElements : function() { 
         let modal = this;
-        modal.controls = {
+        modal.elements = {
             header : modal.container.querySelector('.modal-header'),
             body : modal.container.querySelector('.modal-body'),
             footer : modal.container.querySelector('.modal-footer'),
@@ -31,26 +31,26 @@ export let modal = lite.extend({
     },
     addEventListeners : function() { 
         let modal = this;
-        modal.controls.overlay.addEventListener('click',
+        modal.elements.overlay.addEventListener('click',
             function() { 
-                modal.controls.wrapper.classList.toggle('shown', false); 
+                modal.elements.wrapper.classList.toggle('shown', false); 
             });
     },
     setHeader : function() { 
-        if(!this.header) { return this.controls.header.style.display = 'none'; }
-        if(this.header.extend) { this.header.container = this.controls.header; }
-        else this.controls.header.innerHTML = this.header;
+        if(!this.header) { return this.elements.header.style.display = 'none'; }
+        if(this.header.extend) { this.header.container = this.elements.header; }
+        else this.elements.header.innerHTML = this.header;
     },
     setBody : function() {
         if(!this.body) { return; }
         // don't have a working instanceof
-        if(this.body.extend) { this.body.container = this.controls.body; }
-        else this.controls.body.innerHTML = this.body;
+        if(this.body.extend) { this.body.container = this.elements.body; }
+        else this.elements.body.innerHTML = this.body;
     },
     setFooter : function() { 
-        if(!this.footer) { return this.controls.footer.style.display = 'none'; }
-        if(this.footer.extend) { this.footer.container = this.controls.footer; }
-        else this.controls.footer.innerHTML = this.footer;
+        if(!this.footer) { return this.elements.footer.style.display = 'none'; }
+        if(this.footer.extend) { this.footer.container = this.elements.footer; }
+        else this.elements.footer.innerHTML = this.footer;
     },
     hide : function() {
         this.container.querySelector('.shown').classList.toggle('shown');    
