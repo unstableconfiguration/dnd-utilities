@@ -16,12 +16,12 @@ export let view = lite.extend({
             id : 'battle-table',
             data : vm.data,
             columns : [
-                { field : 'init', header : 'Init', sort : view.numberSort,
-                    style : 'width:50px; text-align:right;' },
+                { field : 'init', header : 'Init', sort : vm.numberSort,
+                    style : 'width:75px; text-align:right;' },
                 { field : 'id', header : 'Id',
                     style : 'width:100px;' },
-                { field : 'name', header : 'Name', click : view.onNameClick,
-                    style : 'width:150px; text-align:center;' },
+                { field : 'name', header : 'Name', click : vm.onNameClick,
+                    style : 'width:150px; text-align:center; text-decoration:underline' },
                 { field : 'hp', header : 'HP', 
                     style : 'width:150px;' }, 
                 { field : 'remove', header : 'Remove', 
@@ -50,7 +50,7 @@ export let view = lite.extend({
             style : 'table-layout:fixed;',
             className : 'table small'
         });
-        vm.grid.sorting.sort('init');
+        vm.grid.sort('init');
     }
     , numberSort : function(a, b) {
         if(a === b) { return 0; }
@@ -70,12 +70,13 @@ export let view = lite.extend({
         let input = document.createElement('input');
         input.value = td.value;
         input.style = td.style.cssText;
-        
+        input.className = 'input-xsmall'
+
         input.addEventListener('change', () => { 
             td.value = input.value; 
             // sort twice so we stay descending
-            vm.grid.sorting.sort('init');
-            vm.grid.sorting.sort('init');
+            vm.grid.sort('init');
+            vm.grid.sort('init');
         });
         return input;
     }
@@ -83,6 +84,7 @@ export let view = lite.extend({
         let input = document.createElement('input');
         input.value = td.value;
         input.style = td.style.cssText;
+        input.className = 'input-xsmall'
 
         input.addEventListener('change', () => { 
             td.value = input.value;
@@ -94,6 +96,7 @@ export let view = lite.extend({
         let input = document.createElement('input');
         input.value = td.value;
         input.style = td.style.cssText;
+        input.className = 'input-xsmall'
 
         input.addEventListener('change', () => {
             td.value = input.value;
@@ -106,7 +109,7 @@ export let view = lite.extend({
 
         let button = document.createElement('button');
         button.innerHTML = '-'
-        button.className = 'btn-inline';
+        button.className = 'btn-xsmall btn-dark';
         button.style.width = '60%';
 
         button.addEventListener('click', function() { 
