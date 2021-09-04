@@ -1,6 +1,6 @@
 import { lite } from 'lite';
 import html from './battle-manager.html';
-// import dice.
+// import dice?
 import { AddParticipant } from './add-participant/add-participant.js';
 import { ParticipantsGrid } from './participants-grid/participants-grid.js';
 import { modal } from '../../components/modal/modal.js';
@@ -9,11 +9,7 @@ export let vm = lite.extend({
     content : html,
     initialize : function() {
         this.data = [];
-        this.loadDice();
         this.addEventListeners();
-    },
-    loadDice : function() { 
-        //
     },
     addEventListeners : function() { 
         let vm = this;
