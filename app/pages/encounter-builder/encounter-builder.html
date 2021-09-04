@@ -1,0 +1,40 @@
+<div id='encounter-builder'>
+    <div class='inputs' >
+        <div>
+            <span class='inputs-column'>Character Levels:</span>
+            <input type='text' id='characters' placeholder='1, 2, 3'/>
+        </div>
+        <div>
+            <span class='inputs-column'>Difficulty:</span>
+            <select id='difficulty'>
+                <option value='Easy'>Easy</option>
+                <option selected='true' value='Medium'>Medium</option>
+                <option value='Hard'>Hard</option>
+                <option value='Deadly'>Deadly</option>   
+            </select>    
+        </div>
+        <div>
+            <span class='inputs-column'>CR Range</span>
+            <div class='inputs-column'>
+                <span>Min:</span>    
+                <select id='crMin' class='drop-down'></select>
+            </div>
+            <div class='inputs-column'>
+                <span>Max:</span>
+                <select id='crMax' class='drop-down'></select>
+            </div>
+        </div>
+        <div>
+            <span class='inputs-column'>Monster #:</span>
+            <div class='inputs-column'>
+                <span>Min:</span>
+                <input id='monsterCountMin' type='text' maxlength="2" class='number-input' value='1'/>
+            </div>
+            <div class='inputs-column'>
+                <span>Max:</span>
+                <input id='monsterCountMax' type='text' maxlength="2" class='number-input' value='6'/>
+            </div>
+        </div>
+    </div>
+    <div id='output-table'></div>
+</div>
