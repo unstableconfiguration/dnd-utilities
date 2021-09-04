@@ -51,6 +51,9 @@ export let modal = lite.extend({
         if(!this.footer) { return this.controls.footer.style.display = 'none'; }
         if(this.footer.extend) { this.footer.container = this.controls.footer; }
         else this.controls.footer.innerHTML = this.footer;
+    },
+    hide : function() {
+        this.container.querySelector('.shown').classList.toggle('shown');    
     }
 
 });
