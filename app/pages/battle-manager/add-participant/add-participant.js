@@ -9,31 +9,31 @@ export let view = lite.extend({
     content : html,
     onContentBound : function() {
         let view = this;
-        view.setControls();
+        view.setElements();
 
-        view.controls.init.value = view.rollD20();
+        view.elements.init.value = view.rollD20();
 
         view.setAutoComplete();
-        view.controls.init.focus();
+        view.elements.init.focus();
     }
-    , setControls : function() {
+    , setElements : function() {
         let vm = this;
-        vm.controls = {
+        vm.elements = {
             init : '#txtInit',
             name : '#txtName',
             hp : '#txtHp',
             count : '#txtCount',
             add : '#btnAddParticipant'
         }
-        for(let k in vm.controls) { 
-            vm.controls[k] = vm.container.querySelector(vm.controls[k]);
+        for(let k in vm.elements) { 
+            vm.elements[k] = vm.container.querySelector(vm.elements[k]);
         }
 
-        vm.controls.add.addEventListener('click', vm.onAddParticipantClicked.bind(this));
-        vm.controls.name.addEventListener('change', vm.onNameChanged.bind(this));
-        vm.controls.name.addEventListener('keypress', vm.onNameKeyPress.bind(this));
-        vm.controls.hp.addEventListener('keypress', vm.onHpKeyPress.bind(this));
-        vm.controls.count.addEventListener('keypress', vm.onCountKeyPress.bind(this));
+        vm.elements.add.addEventListener('click', vm.onAddParticipantClicked.bind(this));
+        vm.elements.name.addEventListener('change', vm.onNameChanged.bind(this));
+        vm.elements.name.addEventListener('keypress', vm.onNameKeyPress.bind(this));
+        vm.elements.hp.addEventListener('keypress', vm.onHpKeyPress.bind(this));
+        vm.elements.count.addEventListener('keypress', vm.onCountKeyPress.bind(this));
     },
     setAutoComplete : function() { 
         let monsterNames = Object.keys(monsters);
@@ -56,10 +56,10 @@ export let view = lite.extend({
     , getParticipant : function() { 
         let vm = this;
         return { 
-            init : vm.controls.init.value,
-            id : vm.controls.name.value,
-            name : vm.controls.name.value,
-            hp : vm.controls.hp.value
+            init : vm.elements.init.value,
+            id : vm.elements.name.value,
+            name : vm.elements.name.value,
+            hp : vm.elements.hp.value
         }
     }
     , onHpKeyPress : function(e) { 
@@ -67,7 +67,7 @@ export let view = lite.extend({
     }
     , onNameChanged : function(e) {
         let vm = this;
-        vm.controls.add.disabled = !vm.isValid();
+        vm.elements.add.disabled = !vm.isValid();
 
         let monster = monsters[e.target.value];
         if(monster) { vm.setMonster(monster); }
@@ -86,24 +86,24 @@ export let view = lite.extend({
     }
     , setMonster : function(monster) { 
         let vm = this;
-        vm.controls.init.value = 
+        vm.elements.init.value = 
             vm.rollD20() + Math.floor((monster.Stats.Dex - 10) / 2);
 
-        vm.controls.hp.value = +/\d+/.exec(monster.Defenses.HP)[0];
+        vm.elements.hp.value = +/\d+/.exec(monster.Defenses.HP)[0];
     }
     , onAddParticipantClicked : function() { 
         this.addParticipant();
     }
     , isValid : function() { 
-        return !!this.controls.name.value;
+        return !!this.elements.name.value;
     }
     , addParticipant : function() {
         let vm = this;
         if(!vm.isValid()) { return ; }
 
-        for(let i = 1; i <= +vm.controls.count.value; i++) {
+        for(let i = 1; i <= +vm.elements.count.value; i++) {
             let participant = vm.getParticipant();
-            if(vm.controls.count.value > 1) { 
+            if(vm.elements.count.value > 1) { 
                 participant.id =  participant.id + ' ' + i;
             }
             vm.onParticipantAdded(participant);  
