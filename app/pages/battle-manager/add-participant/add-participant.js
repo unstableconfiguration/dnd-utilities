@@ -1,8 +1,8 @@
 import { lite } from 'lite';
-//import { autoComplete } from '../../../../scripts/vendor/autocomplete.js';
 import { monsters } from '../../../../5e/monsters.js';
 import { modal } from '../../../components/modal/modal.js';
 import html from './add-participant.html';
+import { autoComplete } from '../../../scripts/vendor/autocomplete.js'
 
 export let view = lite.extend({
     name : 'add-participant',
@@ -13,11 +13,8 @@ export let view = lite.extend({
 
         view.controls.init.value = view.rollD20();
 
-        //view.setAutoComplete();
+        view.setAutoComplete();
         view.controls.init.focus();
-    }
-    , controls : {
-        init : null, name : null, hp : null, add : null
     }
     , setControls : function() {
         let vm = this;
@@ -37,12 +34,11 @@ export let view = lite.extend({
         vm.controls.name.addEventListener('keypress', vm.onNameKeyPress.bind(this));
         vm.controls.hp.addEventListener('keypress', vm.onHpKeyPress.bind(this));
         vm.controls.count.addEventListener('keypress', vm.onCountKeyPress.bind(this));
-    }
-    , setAutoComplete : function() { 
+    },
+    setAutoComplete : function() { 
         let monsterNames = Object.keys(monsters);
-
         new autoComplete({
-            selector: '#txtName',
+            selector: '#add-participant-modal #txtName',
             minChars: 2,
             source: function(term, suggest) {
                 term = term.toLowerCase();
@@ -112,8 +108,7 @@ export let view = lite.extend({
             }
             vm.onParticipantAdded(participant);  
         }
-        // needs new modal().hide()
-        new modal().container.querySelector('.shown').classList.toggle('shown')
+        new modal().hide()
     }
     , onParticipantAdded : function() { }
     , rollD20 : function() { 
