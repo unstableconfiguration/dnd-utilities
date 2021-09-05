@@ -1,8 +1,12 @@
 import { lite } from 'lite';
 import { EncounterBuilder } from './encounterBuilder.js';
 import { Gridify } from 'gridify';
+import { pagination } from '../lookups/pagination/pagination.js';
 import html from './encounter-builder.html';
 
+/* 
+    CR filters not working below 1
+*/
 
 export let vm = lite.extend({
     content : html,
@@ -10,7 +14,6 @@ export let vm = lite.extend({
         let vm = this;
 
         vm.setElements();
-        vm.populateCRDropDowns();
         vm.setEventListeners();
         
         vm.initializeBuilder();
@@ -18,129 +21,75 @@ export let vm = lite.extend({
     setElements : function() { 
         let vm = this;
         vm.elements = {
-            'characters' : '#characters',
-            'crMax' : '#crMax',
-            'crMin' : '#crMin',
-            'difficulty' : '#difficulty',
-            'monsterCountMax' : '#monsterCountMax',
-            'monsterCountMin' : '#monsterCountMin'
-
+            crMax : '#crMax',
+            crMin : '#crMin',
+            difficulty : '#difficulty',
+            monsterCountMax : '#monsterCountMax',
+            monsterCountMin : '#monsterCountMin',
+            partySize : '#party-size',
+            partyLevel : '#party-level'
         };
         for(let k in vm.elements) { 
             vm.elements[k] = vm.container.querySelector(vm.elements[k]);
         }
     },
+    setEventListeners : function() {
+        let vm = this;
+
+        let setOnChange = function(el, callback) {
+            el.addEventListener('change', (e) => {
+                callback(e.target.value);
+                vm.generateEncounter();
+            });
+        }
+
+        setOnChange(vm.elements.crMax, v => vm.builderArgs.crRange.max = +v);
+        setOnChange(vm.elements.crMin, v => vm.builderArgs.crRange.min = +v);
+        setOnChange(vm.elements.monsterCountMax, v => vm.builderArgs.monsterCountRange.max = +v);
+        setOnChange(vm.elements.monsterCountMin, v => vm.builderArgs.monsterCountRange.min = +v);
+        setOnChange(vm.elements.difficulty, v => vm.builderArgs.difficulty = v);
+        
+        let getPlayers = function() { 
+            let size = +vm.elements.partySize.value;
+            let level = +vm.elements.partyLevel.value;
+            return Array(size).fill(level)
+                .map(l => { return { level : +l }});
+        }
+
+        setOnChange(vm.elements.partySize, v => vm.builderArgs.players = getPlayers());
+        setOnChange(vm.elements.partyLevel, v => vm.builderArgs.players = getPlayers());
+        
+        // block non-numerics on min/max
+        vm.elements.monsterCountMin.addEventListener('keypress', function(e) { 
+            if(isNaN(String.fromCharCode(e.charCode))) { return e.preventDefault(); }
+        });
+        vm.elements.monsterCountMax.addEventListener('keypress', e => { 
+            if(isNaN(String.fromCharCode(e.charCode))) { return e.preventDefault(); }
+        });
+
+    },
     initializeBuilder : function() {
         let vm = this;
         vm.encounterBuilder = new EncounterBuilder();
-        vm.builderArgs = vm.EncounterBuilderArgs();
-        vm.setArgDefaults();
+        vm.builderArgs = vm.defaultArgs();
     },
-    EncounterBuilderArgs : function() {
-        let builderArgs = {
-            players : [],
-            difficulty : '',
+    defaultArgs : function() {
+        let vm = this;
+        let args = {
+            players : [], // [{ level : 0}]
+            difficulty : '', 
             crRange : { min : 0, max : 0 },
             monsterCountRange : { min : 0, max : 0 },
-
-            setCharacters : function(value) {
-                builderArgs.players = value
-                    .split(',')
-                    .map(c => { return { level : +c||0 } });
-            },
-            setDifficulty : function(value) {
-                builderArgs.difficulty = value;
-            },
-            setCRMin : function(value) { 
-                builderArgs.crRange.min = +value;
-            },
-            setCRMax : function(value) { 
-                builderArgs.crRange.max = +value;
-            },
-            setCountMin : function(value) { 
-                builderArgs.monsterCountRange.min = +value;
-            },
-            setCountMax : function(value) { 
-                builderArgs.monsterCountRange.max = +value;
-            }
-        }
-        return builderArgs;
-    },
-    setArgDefaults : function () { 
-        let vm = this;
-        vm.builderArgs.setCharacters(vm.elements.characters.value);
-        vm.builderArgs.setDifficulty(vm.elements.difficulty.value);
-        vm.builderArgs.setCRMin(vm.elements.crMin.value);
-        vm.builderArgs.setCRMax(vm.elements.crMax.value);
-        vm.builderArgs.setCountMin(vm.elements.monsterCountMin.value);
-        vm.builderArgs.setCountMax(vm.elements.monsterCountMax.value);
-        
-    },
-    populateCRDropDowns : function() { 
-        let vm = this;
-        vm.populateCRSelect(vm.elements.crMin, 1);
-        vm.populateCRSelect(vm.elements.crMax, 5);
-    },
-    populateCRSelect : function (select, defaultValue = 1) { 
-        let createOption = function(innerText, value) {
-            let option = document.createElement('option');
-            option.innerText = innerText; 
-            option.value = value;
-            if(value === defaultValue) {
-                option.selected = true;
-            }
-            select.appendChild(option);
         }
 
-        createOption('0', 0);
-        createOption('1/8', .135);
-        createOption('1/4', .25);
-        createOption('1/2', .5);
-        for(let i = 1; i <= 30; i++) { 
-            createOption(i, i);
-        }
-    },
-    patterns : {
-        notNumbers : /[^\d]/g,
-        notNumberList : /[^\d,\s]/g
-    },
-    removeCharacters : function(event, rgx) { 
-        event.target.value = event.target.value.replace(rgx, '');
-    },
-    setEventListeners : function() {
-        let vm = this;
-        vm.elements.characters.addEventListener('keyup', (e) => {
-            vm.removeCharacters(e, vm.patterns.notNumberList);
-            vm.builderArgs.setCharacters(e.target.value);
-            vm.generateEncounter();
-        });
+        args.players = [];
+        args.difficulty = vm.elements.difficulty.value;
+        args.crRange.min = +vm.elements.crMin.value;
+        args.crRange.max = +vm.elements.crMax.value;
+        args.monsterCountRange.min = +vm.elements.monsterCountMin.value;
+        args.monsterCountRange.max = +vm.elements.monsterCountMax.value;
 
-        vm.elements.difficulty.addEventListener('change', (e) => {
-            vm.builderArgs.setDifficulty(e.target.value);
-            vm.generateEncounter();
-        });
-
-        vm.elements.crMin.addEventListener('change', (e) => { 
-            vm.builderArgs.setCRMin(e.target.value);
-            vm.generateEncounter();
-        });
-
-        vm.elements.crMax.addEventListener('change', (e) => { 
-            vm.builderArgs.setCRMax(e.target.value);
-            vm.generateEncounter();
-        });
-
-        vm.elements.monsterCountMin.addEventListener('keyup', (e) => { 
-            vm.removeCharacters(e, vm.patterns.notNumbers);
-            vm.builderArgs.setCountMin(e.target.value);
-            vm.generateEncounter();    
-        });
-
-        vm.elements.monsterCountMax.addEventListener('keyup', (e) => { 
-            vm.removeCharacters(e, vm.patterns.notNumbers);
-            vm.builderArgs.setCountMax(e.target.value);
-            vm.generateEncounter();
-        });
+        return args;
     },
     generateEncounter : function() { 
         let vm = this;
@@ -160,6 +109,14 @@ export let vm = lite.extend({
             for(let cr in crs) {
                 crsStrings.push('CR' + cr + ' x' + crs[cr]);
             }
+            // Replace decimals with fractions i.e. 0.135 => 1/8
+            crsStrings = crsStrings.map(str => {
+                str = str.replace('0.135', '1/8');
+                str = str.replace('0.25', '1/4');
+                str = str.replace('0.5', '1/2');
+                return str;
+            })
+
             // Sort them and join them to a single string
             encounter.crsString = crsStrings
                 .sort((a, b) => a <= b)
@@ -168,24 +125,32 @@ export let vm = lite.extend({
 
         return encounters;
     },
-    wildcardFilter : function(cellVal, filterVal) { 
-        return cellVal.includes(filterVal);
-    },
     writeOutput : function(encounters) { 
         let numberSort = function(a, b) { return +a >= +b ? 1 : -1 };
-        let wildcardFilter = this.wildcardFilter;
-
-        new Gridify({
+        let wildcardFilter = (cellVal, filterVal) => cellVal.includes(filterVal);
+        
+        let grid = new Gridify({
             container : 'output-table',
             data : encounters,
             columns : [
-                { field : 'count', header : '# Monsters', filter : true, sort : numberSort, className : 'monster-count-col' }
-                , { field : 'xpCost', header : 'XP Cost', filter : true, sort : numberSort, className : 'xp-cost-col' }
-                , { field : 'crsString', header : 'Challenge Ratings', filter : wildcardFilter, sort : true , className : 'cr-col' }
+                { field : 'count', header : '# Monsters', filter : true, sort : numberSort }
+                , { field : 'xpCost', header : 'XP Cost', filter : true, sort : numberSort }
+                , { field : 'crsString', header : 'Challenge Ratings', filter : wildcardFilter, sort : true }
             ], 
-            paging : true, 
-            className : 'table small'
+            paging : { rows : 10 }, 
+            className : 'table small',
+            onHeaderCellCreated(th, options) { 
+                let sortIcon = th.querySelector('.sort');
+                if(sortIcon) { sortIcon.className = 'fa fa-sort'; } 
+            },
+            onHeaderCreated(thead, options) {
+                thead.querySelectorAll('input[type="text"]')
+                    .forEach(i => i.className = "input-xsmall");
+            },
         });
+        let pageContainer = grid.html.querySelector('#output-table-grid-paging');
+        new pagination({ container : pageContainer, grid : grid, data : grid.paging.data });
+    
     }
 });
 
