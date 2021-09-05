@@ -1,40 +1,58 @@
 <div id='encounter-builder'>
-    <div class='inputs' >
-        <div>
-            <span class='inputs-column'>Character Levels:</span>
-            <input type='text' id='characters' placeholder='1, 2, 3'/>
+    <div class='grid'>
+        <div class='form-group grid-c-8'>
+            <label class='form-group-label label-small' style='min-width:125px;'>Party:</label>
+            <input class='form-group-input input-small' type='text' id='party-size' placeholder="number of players">
+            <input class='form-group-input input-small' type='text' id='party-level' placeholder="average level">
         </div>
-        <div>
-            <span class='inputs-column'>Difficulty:</span>
-            <select id='difficulty'>
+        <div class='grid-c-4'></div>
+        <div class='form-group grid-c-4'>
+            <label class='form-group-label label-small' style='min-width:125px;'>Difficulty:</label>
+            <select id='difficulty' class='form-group-input input-small'>
                 <option value='Easy'>Easy</option>
-                <option selected='true' value='Medium'>Medium</option>
-                <option value='Hard'>Hard</option>
+                <option value='Medium'>Medium</option>
+                <option value='Hard' selected>Hard</option>
                 <option value='Deadly'>Deadly</option>   
             </select>    
         </div>
-        <div>
-            <span class='inputs-column'>CR Range</span>
-            <div class='inputs-column'>
-                <span>Min:</span>    
-                <select id='crMin' class='drop-down'></select>
-            </div>
-            <div class='inputs-column'>
-                <span>Max:</span>
-                <select id='crMax' class='drop-down'></select>
-            </div>
+        <div class='grid-c-8'></div>
+        
+        <div class='form-group grid-c-8'>
+            <label class='form-group-label label-small' style='min-width:125px;'>CR Range</label>
+            <label class='form-group-label label-small'>Min:</label>    
+            <select id='crMin' class='form-group-input input-small'>
+                <option>1/8</option><option>1/4</option><option>1/2</option>
+                <!-- Default CR min-->
+                <option selected>1</option>
+                <option>2</option><option>3</option><option>4</option><option>5</option>
+                <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+                <option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+                <option>21</option><option>22</option><option>23</option><option>24</option><option>25</option>
+                <option>26</option><option>27</option><option>28</option><option>29</option><option>30</option>   
+            </select>
+            <label class='form-group-label label-small'>Max:</label>
+            <select id='crMax' class='form-group-input input-small'>
+                <option>1/8</option><option>1/4</option><option>1/2</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <!-- Default CR Max-->
+                <option selected>5</option>
+                <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+                <option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+                <option>21</option><option>22</option><option>23</option><option>24</option><option>25</option>
+                <option>26</option><option>27</option><option>28</option><option>29</option><option>30</option>   
+            </select>    
         </div>
-        <div>
-            <span class='inputs-column'>Monster #:</span>
-            <div class='inputs-column'>
-                <span>Min:</span>
-                <input id='monsterCountMin' type='text' maxlength="2" class='number-input' value='1'/>
-            </div>
-            <div class='inputs-column'>
-                <span>Max:</span>
-                <input id='monsterCountMax' type='text' maxlength="2" class='number-input' value='6'/>
-            </div>
+        <div class='grid-c-4'></div>
+        <div class='form-group grid-c-8'>
+            <label class='form-group-label label-small' style='min-width:125px;'>Monster Count:</label>
+            <label class='form-group-label label-small'>Min:</label>
+            <input id='monsterCountMin' class='form-group-input input-small' type='text' maxlength="2" value='1'/>
+            <label class='form-group-label label-small'>Max:</label>
+            <input id='monsterCountMax' class='form-group-input input-small' type='text' maxlength="2" value='6'/>
         </div>
+        <div class='grid-c-4'></div>
     </div>
     <div id='output-table'></div>
 </div>
