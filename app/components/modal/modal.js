@@ -31,10 +31,7 @@ export let modal = lite.extend({
     },
     addEventListeners : function() { 
         let modal = this;
-        modal.elements.overlay.addEventListener('click',
-            function() { 
-                modal.elements.wrapper.classList.toggle('shown', false); 
-            });
+        modal.elements.overlay.addEventListener('click', modal.hide);
     },
     setHeader : function() { 
         if(!this.header) { return this.elements.header.style.display = 'none'; }
