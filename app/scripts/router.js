@@ -12,13 +12,6 @@ router.addRoutes([
 
 router.onHashChange = function(value) {
     if(typeof(value) == 'function') { value(); }
-    else { throw new Exception("could not find value for route"); }
-
-    let navs = document.querySelectorAll('.nav-right > .nav-item')
-    navs.forEach(nav => {
-        let hash = location.hash || 'lookups'
-        let select = nav.querySelector('a').href.includes(hash);
-        nav.classList.toggle('active', select);
-    });
+    else { throw new Error("could not find value for route: " + location.hash); }
 }
 
