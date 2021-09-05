@@ -1,3 +1,4 @@
+/* Credit to the makers of 5etools */
 export let mordenkainens = [
 		{
 			"name": "Abyssal Wretch",
