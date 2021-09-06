@@ -26,7 +26,7 @@ export let vm = lite.extend({
         vm.elements.input.addEventListener('keydown', e => { 
             if(e.keyCode == 13) { 
                 vm.roll(e.target.value);
-                new log({ container : vm.elements.outputLog, data : vm.log });
+                new log({ container : vm.elements.outputLog, parent : vm, data : vm.log });
             }
         });
     },

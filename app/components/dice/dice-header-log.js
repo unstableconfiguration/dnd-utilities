@@ -10,15 +10,36 @@ export let log = lite.extend({
         let vm = this;
         vm.data[0].equation = vm.data[0].equation + ': ';
 
-        let grid = new Gridify({
+        vm.grid = new Gridify({
             container : vm.container.querySelector('#log-container'),
             data : vm.data,
             columns : [ 
                 { field : 'equation', style : 'text-align:right' },
-                { field : 'solution', style : 'text-align:left' }
+                { field : 'solution', style : 'text-align:left' },
+                { field : 'remove' }
             ],
-            className : 'table small'
+            className : 'table small',
+            onTableCellCreated : function(td, colDef) {
+                if(colDef.field == 'remove') {
+                    td.innerText = '';
+                    td.appendChild(vm.tdRemoveButton(td));
+                }
+            }
+        });
+    },
+    tdRemoveButton : function(td) { 
+        let vm = this;
+
+        let button = document.createElement('button');
+        button.innerHTML = '-'
+        button.className = 'btn-xsmall btn-dark';
+        button.style.width = '60%';
+
+        button.addEventListener('click', function() { 
+            td.parentElement.parentElement.removeChild(td.parentElement);
+            vm.parent.log = vm.grid.data.get();
         });
 
+        return button
     }
 });
