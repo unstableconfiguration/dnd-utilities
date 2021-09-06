@@ -10,17 +10,17 @@ var vm = lite.extend({
   },
   loadTab: {
     'spells': container => {
-      import('./spells-ca6d7659.js').then(t => new t.table({
+      import('./spells-d5488752.js').then(t => new t.table({
         container: container
       }));
     },
     'monsters': container => {
-      import('./monsters-ae8fb441.js').then(t => new t.table({
+      import('./monsters-8063492a.js').then(t => new t.table({
         container: container
       }));
     },
     'items': container => {
-      import('./items-d6553d84.js').then(t => new t.table({
+      import('./items-7e2d019a.js').then(t => new t.table({
         container: container
       }));
     }

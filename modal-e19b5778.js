@@ -22,9 +22,7 @@ var modal = lite.extend({
   },
   addEventListeners: function addEventListeners() {
     var modal = this;
-    modal.elements.overlay.addEventListener('click', function () {
-      modal.elements.wrapper.classList.toggle('shown', false);
-    });
+    modal.elements.overlay.addEventListener('click', modal.hide.bind(modal));
   },
   setHeader: function setHeader() {
     if (!this.header) {

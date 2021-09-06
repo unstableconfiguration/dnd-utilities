@@ -1,7 +1,6 @@
-import { l as lite } from './index.js';
-import { G as Gridify } from './gridify-e8a24bcd.js';
-import { p as pagination } from './pagination-cdf5870f.js';
-import { m as modal } from './modal-fb7914d8.js';
+import { l as lite, G as Gridify } from './index.js';
+import { p as pagination } from './pagination-d12b2d62.js';
+import { m as modal } from './modal-e19b5778.js';
 
 // Obtained from https://github.com/austen0/dnd_5e_spells
 // Seems to have some elemental evil spells 

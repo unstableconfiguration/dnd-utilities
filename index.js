@@ -324,22 +324,22 @@ var load = file => new file.vm({
 router.addRoutes([{
   route: '',
   value: () => {
-    import('./lookups-b33eefb9.js').then(load);
+    import('./lookups-351b515d.js').then(load);
   }
 }, {
   route: 'lookups',
   value: () => {
-    import('./lookups-b33eefb9.js').then(load);
+    import('./lookups-351b515d.js').then(load);
   }
 }, {
   route: 'battle-manager',
   value: () => {
-    import('./battle-manager-23781c98.js').then(load);
+    import('./battle-manager-c32e5eaa.js').then(load);
   }
 }, {
   route: 'encounter-builder',
   value: () => {
-    import('./encounter-builder-547bac81.js').then(load);
+    import('./encounter-builder-c4998609.js').then(load);
   }
 }]);
 
@@ -347,28 +347,1385 @@ router.onHashChange = function (value) {
   if (typeof value == 'function') {
     value();
   } else {
-    throw new Exception("could not find value for route");
+    throw new Error("could not find value for route: " + location.hash);
+  }
+};
+
+var html$1 = "<div class=\"header u-unselectable header-animated\">\r\n    <div class=\"header-brand\">\r\n        <div class=\"nav-item no-hover\">\r\n            <a><h6 class=\"title\">D&D Utilities</h6></a>\r\n        </div>\r\n    </div>\r\n    <div class=\"header-nav\" id=\"header-menu\">\r\n        <div class=\"nav-left\">\r\n            <div class=\"nav-item text-center\">\r\n                <a target=\"_blank\" href=\"https://github.com/unstableconfiguration/dnd-utilities\">\r\n                    <span class=\"icon\">\r\n                        <i class=\"fab fa-wrapper fa-github\" aria-hidden=\"true\"></i>\r\n                    </span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n        <div class=\"nav-center\">\r\n            <div class=\"nav-item\" id=\"dice-header-container\">\r\n                <span class=\"icon\">\r\n                    <i class=\"fas fa-dice-d20\"></i>\r\n                </span>        \r\n            </div>\r\n        </div>\r\n        <div class=\"nav-right\">\r\n            <div class=\"nav-item active\">\r\n                <a href=\"#lookups\">Lookups</a>\r\n            </div>\r\n            <div class=\"nav-item\">\r\n                <a href=\"#battle-manager\">Battle Manager</a>\r\n            </div>\r\n            <div class=\"nav-item\">\r\n                <a href=\"#encounter-builder\">Encounter Builder</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
+
+var html = "<div class=\"form-group\">  \r\n    <label class=\"form-group-input\">\r\n        <span class=\"icon\">\r\n            <i class=\"fas fa-dice-d20\"></i>\r\n        </span>\r\n    </label>\r\n    \r\n    <input id=\"dice-input\" class=\"form-group-input input-small w-50\" type=\"text\" placeholder=\"1d6\">\r\n    \r\n\r\n    <div class=\"list-dropdown dropdown-right\">\r\n        <button id=\"dice-output\" class=\"form-group-btn btn-small btn-dropdown\">    \r\n            =\r\n        </button>\r\n        <div id=\"dice-output-log\" class=\"menu\">\r\n        </div>\r\n    </div>  \r\n    \r\n</div>";
+
+var optionDefaults = {
+  /* Human readable name for the operation. */
+  name: 'Unnamed',
+
+  /* A regularexpression that finds a meaningful target string for this operation.
+      Example: /\d*d\d+/ - finds strings like 'd6' or '1d6' for the dice roller
+  */
+  search: /RegExp/g,
+
+  /* Alternatively, search can be a function that returns the expression */
+  search: function search(equation) {
+    throw 'No search function provided for operation ' + name;
+  },
+
+  /* Accepts the results of the search and splits them up into an operand array.
+      Example: would accept '1+2' and return an [1, 2] for an addition operation.    
+      Default: Returns all numbers of one or more digits including negatives and decimals
+  */
+  parse: function parse(expression) {
+    // -?  optional minus sign for negative numbers 
+    // (\d*\.)? optional 0 or more numbers followed by a . for decimals
+    // \d+  required at least one number of one or more digits
+    var number = /-?(\d*\.)?\d+/g;
+    var get = null,
+        operands = [];
+
+    while (get = number.exec(expression)) {
+      operands.push(get[0]);
+    }
+
+    return operands;
+  },
+
+  /* Accepts the operands from parse and returns a single string value
+      Example: if the operands are [1, 2] and it is an addition operation, this would return "3"
+  */
+  resolve: function resolve(operands) {}
+};
+var DiceOperation = function DiceOperation() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var op = this;
+
+  for (var k in options) {
+    op[k] = options[k];
   }
 
-  var navs = document.querySelectorAll('.nav-right > .nav-item');
-  navs.forEach(nav => {
-    var hash = location.hash || 'lookups';
-    var select = nav.querySelector('a').href.includes(hash);
-    nav.classList.toggle('active', select);
+  op.name = options.name || optionDefaults.name;
+  var search = options.search;
+
+  if (search instanceof RegExp) {
+    search = function search(input) {
+      return (new RegExp(options.search).exec(input) || [null])[0];
+    };
+  }
+
+  op.onSearch = function (equation) {};
+
+  op.onSearched = function (equation, expression) {};
+
+  op.search = function (equation) {
+    op.onSearch(equation);
+    var expression = search(equation);
+    op.onSearched(equation, expression);
+    return expression;
+  };
+
+  var parse = options.parse || optionDefaults.parse;
+
+  op.onParse = function (expression) {};
+
+  op.onParsed = function (expression, operands) {};
+
+  op.parse = function (expression) {
+    op.onParse(expression);
+    var operands = parse(expression);
+    op.onParsed(expression, operands);
+    return operands;
+  };
+
+  var resolve = options.resolve;
+
+  op.onResolve = function (operands) {};
+
+  op.onResolved = function (operands, result) {};
+
+  op.resolve = function (operands) {
+    op.onResolve(operands);
+    var result = resolve.apply(op, operands);
+    op.onResolved(operands, result);
+    return result;
+  };
+
+  op.onEvaluate = function (equation) {};
+
+  op.onEvaluated = function (equation, expression) {};
+
+  op.evaluate = function (equation) {
+    op.onEvaluate(equation);
+    var input = equation;
+    var expression;
+
+    while ((expression = op.search(equation)) !== null) {
+      var operands = op.parse(expression);
+      var result = op.resolve(operands);
+      equation = equation.replace(expression, result);
+    }
+
+    op.onEvaluated(input, equation);
+    return equation;
+  };
+};
+
+var BaseModule = function BaseModule() {
+  this.apply = function (roller) {
+    roller.operations.unshift(this.operations[0]);
+  };
+
+  this.operations = [new DiceOperation({
+    name: 'dice',
+    search: /\d*d\d+/,
+    parse: function parse(expression) {
+      return expression.split(/\D+/);
+    },
+    roll: function roll(facets) {
+      return Math.floor(Math.random() * facets + 1);
+    },
+    resolve: function resolve(rolls, facets) {
+      var value = 0;
+
+      for (var i = 0; i < (rolls || 1); i++) {
+        value += this.roll(facets);
+      }
+
+      return value;
+    }
+  })];
+};
+
+/* 
+    options = {
+        modules : [modules]
+    }
+*/
+
+var Dice = function Dice(options) {
+  var roller = this;
+  roller.operations = [];
+
+  roller.onSolve = function (equation) {};
+
+  roller.onSolved = function (equation, solution) {};
+
+  roller.solve = function (equation) {
+    var input = equation;
+    roller.onSolve(equation);
+    roller.operations.forEach(op => {
+      equation = op.evaluate(equation);
+    });
+    roller.onSolved(input, equation);
+    return equation;
+  };
+
+  roller.applyModules = function (modules) {
+    if (!Array.isArray(modules)) {
+      modules = [modules];
+    }
+
+    modules.forEach(module => {
+      new module().apply(roller);
+    });
+  }; // Seed with dice roll operation
+
+
+  roller.applyModules(BaseModule);
+
+  if (options && options.modules) {
+    roller.applyModules(options.modules);
+  }
+};
+
+var DnDModule = function DnDModule() {
+  this.apply = function (roller) {
+    var advantage = this.operations[0];
+    advantage.parent = roller;
+    roller.operations.unshift(advantage);
+  };
+
+  this.operations = [
+  /* The game frequently asks the player to roll a twenty-sided die twice and pick the higher 
+  	or lower of the two rolls. 
+  	using the syntax 2xd20 it will roll the die twice and separate the results into an array. 
+  */
+  new DiceOperation({
+    name: 'Advantage',
+    search: /\d+xd\d+/,
+    resolve: function resolve(repetitions, facets) {
+      var operation = this; // 2xd20 becomes [d20, d20]. We then let the roller solve each d20 
+
+      var results = Array(+repetitions).fill('d' + facets).map(x => +operation.parent.solve(x)); // high-to-low sorting
+
+      results.sort((x, y) => +x < +y);
+      return JSON.stringify(results);
+    },
+    parse: match => match.split(/\D+/)
+  })];
+};
+
+/* RegExp fragment. 
+    -? : optional - sign for negative numbers 
+    (\d*\.)? : optional set of 0 or more numbers and one . for decimals 
+    \d+ : one or more digits.  
+
+    matches: 1, 1.1, .1, -1, -1.1, -.1
+*/
+
+var rgxNumber = '-?(\\d*\\.)?\\d+';
+var MathModule = function MathModule() {
+  this.apply = function (roller) {
+    this.operations.forEach(op => {
+      // Parentheses needs a reference to the roller for recursion 
+      op.parent = roller;
+      roller.operations.push(op);
+    });
+  };
+
+  this.operations = [new DiceOperation({
+    name: 'Parentheses',
+    search: /\([^()]+\)/,
+    parse: match => [match.replace(/[()]/g, '')],
+    resolve: function resolve(x) {
+      return this.parent.solve(x);
+    }
+  }), new DiceOperation({
+    name: 'Exponents',
+    search: new RegExp(rgxNumber + '\\^' + rgxNumber),
+    resolve: (x, y) => Math.pow(x, y)
+  })
+  /* Needs to happen simultaneously, so a single function */
+  , new DiceOperation({
+    name: 'MultiplyDivide',
+    search: new RegExp(rgxNumber + '[*\\/]' + rgxNumber),
+    parse: function parse(expression) {
+      var firstOperand = new RegExp('^' + rgxNumber).exec(expression)[0];
+      var secondOperand = new RegExp(rgxNumber + '$').exec(expression)[0];
+      var operator = /[*\/]/.exec(expression)[0];
+      return [firstOperand, secondOperand, operator];
+    },
+    resolve: (x, y, op) => op == '*' ? x * y : x / y
+  }), new DiceOperation({
+    name: 'AddSubtract',
+    search: new RegExp(rgxNumber + '[+-]' + rgxNumber),
+    parse: function parse(expression) {
+      var firstOperand = new RegExp('^' + rgxNumber).exec(expression)[0];
+      var secondOperand = new RegExp(rgxNumber + '$').exec(expression)[0];
+      var operator = expression.substr(firstOperand.length, 1); // Make secondOperand positive if we are subtracting a positive.
+
+      if (operator == '-' && !/--/.test(expression)) {
+        secondOperand = secondOperand.substr(1);
+      }
+
+      return [firstOperand, secondOperand, operator];
+    },
+    resolve: (x, y, op) => op == '+' ? +x + +y : +x - +y
+  })];
+};
+
+/*  Log structure :
+    roller.log : [
+        {
+            equation : '',
+            solution : '',
+            operations : [
+                { 
+                    name : '',
+                    expression : '',
+                    search : [ { equation : '', expression : '' } ],
+                    parse : [ { expression : '', operands : [] } ],
+                    resolve : [ { operands : [], result : '' } ],
+                    evaluate : { input : '', equation : ''  }
+                }
+            ]
+        }
+    ];
+*/
+var getCurrentOp = function getCurrentOp(roller) {
+  return roller.log.slice(-1)[0].operations.slice(-1)[0];
+};
+
+var LoggingModule = function LoggingModule() {
+  this.apply = function (roller) {
+    roller.log = [];
+    this.onSolve(roller);
+    this.onSolved(roller);
+    this.onEvaluate(roller);
+    this.onEvaluated(roller);
+    this.onSearched(roller);
+    this.onParsed(roller);
+    this.onResolved(roller);
+    this.onDiceResolve(roller);
+    this.onDiceRoll(roller);
+    this.onDiceResolved(roller);
+  };
+
+  this.onSolve = function (roller) {
+    var onSolve = roller.onSolve;
+
+    roller.onSolve = function (equation) {
+      roller.log.push({
+        equation: equation,
+        solution: '',
+        operations: []
+      });
+      return onSolve(equation);
+    };
+  };
+
+  this.onSolved = function (roller) {
+    var onSolved = roller.onSolved;
+
+    roller.onSolved = function (equation, solution) {
+      roller.log.slice(-1)[0].solution = solution;
+      return onSolved(equation, solution);
+    };
+  };
+
+  this.onEvaluate = function (roller) {
+    roller.operations.forEach(op => {
+      var onEvaluate = op.onEvaluate;
+
+      op.onEvaluate = function (equation) {
+        roller.log.slice(-1)[0].operations.push({
+          name: op.name,
+          search: [],
+          parse: [],
+          resolve: []
+        });
+        return onEvaluate(equation);
+      };
+    });
+  };
+
+  this.onEvaluated = function (roller) {
+    roller.operations.forEach(op => {
+      var onEvaluated = op.onEvaluated;
+
+      op.onEvaluated = function (input, equation) {
+        getCurrentOp(roller).evaluate = {
+          input: input,
+          equation: equation
+        };
+        return onEvaluated(input, equation);
+      };
+    });
+  };
+
+  this.onSearched = function (roller) {
+    roller.operations.forEach(op => {
+      var onSearched = op.onSearched;
+
+      op.onSearched = function (equation, expression) {
+        getCurrentOp(roller).search.push({
+          equation: equation,
+          expression: expression
+        });
+        return onSearched(equation, expression);
+      };
+    });
+  };
+
+  this.onParsed = function (roller) {
+    roller.operations.forEach(op => {
+      var onParsed = op.onParsed;
+
+      op.onParsed = function (expression, operands) {
+        getCurrentOp(roller).parse.push({
+          expression: expression,
+          operands: operands
+        });
+        return onParsed(expression, operands);
+      };
+    });
+  };
+
+  this.onResolved = function (roller) {
+    roller.operations.forEach(op => {
+      var onResolved = op.onResolved;
+
+      op.onResolved = function (operands, result) {
+        getCurrentOp(roller).resolve.push({
+          operands: operands,
+          result: result
+        });
+        return onResolved(operands, result);
+      };
+    });
+  };
+  /* Before rolling, add empty operation.rolls array */
+
+
+  this.onDiceResolve = function (roller) {
+    var diceOp = roller.operations.find(op => op.name === 'dice');
+    var onResolve = diceOp.onResolve;
+
+    diceOp.onResolve = function (operands) {
+      getCurrentOp(roller).rolls = [];
+      return onResolve(operands);
+    };
+  };
+  /* For each roll, add roll result to operation.rolls array */
+
+
+  this.onDiceRoll = function (roller) {
+    var diceOp = roller.operations.find(op => op.name === 'dice');
+    var roll = diceOp.roll;
+
+    diceOp.roll = function (facets) {
+      var rollResult = roll(facets);
+      getCurrentOp(roller).rolls.push(rollResult);
+      return rollResult;
+    };
+  };
+  /* After rolling, move operation.rolls to operation.resolve.rolls */
+
+
+  this.onDiceResolved = function (roller) {
+    var diceOp = roller.operations.find(op => op.name === 'dice');
+    var onResolved = diceOp.onResolved;
+
+    diceOp.onResolved = function (operands, result) {
+      var resolved = onResolved(operands, result);
+      var diceLog = getCurrentOp(roller);
+      diceLog.resolve.slice(-1)[0].rolls = diceLog.rolls;
+      delete diceLog.rolls;
+      return resolved;
+    };
+  };
+};
+
+var filters = function filters() {
+  var grid = this;
+
+  grid.filter = function () {
+    grid.filters.filter();
+  };
+
+  var onHeaderCreated = grid.onHeaderCreated;
+
+  grid.onHeaderCreated = function (th, columns) {
+    var hasFilters = columns.some(column => column.filter);
+
+    if (hasFilters) {
+      grid.filters.initialize(columns);
+      grid.filters.addFilters(columns);
+    }
+
+    onHeaderCreated(th, columns);
+  };
+
+  grid.filters = {
+    initialize: function initialize(columns) {
+      var filterRow = grid.html.tHead.insertRow();
+      filterRow.id = grid.html.id + '-filters';
+      columns.forEach(col => {
+        filterRow.insertCell(); // .id = xyz, but do we need to name he cell?
+      });
+    },
+    addFilters: function addFilters(columns) {
+      var th = grid.html.tHead.rows[1];
+      columns.forEach((column, idx) => {
+        var filter = grid.filters.addFilter(column);
+
+        if (filter) {
+          th.cells[idx].appendChild(filter);
+        }
+      });
+    },
+    addFilter: function addFilter(column) {
+      if (!column.filter) {
+        return;
+      }
+
+      var filter = grid.filters.__getFilterDefinition(column);
+
+      var control = filter.control;
+      control.id = grid.html.id + '-filters-' + column.field;
+      control.compare = filter.compare;
+      return control;
+    },
+    cells: function cells() {
+      return Array.from(grid.html.tHead.rows[1].cells);
+    },
+    filter: function filter() {
+      var controls = grid.filters.getControls();
+      var rows = Array.from(grid.html.tBodies[0].rows);
+      rows.forEach(row => {
+        var cells = Array.from(row.cells);
+        var isFiltered = controls.some(control => {
+          var cell = cells.find(td => {
+            return control.id.split('-').slice(-1)[0] == td.id.split('-').slice(-1)[0];
+          });
+          return !control.compare(cell.value, control.value);
+        });
+        row.filtered = isFiltered;
+        row.style.display = isFiltered ? 'none' : '';
+      });
+    },
+    getControls: function getControls() {
+      return grid.filters.cells().map(cell => cell.firstChild).filter(x => !!x);
+    },
+    __getFilterDefinition: function __getFilterDefinition(column) {
+      var definition = {
+        control: grid.filters.__getDefaultFilterControl(column),
+        compare: grid.filters.__getDefaultCompare()
+      };
+
+      if (typeof column.filter === 'function') {
+        definition.compare = column.filter;
+      }
+
+      if (typeof column.filter === 'object') {
+        for (var key in column.filter) {
+          definition[key] = column.filter[key];
+        }
+      }
+
+      return definition;
+    },
+    __getDefaultCompare: function __getDefaultCompare() {
+      return function (tdValue, filterValue) {
+        return ('' + tdValue).toLowerCase().substr(0, filterValue.length) == filterValue.toLowerCase();
+      };
+    },
+    __getDefaultFilterControl: function __getDefaultFilterControl(column) {
+      var control = document.createElement('input');
+      control.type = 'text';
+      control.style = 'display:block; margin: auto; width:80%;';
+      control.addEventListener('change', () => {
+        grid.filters.filter();
+      });
+      return control;
+    }
+  };
+};
+
+var paging = function paging() {
+  var grid = this;
+
+  grid.page = function () {
+    grid.paging.page(...arguments);
+  };
+
+  var onTableCreated = grid.onTableCreated;
+
+  grid.onTableCreated = function (table, options) {
+    if (options.paging) {
+      grid.paging.initialize(options.paging);
+    }
+
+    onTableCreated(table, options);
+  };
+
+  grid.footer.pager = {
+    initialize: function initialize(options) {
+      var pagingRow = grid.html.tFoot.insertRow();
+      pagingRow.id = grid.html.id + '-paging';
+      pagingRow.options = options; // Prototype default pager.
+      //pagingRow.appendChild(grid.footer.pager.__defaultPagerControl());
+    }
+    /*__defaultPagerControl : function() { 
+        let pagerDiv = document.createElement('div');
+        pagerDiv.id = grid.html.id + '-pager';
+        
+        pagerDiv.appendChild(this.__elPrev());
+        pagerDiv.appendChild(this.__elDisplay());
+        pagerDiv.appendChild(this.__elNext());
+          return pagerDiv;
+    },
+    __elPrev : function() { 
+        let prev = document.createElement('span');
+        prev.innerHTML = "Prev ";
+        prev.addEventListener('click', e => {
+            let data = grid.paging.data;
+            if(data.currentPage == 1) { return; }
+            grid.paging.data.currentPage--;
+            grid.footer.pager.__updateDisplay();
+            grid.page(grid.paging.data.currentPage);
+        });
+        return prev;
+    },
+    __elNext : function() { 
+        let next = document.createElement('span');
+        next.innerHTML = " Next";
+        next.addEventListener('click', e => {
+            let data = grid.paging.data;
+            if(data.currentPage == data.visiblePages) { return; }
+            grid.paging.data.currentPage++;
+            grid.footer.pager.__updateDisplay();
+            grid.page(grid.paging.data.currentPage);
+        });
+        return next;
+    },
+    __elDisplay : function() {
+        let display = document.createElement('span');
+        let data = grid.paging.data;
+        display.id = grid.html.id + '-pager-display';
+        display.innerHTML = "Page 1 of " + data.visiblePages;
+        return display;
+    },
+    __updateDisplay : function() {
+        let display = document.querySelector("#" + grid.html.id + "-pager-display");
+        let data = grid.paging.data;
+        display.innerHTML = "Page " + data.currentPage + " of " + data.visiblePages;
+    }*/
+
+  };
+  grid.paging = {
+    initialize: function initialize(options) {
+      if (!options) {
+        return;
+      }
+
+      grid.paging.extendSorting();
+      grid.paging.extendFiltering();
+
+      var pagerData = grid.paging._defaultOptions(options);
+
+      grid.paging.data = pagerData;
+      grid.footer.pager.initialize(options);
+      grid.paging.page(pagerData.currentPage);
+    } // Not sure how to make these modules agnostic of one another. 
+    // In the meantime, paging needs to know about sorting and filtering.
+    ,
+    extendSorting: function extendSorting() {
+      if (typeof grid.sorting !== 'undefined') {
+        var sort = grid.sorting.sort;
+
+        grid.sorting.sort = function () {
+          var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+          grid.paging.clear();
+          sort(options);
+          var currentPage = grid.paging.data.currentPage;
+          grid.paging.page(currentPage);
+        };
+      }
+    },
+    extendFiltering: function extendFiltering() {
+      if (typeof grid.filters !== 'undefined') {
+        var filter = grid.filters.filter;
+
+        grid.filters.filter = function () {
+          grid.paging.clear();
+          filter();
+          grid.paging.page(); //grid.footer.pager.__updateDisplay();
+        };
+      }
+    },
+    page: function page() {
+      var pageNumber = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      grid.paging.data.currentPage = pageNumber;
+      grid.paging.data.visiblePages = grid.paging._getVisiblePageCount();
+
+      grid.paging._setRowVisibility(pageNumber);
+    },
+    clear: function clear() {
+      var rows = Array.from(grid.html.tBodies[0].rows);
+      rows.forEach(r => {
+        if (r.paged) {
+          r.paged = undefined;
+          r.style.display = '';
+        }
+      });
+    } // More blending of this with filtering. 
+    ,
+    _getVisiblePageCount: function _getVisiblePageCount() {
+      var rows = Array.from(grid.html.tBodies[0].rows);
+      rows = rows.filter(r => !r.filtered);
+      return Math.ceil(rows.length / grid.paging.data.rows);
+    },
+    _setRowVisibility: function _setRowVisibility(pageNumber) {
+      var rows = Array.from(grid.html.tBodies[0].rows);
+      var options = grid.paging.data;
+      grid.paging.clear();
+      var start = (options.currentPage - 1) * options.rows;
+      var end = options.currentPage * options.rows; // Only page visible rows
+
+      rows = rows.filter(r => r.style.display !== 'none');
+      rows = rows.filter((r, ix) => ix >= end || ix < start);
+      rows.forEach(r => {
+        r.style.display = 'none';
+        r.paged = true;
+      });
+    },
+    _defaultOptions: function _defaultOptions(options) {
+      if (typeof options !== 'object') options = {};
+      options.rows = options.rows || 20;
+      options.totalRows = options.totalRows || grid.data.get().length;
+      options.totalPages = Math.ceil(options.totalRows / options.rows);
+      options.visiblePages = options.totalPages;
+      options.currentPage = options.currentPage || 1;
+      return options;
+    }
+  };
+};
+
+var sorting = function sorting() {
+  var grid = this;
+
+  grid.sort = function (col) {
+    grid.sorting.sort(col);
+  };
+
+  var onHeaderCellCreated = grid.onHeaderCellCreated;
+
+  grid.onHeaderCellCreated = function (th, column) {
+    if (column.sort && column.header) {
+      grid.sorting.initialize(th, column);
+    }
+
+    onHeaderCellCreated(th, column);
+  };
+
+  grid.sorting = {
+    initialize: function initialize(th, column) {
+      grid.sorting.__addSortIcon(th);
+
+      th.addEventListener('click', ev => {
+        var field = ev.target.id.split('-').slice(-1)[0];
+        grid.sort(field);
+      });
+    }
+    /*  .sort('field')
+        .sort({ field : '', compare : ()=>{}, direction : 'asc'|'desc'})
+    */
+    ,
+    sort: function sort(args) {
+      var field = typeof args === 'string' ? args : args.field;
+
+      if (!field) {
+        return;
+      }
+
+      var options = grid.sorting.__getSortOptions(field);
+
+      if (args.direction) {
+        options.direction = args.direction.substr(0, 3) === 'asc' ? -1 : 1;
+      } else {
+        options.direction = options.direction === 1 ? -1 : 1;
+      }
+
+      var compare = args.compare || options.compare;
+      var rows = Array.from(grid.html.tBodies[0].rows);
+      var colIdx = Array.from(rows[0].cells).findIndex(td => {
+        return td.id.split('-').slice(-1)[0] == field;
+      });
+      rows.sort((x, y) => {
+        var xv = x.cells[colIdx].value;
+        var yv = y.cells[colIdx].value;
+        var compared = compare(xv, yv);
+        return +compared * options.direction;
+      });
+
+      grid.sorting.__redrawGrid(rows);
+    },
+    __getSortOptions: function __getSortOptions(field) {
+      if (!grid.html.sortOptions) {
+        grid.sorting.__setSortOptions();
+      }
+
+      return grid.html.sortOptions[field];
+    },
+    __setSortOptions: function __setSortOptions() {
+      var sortOptions = {};
+      var columns = grid.html.options.columns;
+      columns.forEach(col => {
+        sortOptions[col.field] = grid.sorting.__options(col);
+      });
+      grid.html.sortOptions = sortOptions;
+    },
+    __options: function __options(column) {
+      var options = {
+        compare: (a, b) => a <= b ? 1 : -1,
+        direction: 1
+      };
+
+      if (typeof column.sort === 'function') {
+        options.compare = column.sort;
+      }
+
+      if (column.sort && column.sort.compare) {
+        options.compare = column.sort.compare;
+      }
+
+      return options;
+    },
+    __addSortIcon: function __addSortIcon(th) {
+      var icon = th.appendChild(document.createElement('span'));
+      icon.className = 'sort';
+      th.style.paddingRight = '30px';
+    },
+    __redrawGrid: function __redrawGrid(rows) {
+      grid.body.clear();
+      var tBody = grid.html.tBodies[0];
+      rows.forEach(r => tBody.appendChild(r));
+    }
+  };
+  Object.defineProperty(grid.sorting, 'defaultCompare', {
+    get: () => function (a, b) {
+      if (a == b) {
+        return 0;
+      }
+
+      return a < b ? 1 : -1;
+    }
   });
 };
 
-var html = "<div class=\"header u-unselectable header-animated\">\r\n    <div class=\"header-brand\">\r\n        <div class=\"nav-item no-hover\">\r\n            <a><h6 class=\"title\">D&D Utilities</h6></a>\r\n        </div>\r\n    </div>\r\n    <div class=\"header-nav\" id=\"header-menu\">\r\n        <div class=\"nav-left\">\r\n            <div class=\"nav-item text-center\">\r\n                <a target=\"_blank\" href=\"https://github.com/unstableconfiguration/dnd-utilities\">\r\n                    <span class=\"icon\">\r\n                        <i class=\"fab fa-wrapper fa-github\" aria-hidden=\"true\"></i>\r\n                    </span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n        <div class=\"nav-right\">\r\n            <div class=\"nav-item active\">\r\n                <a href=\"#lookups\">Lookups</a>\r\n            </div>\r\n            <div class=\"nav-item\">\r\n                <a href=\"#battle-manager\">Battle Manager</a>\r\n            </div>\r\n            <div class=\"nav-item\">\r\n                <a href=\"#encounter-builder\">Encounter Builder</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
+//Gridify.prototype.extensions.styling = function() {
+var styling = function styling() {
+  var grid = this;
+  var onTableCreated = grid.onTableCreated;
+
+  grid.onTableCreated = function (table, options) {
+    grid.styling.stylize(table, options);
+    onTableCreated(table, options);
+  };
+
+  var onCaptionCreated = grid.onCaptionCreated;
+
+  grid.onCaptionCreated = function (caption, options) {
+    grid.styling.stylize(caption, options);
+    onCaptionCreated(caption, options);
+  };
+
+  var onHeaderCellCreated = grid.onHeaderCellCreated;
+
+  grid.onHeaderCellCreated = function (th, options) {
+    // Allow columns to set width of header
+    var width = (options.style || '').split(';').find(s => s.includes('width'));
+    grid.styling.stylize(th, {
+      style: width
+    });
+    grid.styling.stylize(th, options.header);
+    onHeaderCellCreated(th, options);
+  };
+
+  var onTableCellCreated = grid.onTableCellCreated;
+
+  grid.onTableCellCreated = function (td, options) {
+    grid.styling.stylize(td, options);
+    onTableCellCreated(td, options);
+  };
+
+  var onFooterCellCreated = grid.onFooterCellCreated;
+
+  grid.onFooterCellCreated = function (td, options) {
+    grid.styling.stylize(td, options.footer);
+    onFooterCellCreated(td, options);
+  };
+
+  grid.styling = {
+    stylize: function stylize(el, options) {
+      if (!options) {
+        return;
+      }
+
+      if (options.className) {
+        el.className = options.className;
+      }
+
+      if (options.style) {
+        grid.styling.setStyle(el, options.style);
+      }
+    },
+    setStyle: function setStyle(el, style) {
+      (style || '').split(';').map(x => x.trim().split(':')).forEach(kv => {
+        if (!kv || kv.length !== 2) {
+          return;
+        }
+
+        var key = kv[0].trim(),
+            value = kv[1].trim();
+        el.style[key] = value;
+      });
+    }
+  };
+};
+
+var Gridify = function Gridify() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var grid = this;
+  grid.container = options.container;
+
+  if (typeof grid.container === 'string') {
+    grid.container = document.getElementById(grid.container);
+  }
+
+  grid.create = function (options) {
+    if (grid.container) {
+      _clear(grid.container);
+    }
+
+    grid.table.create(options);
+    grid.caption.create(options.caption);
+    grid.header.create(options.columns);
+    grid.body.create(options.data, options.columns);
+    grid.footer.create(options.columns); // Called here so that onTableCreated is passed the completed table.
+
+    grid.onTableCreated(_table, options);
+
+    if (grid.container) {
+      grid.container.appendChild(_table);
+    }
+  };
+
+  grid.onTableCreated = function (table, options) {
+    if (options.onTableCreated) {
+      options.onTableCreated(table, options);
+    }
+  };
+
+  grid.onCaptionCreated = function (caption, captionDefinition) {
+    if (options.onCaptionCreated) {
+      options.onCaptionCreated(caption, captionDefinition);
+    }
+  };
+
+  grid.onHeaderCreated = function (tHead, headers) {
+    if (options.onHeaderCreated) {
+      options.onHeaderCreated(tHead, headers);
+    }
+  };
+
+  grid.onHeaderCellCreated = function (th, column) {
+    if (options.onHeaderCellCreated) {
+      options.onHeaderCellCreated(th, column);
+    }
+  };
+
+  grid.onTableBodyCreated = function (tBody, columns) {
+    if (options.onTableBodyCreated) {
+      options.onTableBodyCreated(tBody, columns);
+    }
+  };
+
+  grid.onTableRowCreated = function (tr, columns) {
+    if (options.onTableRowCreated) {
+      options.onTableRowCreated(tr, columns);
+    }
+  };
+
+  grid.onTableCellCreated = function (td, column) {
+    if (options.onTableCellCreated) {
+      options.onTableCellCreated(td, column);
+    }
+  };
+
+  grid.onFooterCreated = function (tFoot, footers) {
+    if (options.onFooterCreated) {
+      options.onFooterCreated(tFoot, footers);
+    }
+  };
+
+  grid.onFooterCellCreated = function (td, footerDefinition) {
+    if (options.onFooterCellCreated) {
+      options.onFooterCellCreated(td, footerDefinition);
+    }
+  };
+
+  var _clear = function _clear(container) {
+    while (container && container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  };
+
+  var _setAttributes = function _setAttributes(el, attributes) {
+    for (var _k in attributes) {
+      el.setAttribute(_k, attributes[_k]);
+    }
+  };
+
+  var _table;
+
+  grid.table = {
+    create: function create(options) {
+      _table = grid.table.initialize(options);
+
+      _setAttributes(_table, options.attributes);
+    },
+    initialize: function initialize(options) {
+      _table = document.createElement('table');
+      _table.id = grid.table._getTableId(options);
+      _table.options = grid.table.__options(options);
+      return _table;
+    },
+    _getTableId: function _getTableId(options) {
+      if (_table.id) {
+        return _table.id;
+      }
+
+      if (options.id) {
+        return options.id;
+      }
+
+      if (grid.container) {
+        return grid.container.id + '-grid';
+      }
+
+      return 'new-grid';
+    },
+    __options: function __options(options) {
+      if (!options.columns) {
+        options.columns = [];
+
+        if (Array.isArray(options.data) && options.data.length > 0) {
+          for (var field in options.data[0]) {
+            options.columns.push({
+              field: field
+            });
+          }
+        }
+      }
+
+      return options;
+    }
+  };
+  Object.defineProperty(grid, 'html', {
+    get: () => _table
+  });
+  grid.caption = {
+    create: function create(captionDef) {
+      if (!captionDef) {
+        return;
+      }
+
+      var caption = grid.caption.initialize();
+
+      var options = grid.caption.__options(captionDef);
+
+      _setAttributes(caption, options.attributes);
+
+      caption.innerText = options.text;
+      grid.onCaptionCreated(caption, options);
+    },
+    initialize: function initialize() {
+      var caption = _table.createCaption();
+
+      caption.id = _table.id + '-caption';
+      return caption;
+    },
+    __options: function __options(caption) {
+      return typeof caption === 'string' ? {
+        text: caption
+      } : caption;
+    }
+  };
+  grid.header = {
+    create: function create(columns) {
+      if (!columns) {
+        return;
+      }
+
+      var tHead = grid.header.initialize();
+      grid.header.addHeaderCells(columns);
+      grid.onHeaderCreated(tHead, columns);
+    },
+    initialize: function initialize() {
+      if (_table.tHead) {
+        _table.removeChild(_table.tHead);
+      }
+
+      var tHead = _table.createTHead();
+
+      tHead.id = _table.id + '-thead';
+      return tHead;
+    },
+    addHeaderCells: function addHeaderCells(columns) {
+      var hr = _table.tHead.insertRow();
+
+      columns.forEach(col => {
+        grid.header.addHeaderCell(hr, col);
+      });
+    },
+    addHeaderCell: function addHeaderCell(headerRow, column) {
+      var th = document.createElement('th');
+      th.id = _table.tHead.id + '-' + column.field || headerRow.cells.length;
+      headerRow.appendChild(th);
+
+      var options = grid.header.__options(column);
+
+      if (options) {
+        th.innerText = options.text;
+
+        _setAttributes(th, options.attributes);
+      }
+
+      grid.onHeaderCellCreated(th, column);
+    },
+    __options: function __options(column) {
+      if (!column.header) {
+        return;
+      }
+
+      if (typeof column.header === 'string') {
+        return {
+          text: column.header
+        };
+      }
+
+      return column.header;
+    }
+  };
+  grid.body = {
+    initialize: function initialize() {
+      while (_table.tBodies.length) {
+        _table.removeChild(_table.tBodies[0]);
+      }
+
+      var tBody = _table.createTBody();
+
+      tBody.id = _table.id + '-tbody';
+      return tBody;
+    },
+    clear: function clear() {
+      _clear(_table.tBodies[0]);
+    },
+    create: function create(data, columns) {
+      var tBody = grid.body.initialize();
+
+      if (data) {
+        data.forEach(row => {
+          grid.body.addTableRow(tBody, row);
+        });
+      }
+
+      grid.onTableBodyCreated(tBody, columns);
+    },
+    addTableRow: function addTableRow(tBody, dataRow) {
+      var tr = tBody.insertRow();
+      tr.id = tBody.id + '-' + tBody.rows.length;
+
+      _table.options.columns.forEach(col => {
+        grid.body.addTableCell(tr, col, dataRow[col.field]);
+      });
+
+      grid.onTableRowCreated(tr);
+    },
+    addTableCell: function addTableCell(tr, column, value) {
+      var td = tr.insertCell();
+      td.id = tr.id + '-' + column.field;
+      td.field = column.field;
+      td.value = value;
+      td.innerText = value;
+
+      _setAttributes(td, column.attributes);
+
+      if (column.click) {
+        td.onclick = column.click;
+      }
+
+      grid.onTableCellCreated(td, column);
+    }
+  };
+  grid.data = {
+    get: function get() {
+      return Array.from(_table.tBodies[0].rows).map(r => grid.data.getRowData(r));
+    },
+    set: function set(data) {
+      grid.body.create(data);
+    },
+    getRowData: function getRowData(tr) {
+      var rowData = {};
+      Array.from(tr.cells).forEach(td => {
+        rowData[td.field] = td.value;
+      });
+      return rowData;
+    }
+  };
+  grid.footer = {
+    create: function create(columns) {
+      if (!columns) {
+        return;
+      }
+
+      var tFoot = grid.footer.initialize(columns);
+      grid.footer.addFooterCells(tFoot, columns);
+      grid.onFooterCreated(tFoot, columns);
+    },
+    initialize: function initialize() {
+      if (_table.tFoot) {
+        _table.removeChild(_table.tFoot);
+      }
+
+      var tFoot = _table.createTFoot();
+
+      tFoot.id = _table.id + '-tfoot';
+      return tFoot;
+    },
+    addFooterCells: function addFooterCells(tFoot, columns) {
+      var tr = tFoot.insertRow();
+      columns.forEach(column => {
+        grid.footer.addFooterCell(tr, column);
+      });
+    },
+    addFooterCell: function addFooterCell(tr, column) {
+      var td = tr.insertCell();
+      td.id = _table.tFoot.id + '-' + column.field || tr.cells.length;
+
+      var footer = grid.footer.__options(column);
+
+      if (footer) {
+        td.innerText = footer.text;
+
+        _setAttributes(td, footer.attributes);
+      }
+
+      grid.onFooterCellCreated(td, column);
+    },
+    __options: function __options(column) {
+      if (!column.footer) {
+        return;
+      }
+
+      if (typeof column.footer === 'string') {
+        return {
+          text: column.footer
+        };
+      }
+
+      return column.footer;
+    }
+  };
+
+  for (var k in grid.extensions) {
+    grid.extensions[k].apply(grid, arguments);
+  }
+
+  grid.create(options);
+  return grid;
+};
+Gridify.prototype.extensions = {
+  filters: filters,
+  sorting: sorting,
+  paging: paging,
+  styling: styling
+};
+
+var log = lite.extend({
+  content: "<div id='log-container' style='max-height:20rem; overflow-y:scroll'></div>",
+  initialize: function initialize() {
+    this.updateLog();
+  },
+  updateLog: function updateLog() {
+    var vm = this;
+    vm.data[0].rolls = vm.getRolls(vm.data[0]);
+    vm.grid = new Gridify({
+      container: vm.container.querySelector('#log-container'),
+      data: vm.data,
+      columns: [{
+        field: 'equation',
+        style: 'text-align:right; border-right: 1px solid rgba(222,226,230,.5);',
+        click: vm.onRollClicked
+      }, {
+        field: 'solution',
+        style: 'text-align:left; white-space:nowrap;'
+      }, {
+        field: 'rolls',
+        style: 'white-space:nowrap'
+      }, {
+        field: 'remove'
+      }],
+      className: 'table small',
+      onTableCellCreated: function onTableCellCreated(td, colDef) {
+        if (colDef.field == 'remove') {
+          td.innerText = '';
+          td.appendChild(vm.tdRemoveButton(td));
+        }
+      }
+    });
+  },
+  getRolls: function getRolls(log) {
+    // Advantage has 2 dice ops, one of which is a dud so we skip it
+    var diceOp = log.operations.filter(op => op.name == 'dice').slice(-1)[0];
+
+    if (!diceOp) {
+      return '';
+    }
+
+    var rolls = diceOp.resolve.map(res => {
+      res.rolls.sort((a, b) => a <= b);
+      return res.operands.join('d') + '(' + res.rolls.join(', ') + ')';
+    }).join(', ');
+    return rolls;
+  },
+  onRollClicked: function onRollClicked(e) {
+    document.getElementById('dice-input').value = e.target.innerHTML;
+    document.getElementById('dice-input').focus();
+  },
+  tdRemoveButton: function tdRemoveButton(td) {
+    var vm = this;
+    var button = document.createElement('button');
+    button.innerHTML = '-';
+    button.className = 'btn-xsmall btn-dark';
+    button.style.width = '60%';
+    button.addEventListener('click', function () {
+      td.parentElement.parentElement.removeChild(td.parentElement);
+      vm.parent.log = vm.grid.data.get();
+    });
+    return button;
+  }
+});
+
+var vm = lite.extend({
+  content: html,
+  initialize: function initialize() {
+    this.dice = new Dice({
+      modules: [MathModule, DnDModule, LoggingModule]
+    });
+    this.log = [];
+    this.setElements();
+    this.addEventListeners();
+  },
+  setElements: function setElements() {
+    var vm = this;
+    vm.elements = {
+      input: vm.container.querySelector('#dice-input'),
+      output: vm.container.querySelector('#dice-output'),
+      outputLog: vm.container.querySelector('#dice-output-log')
+    };
+  },
+  addEventListeners: function addEventListeners() {
+    var vm = this;
+    vm.elements.input.addEventListener('keydown', e => {
+      if (e.keyCode == 13) {
+        vm.roll(e.target.value);
+        new log({
+          container: vm.elements.outputLog,
+          parent: vm,
+          data: vm.log
+        });
+      }
+    });
+  },
+  roll: function roll(equation) {
+    var vm = this;
+    var roll = vm.dice.solve(equation);
+    var logItem = vm.getLogItem(equation, roll);
+    vm.log.unshift(logItem);
+    vm.elements.output.innerHTML = roll || '=';
+  },
+  // Bypass an issue with logging advantage
+  getLogItem: function getLogItem(equation, solution) {
+    var logItem = this.dice.log.slice(-1)[0]; // Fixes issue with how advantage logs
+
+    logItem.equation = equation;
+    return logItem;
+  }
+});
+var dice = vm;
 
 var header = lite.extend({
   container: document.getElementById('header-container'),
-  content: html,
+  content: html$1,
   initialize: function initialize() {
     // Need onContentbound event back
     this.addEventListeners();
+    new dice({
+      container: 'dice-header-container'
+    });
   },
   addEventListeners: function addEventListeners() {
-    var navItems = document.querySelectorAll('.nav-item');
+    var navItems = document.querySelectorAll('.nav-right > .nav-item');
     navItems.forEach(nav => {
       nav.addEventListener('click', function () {
         navItems.forEach(n => n.classList.remove('active'));
@@ -381,4 +1738,4 @@ var header = lite.extend({
 new header();
 window.onhashchange();
 
-export { lite as l };
+export { Gridify as G, lite as l };

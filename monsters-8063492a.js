@@ -1,8 +1,7 @@
-import { G as Gridify } from './gridify-e8a24bcd.js';
-import { l as lite } from './index.js';
-import { m as monsters, M as MonsterBox } from './monsterbox-69f998db.js';
-import { p as pagination } from './pagination-cdf5870f.js';
-import { m as modal } from './modal-fb7914d8.js';
+import { l as lite, G as Gridify } from './index.js';
+import { m as monsters, M as MonsterBox } from './monsterbox-5ca776b5.js';
+import { p as pagination } from './pagination-d12b2d62.js';
+import { m as modal } from './modal-e19b5778.js';
 
 var table = lite.extend({
   content: '<div id="monsters-grid">Test 2</div>',
