@@ -8,13 +8,15 @@ export let log = lite.extend({
     },
     updateLog : function() { 
         let vm = this;
-
+        vm.data[0].rolls = vm.getRolls(vm.data[0]);
+        
         vm.grid = new Gridify({
             container : vm.container.querySelector('#log-container'),
             data : vm.data,
             columns : [ 
                 { field : 'equation', style : 'text-align:right; border-right: 1px solid rgba(222,226,230,.5);', click : vm.onRollClicked },
-                { field : 'solution', style : 'text-align:left' },
+                { field : 'solution', style : 'text-align:left; white-space:nowrap;' },
+                { field : 'rolls', style : 'white-space:nowrap' },
                 { field : 'remove' }
             ],
             className : 'table small',
@@ -25,6 +27,17 @@ export let log = lite.extend({
                 }
             }
         });
+    },
+    getRolls : function(log) { 
+        // Advantage has 2 dice ops, one of which is a dud so we skip it
+        let diceOp = log.operations.filter(op => op.name == 'dice').slice(-1)[0];
+        if(!diceOp) { return ''; }
+        let rolls = diceOp.resolve.map(res => {
+            res.rolls.sort((a, b) => a<=b);
+            return res.operands.join('d') + '(' + res.rolls.join(', ') + ')';
+        }).join(', ')
+
+        return rolls
     },
     onRollClicked : function(e) {
         document.getElementById('dice-input').value = e.target.innerHTML;

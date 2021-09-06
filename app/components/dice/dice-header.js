@@ -41,9 +41,9 @@ export let vm = lite.extend({
     },
     // Bypass an issue with logging advantage
     getLogItem : function(equation, solution) { 
-        let logItem = this.dice.log.reverse()
-            .find(e => e.equation == equation);
-        if(!logItem.solution) { logItem.solution = solution; }
+        let logItem = this.dice.log.slice(-1)[0];
+        // Fixes issue with how advantage logs
+        logItem.equation = equation; 
         return logItem
     }
 });
