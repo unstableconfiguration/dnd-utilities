@@ -8,13 +8,12 @@ export let log = lite.extend({
     },
     updateLog : function() { 
         let vm = this;
-        vm.data[0].equation = vm.data[0].equation + ': ';
-        
+
         vm.grid = new Gridify({
             container : vm.container.querySelector('#log-container'),
             data : vm.data,
             columns : [ 
-                { field : 'equation', style : 'text-align:right', click : vm.onRollClicked },
+                { field : 'equation', style : 'text-align:right; border-right: 1px solid rgba(222,226,230,.5);', click : vm.onRollClicked },
                 { field : 'solution', style : 'text-align:left' },
                 { field : 'remove' }
             ],
@@ -28,8 +27,7 @@ export let log = lite.extend({
         });
     },
     onRollClicked : function(e) {
-        // set text, skip ': '
-        document.getElementById('dice-input').value = e.target.innerHTML.slice(0, -2);
+        document.getElementById('dice-input').value = e.target.innerHTML;
         document.getElementById('dice-input').focus();
     },
     tdRemoveButton : function(td) { 
