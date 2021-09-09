@@ -1,5 +1,9 @@
-import { phbSpells } from './imports/spells.js';
-import { tcoeSpells } from './imports/tcoe-spells.js'
+import { condensedPhb } from "./imports/spells/spells-condensed-phb";
+import { condensedTce } from './imports/spells/spells-condensed-tce';
+import { condensedXge } from './imports/spells/spells-condensed-xge';
+
+//import * as x from './imports/spells-sanitizer'
+
 
 export const spells = {}
 
@@ -16,41 +20,31 @@ let Spell = function(data) {
     return this;
 }
 
-/* phb import contains spells from elemental evil as well */
-let convertPhb = function() { 
-    phbSpells.forEach(s => {
-        let spell = new Spell({
-            CastingTime : s.Cast_Time,
-            Components : s.Components,
-            Description : s.Description_Higher_Levels,
-            Duration : s.Duration,
-            Level : s.Level,
-            Name : s.Name,
-            Range : s.Range, 
-            Ritual : s.Ritual,
-            School : s.School
-        });
-        spells[spell.Name] = spell;
+
+
+let convertSpell = function(spell) {
+    //console.log(spell)
+    return new Spell({
+        CastingTime : spell.castTime,
+        Components : spell.components,
+        Description : spell.description,
+        Duration : spell.duration,
+        Level : spell.level,
+        Name : spell.name,
+        Range : spell.range,
+        Ritual : spell.meta && spell.meta.ritual,
+        School : spell.school
     });
 }
 
-let convertTashas = function() { 
-    for(let k in tcoeSpells) {
-        let spell = tcoeSpells[k];
-        spell = new Spell({
-            CastingTime : spell.CastingTime,
-            Components : spell.Components,
-            Description : spell.Description,
-            Duration : spell.Duration,
-            Level : spell.Level,
-            Name : spell.Name,
-            Range : spell.Range, 
-            Ritual : spell.Ritual,
-            School : spell.School
-        });
-        
-        spells[spell.Name] = spell; 
-    }
-}
-convertPhb();
-convertTashas();
+condensedPhb.forEach(s => { 
+    spells[s.name] = convertSpell(s);
+});
+
+condensedTce.forEach(s => {
+    spells[s.name] = convertSpell(s);
+})
+
+condensedXge.forEach(s => {
+    spells[s.name] = convertSpell(s);
+});

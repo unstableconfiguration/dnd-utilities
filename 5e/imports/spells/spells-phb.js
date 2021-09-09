@@ -40046,4 +40046,3 @@ export let spellsPhb = [
 			]
 		}
 	]
-}
