@@ -30,7 +30,7 @@ export let curseOfStrahd = [
 			},
 			"hasToken": true
 		},
-		{
+        {
 			"name": "Animated Halberd",
 			"source": "CoS",
 			"page": 59,
@@ -4740,4 +4740,4 @@ export let curseOfStrahd = [
 			]
 		}
 	]
-}
+

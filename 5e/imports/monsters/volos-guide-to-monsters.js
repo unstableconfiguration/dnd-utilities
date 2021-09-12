@@ -19265,4 +19265,4 @@ export let volos =  [
 			"hasFluffImages": true
 		}
 	]
-}
+

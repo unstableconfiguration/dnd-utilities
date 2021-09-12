@@ -22022,4 +22022,4 @@ export let mordenkainens = [
 			"hasFluffImages": true
 		}
 	]
-}
+

@@ -63122,4 +63122,4 @@ export let monsterManual = [
 			"hasFluffImages": true
 		}
 	]
-}
+
