@@ -1,4 +1,8 @@
-import { phbMonsters } from "./imports/monsters.js"
+import { monsterManual } from './imports/monsters/condensed-mm-monsters'
+import { volos } from './imports/monsters/condensed-vgm-monsters'
+import { mordenkainens } from './imports/monsters/condensed-mtf-monsters'
+import { strahd } from './imports/monsters/condensed-cos-monsters'
+//import * as wat  from './imports/monster-sanitizer.js';
 
 export const monsters = {}
 
@@ -36,24 +40,19 @@ let Monster = function(data){
     this.Traits = data.Traits || [];
     this.Items = data.Items || [];
 }
-    
-let preparePhbMonsters = function() { 
-    for(let m in phbMonsters) {
-        let phbMonster = phbMonsters[m];
-        if(!Array.isArray(phbMonster.trait)) { phbMonster.trait = phbMonster.trait ? [phbMonster.trait] : []; }
-        if(!Array.isArray(phbMonster.action)) { phbMonster.action = phbMonster.action ? [phbMonster.action] : []; }
-        if(!Array.isArray(phbMonster.legendary)) { phbMonster.legendary = phbMonster.legendary ? [phbMonster.legendary] : []; }
-        if(!Array.isArray(phbMonster.reaction)) { phbMonster.reaction = phbMonster.reaction ?[phbMonster.reaction] : []; }
 
-        monsters[m] = new Monster({
-            Name : phbMonster.name,
-            Alignment : phbMonster.alignment,
-            ChallengeRating : phbMonster.cr,
-            ConditionImmune : phbMonster.conditionImmune,
-            Immune : phbMonster.immune,
-            Languages : phbMonster.languages,
-            Resist : phbMonster.resist,
-            Senses : phbMonster.senses,
+let loadMonsters = function(monsterSet) { 
+    for(let m in monsterSet) { 
+        let monster = monsterSet[m];
+        monster = new Monster({
+            Name : monster.name,
+            Alignment : monster.alignment,
+            ChallengeRating : monster.cr,
+            ConditionImmune : monster.conditionImmune,
+            Immune : monster.immune,
+            Languages : monster.languages,
+            Resist : monster.resist ? monster.resist.join(', ') : undefined,
+            Senses : monster.senses,
             Size : {
                 'T' : 'Tiny',
                 'S' : 'Small',
@@ -61,26 +60,32 @@ let preparePhbMonsters = function() {
                 'L' : 'Large',
                 'H' : 'Huge',
                 'G' : 'Gargantuan'
-            }[phbMonster.size],
-            Saves : phbMonster.save,
-            Skills : phbMonster.skill,
-            Speed : phbMonster.speed,
-            Type : phbMonster.type.split(',')[0],
-            Vulnerable : phbMonster.vulnerable, 
-            AC : phbMonster.ac,
-            HP : phbMonster.hp,
-            Str : phbMonster.str,
-            Dex : phbMonster.dex,
-            Con : phbMonster.con,
-            Int : phbMonster.int,
-            Wis : phbMonster.wis,
-            Cha : phbMonster.cha,
-            Traits : phbMonster.trait.map(t => { return { Name : t.name, Text : t.text }}),
-            Actions : phbMonster.action.map(a => { return { Name : a.name, Text : a.text }}),
-            Reactions : phbMonster.reaction.map(r => { return { Name : r.name, Text : r.text }}),
-            LegendaryActions : phbMonster.legendary.map(l => { return { Name : l.name, Text : l.text }})
+            }[monster.size],
+            Saves : monster.save,
+            Skills : monster.skill,
+            Speed : monster.speed,
+            Type : monster.type,
+            Vulnerable : monster.vulnerable ? monster.vulnerable.join(', ') : '', 
+            AC : monster.ac,
+            HP : monster.hp,
+            Str : monster.str,
+            Dex : monster.dex,
+            Con : monster.con,
+            Int : monster.int,
+            Wis : monster.wis,
+            Cha : monster.cha,
+            Traits : monster.trait, //.map(t => { return { Name : t.name, Text : t.text }}),
+            Actions : monster.action, //.map(a => { return { Name : a.name, Text : a.text }}),
+            Reactions : monster.reaction, //.map(r => { return { Name : r.name, Text : r.text }}),
+            LegendaryActions : monster.legendary, //.map(l => { return { Name : l.name, Text : l.text }})
         });
-    }
+    
+        monsters[monster.Name] = monster;
+        
+    }    
 }
 
-preparePhbMonsters();
+loadMonsters(monsterManual);
+loadMonsters(volos);
+loadMonsters(mordenkainens);
+loadMonsters(strahd);
