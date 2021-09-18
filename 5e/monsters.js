@@ -41,6 +41,21 @@ let Monster = function(data){
     this.Items = data.Items || [];
 }
 
+// add to sanitizer and re-import later
+let getResist = function(resist, name) { 
+    if(!resist) return undefined;
+    if(!Array.isArray(resist)) { console.log('problem', resist); }
+    resist = resist.map(r => { 
+        if(r.special) { r = r.special; }
+        if(typeof(r) === 'object') {
+            //console.log(r, name);
+            r = r.resist.join(', ') + r.note;
+        }
+        return r;
+    });
+    return resist.join('; ');
+}
+
 let loadMonsters = function(monsterSet) { 
     for(let m in monsterSet) { 
         let monster = monsterSet[m];
@@ -51,7 +66,7 @@ let loadMonsters = function(monsterSet) {
             ConditionImmune : monster.conditionImmune,
             Immune : monster.immune,
             Languages : monster.languages,
-            Resist : monster.resist ? monster.resist.join(', ') : undefined,
+            Resist : getResist(monster.resist, monster.name),
             Senses : monster.senses,
             Size : {
                 'T' : 'Tiny',
