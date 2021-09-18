@@ -324,22 +324,22 @@ var load = file => new file.vm({
 router.addRoutes([{
   route: '',
   value: () => {
-    import('./lookups-351b515d.js').then(load);
+    import('./lookups-371ad805.js').then(load);
   }
 }, {
   route: 'lookups',
   value: () => {
-    import('./lookups-351b515d.js').then(load);
+    import('./lookups-371ad805.js').then(load);
   }
 }, {
   route: 'battle-manager',
   value: () => {
-    import('./battle-manager-c32e5eaa.js').then(load);
+    import('./battle-manager-caadaf17.js').then(load);
   }
 }, {
   route: 'encounter-builder',
   value: () => {
-    import('./encounter-builder-c4998609.js').then(load);
+    import('./encounter-builder-0c9316ae.js').then(load);
   }
 }]);
 

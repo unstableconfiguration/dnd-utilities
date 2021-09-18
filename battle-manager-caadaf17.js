@@ -1,6 +1,6 @@
 import { l as lite, G as Gridify } from './index.js';
-import { m as monsters, M as MonsterBox } from './monsterbox-5ca776b5.js';
-import { m as modal } from './modal-e19b5778.js';
+import { m as monsters, M as MonsterBox } from './monsterbox-39ae281b.js';
+import { m as modal } from './modal-6001e400.js';
 
 var html$1 = "<div id=\"battle-manager\">\r\n    <div id=\"left\">\r\n        <div>\r\n            <button id=\"btnShowAddParticipantModal\" class=\"btn-primary\">+Add Participant</button>\r\n        </div>\r\n        <div>\r\n            <div id=\"battle-table-container\"></div>\r\n        </div>\r\n    </div>\r\n    <div id=\"right\">\r\n        <div id=\"dice-container\"></div>\r\n    </div>\r\n</div>";
 
