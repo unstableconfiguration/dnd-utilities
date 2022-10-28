@@ -1,18 +1,22 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import { Gridify } from 'gridify';
 import { monsters } from '../../../../5e/monsters.js';
-import { modal } from '../../../components/modal/modal.js';
+import { Modal } from '../../../components/modal/modal.js';
 import { MonsterBox } from '../../../components/monsterbox/monsterbox.js';
 
-export let view = lite.extend({
-    content : ' '
-    , initialize : function() {
+export class ParticipantGrid {
+    constructor(args) {
+        this.parent = args.parent;
+        this.container = args.container;
+        this.data = args.data;
+
         this.drawGrid();
     }
-    , drawGrid : function() {
+
+    drawGrid() {
         let vm = this;
         vm.grid = new Gridify({
-            container : 'battle-table-container',
+            container : vm.container,
             id : 'battle-table',
             data : vm.data,
             columns : [
@@ -52,20 +56,24 @@ export let view = lite.extend({
         });
         vm.grid.sort('init');
     }
-    , numberSort : function(a, b) {
+    
+    numberSort(a, b) {
         if(a === b) { return 0; }
         return +a > +b ? 1 : -1;
     }
-    , onNameClick : function(e) { 
+    
+    onNameClick(e) { 
         let monster = monsters[e.target.value];
         if(!monster) { return; }
-        new modal({
-            body : new MonsterBox({
-                data : monster
-            })
+
+        let modal = new Modal();
+        new MonsterBox({ 
+            container : modal.body,
+            data : monster  
         });
     }
-    , tdInit : function(td) { 
+    
+    tdInit(td) { 
         let vm = this;
         let input = document.createElement('input');
         input.value = td.value;
@@ -80,7 +88,8 @@ export let view = lite.extend({
         });
         return input;
     }
-    , tdId : function(td) {
+    
+    tdId(td) {
         let input = document.createElement('input');
         input.value = td.value;
         input.style = td.style.cssText;
@@ -92,7 +101,8 @@ export let view = lite.extend({
 
         return input;
     }
-    , tdHP : function(td) { 
+
+    tdHP(td) { 
         let input = document.createElement('input');
         input.value = td.value;
         input.style = td.style.cssText;
@@ -103,8 +113,9 @@ export let view = lite.extend({
         });
 
         return input;
-     }
-    , tdRemoveButton : function(td) { 
+    }
+    
+    tdRemoveButton(td) { 
         let vm = this;
 
         let button = document.createElement('button');
@@ -119,8 +130,9 @@ export let view = lite.extend({
 
         return button
     }
-});
-export let ParticipantsGrid = view;
+}
+
+export let View = ParticipantGrid;
 
 
 

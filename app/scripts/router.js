@@ -8,7 +8,7 @@ Lite.router.initialize();
 Lite.router.addRoutes([
     { route : '', value : () => { import('../pages/lookups/lookups.js').then(load); } },
     { route : 'lookups', value : () => { import('../pages/lookups/lookups.js').then(load); } },
-    //{ route : 'battle-manager', value : () => { import('../pages/battle-manager/battle-manager.js').then(load); } },
+    { route : 'battle-manager', value : () => { import('../pages/battle-manager/battle-manager.js').then(load); } },
     //{ route : 'encounter-builder', value : () => { import('../pages/encounter-builder/encounter-builder.js').then(load); } },
 ]);
 

@@ -1,45 +1,48 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import html from './battle-manager.html';
 // import dice?
 import { AddParticipant } from './add-participant/add-participant.js';
-import { ParticipantsGrid } from './participants-grid/participants-grid.js';
-import { modal } from '../../components/modal/modal.js';
+import { ParticipantGrid } from './participants-grid/participants-grid.js';
+import { Modal } from '../../components/modal/modal.js';
 
-export let vm = lite.extend({
-    content : html,
-    initialize : function() {
+export class BattleManager {
+    constructor(args) {
+        this.container = Lite.append(args.container, html);
         this.data = [];
         this.addEventListeners();
-    },
-    addEventListeners : function() { 
+    }
+
+    addEventListeners() { 
         let vm = this;
         document.getElementById('btnShowAddParticipantModal')
             .addEventListener('click', vm.btnShowAddParticipantModalClicked.bind(vm));
-    },
-    btnShowAddParticipantModalClicked : function() { 
+    }
+    
+    btnShowAddParticipantModalClicked() { 
         let vm = this;
-        new modal({
-            body : new AddParticipant({
-                parent : vm,
-                onParticipantAdded : vm.onParticipantAdded.bind(vm)
-            })
+        let modal = new Modal();
+        new AddParticipant({
+            container : modal.body,
+            onParticipantAdded : vm.onParticipantAdded.bind(vm)
         });
-    },
-    onParticipantAdded : function(participantData) {
+    }
+
+    onParticipantAdded(participantData) {
         let vm = this;
         vm.data.push(participantData);
         vm.drawGrid();
         document.getElementById('btnShowAddParticipantModal').focus();
-    },
-    drawGrid : function() { 
+    }
+
+    drawGrid() { 
         let vm = this;
         if(!vm.data.length) { return; }
-        new ParticipantsGrid({
+        new ParticipantGrid({
             parent : vm, 
             container : 'battle-table-container',
             data : vm.data
         });
     }
-});
+}
 
-
+export const View = BattleManager;

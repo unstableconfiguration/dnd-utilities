@@ -1,22 +1,23 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import { monsters } from '../../../../5e/monsters.js';
-import { modal } from '../../../components/modal/modal.js';
+import { Modal } from '../../../components/modal/modal.js';
 import html from './add-participant.html';
 import { autoComplete } from '../../../scripts/vendor/autocomplete.js'
 
-export let view = lite.extend({
-    name : 'add-participant',
-    content : html,
-    onContentBound : function() {
-        let view = this;
-        view.setElements();
+export class AddParticipant {
+    constructor(args) {
+        this.container = Lite.append(args.container, html);
+        this.onParticipantAdded = args.onParticipantAdded;
 
-        view.elements.init.value = view.rollD20();
+        this.setElements();
 
-        view.setAutoComplete();
-        view.elements.init.focus();
+        this.elements.init.value = this.rollD20();
+
+        this.setAutoComplete();
+        this.elements.init.focus();
     }
-    , setElements : function() {
+
+    setElements() {
         let vm = this;
         vm.elements = {
             init : '#txtInit',
@@ -34,8 +35,9 @@ export let view = lite.extend({
         vm.elements.name.addEventListener('keypress', vm.onNameKeyPress.bind(this));
         vm.elements.hp.addEventListener('keypress', vm.onHpKeyPress.bind(this));
         vm.elements.count.addEventListener('keypress', vm.onCountKeyPress.bind(this));
-    },
-    setAutoComplete : function() { 
+    }
+
+    setAutoComplete() { 
         let monsterNames = Object.keys(monsters);
         new autoComplete({
             selector: '#add-participant-modal #txtName',
@@ -47,13 +49,14 @@ export let view = lite.extend({
                 });
                 suggest(matches);                
             },
-            onSelect : function(e) { 
+            onSelect(e) { 
                 // Force .onNameChanged to be called
                 e.target.dispatchEvent(new Event('change'));
             }
         });
     }
-    , getParticipant : function() { 
+    
+    getParticipant() { 
         let vm = this;
         return { 
             init : vm.elements.init.value,
@@ -62,17 +65,20 @@ export let view = lite.extend({
             hp : vm.elements.hp.value
         }
     }
-    , onHpKeyPress : function(e) { 
+    
+    onHpKeyPress(e) { 
         if(e.keyCode === 13) { this.addParticipant(); }
     }
-    , onNameChanged : function(e) {
+    
+    onNameChanged(e) {
         let vm = this;
         vm.elements.add.disabled = !vm.isValid();
 
         let monster = monsters[e.target.value];
         if(monster) { vm.setMonster(monster); }
     }
-    , onNameKeyPress : function(e) {
+    
+    onNameKeyPress(e) {
         // Press enter twice on name to submit
         if(e.keyCode === 13) { 
             if(e.target.enterPressed) { this.addParticipant(); }
@@ -81,23 +87,28 @@ export let view = lite.extend({
         else 
             e.target.enterPressed = false;
     }
-    , onCountKeyPress : function(e) {
+    
+    onCountKeyPress(e) {
         if(e.keyCode === 13) { this.addParticipant(); }
     }
-    , setMonster : function(monster) { 
+    
+    setMonster(monster) { 
         let vm = this;
         vm.elements.init.value = 
             vm.rollD20() + Math.floor((monster.Stats.Dex - 10) / 2);
 
         vm.elements.hp.value = +/\d+/.exec(monster.Defenses.HP)[0];
     }
-    , onAddParticipantClicked : function() { 
+    
+    onAddParticipantClicked() { 
         this.addParticipant();
     }
-    , isValid : function() { 
+    
+    isValid() { 
         return !!this.elements.name.value;
     }
-    , addParticipant : function() {
+    
+    addParticipant() {
         let vm = this;
         if(!vm.isValid()) { return ; }
 
@@ -108,11 +119,14 @@ export let view = lite.extend({
             }
             vm.onParticipantAdded(participant);  
         }
-        new modal().hide()
+        new Modal().hide()
     }
-    , onParticipantAdded : function() { }
-    , rollD20 : function() { 
+
+    onParticipantAdded() { }
+    
+    rollD20() { 
         return Math.floor(Math.random() * 20) + 1;
     }
-});
-export let AddParticipant = view;
+}
+
+export let View = AddParticipant;
