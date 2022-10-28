@@ -22,7 +22,7 @@ export class Lookups {
 
     #loadTab = {
         'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellsLookup({ container : container })) },
-        //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.table({ container : container })) },
+        'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
         //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.table({ container : container })) }
     }
 }

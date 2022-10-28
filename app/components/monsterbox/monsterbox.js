@@ -1,22 +1,22 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 //import { monsters } from '../../../';
 import html from './monsterbox.html';
 
-export let vm = lite.extend({
-    content : html, 
-    initialize : function() {  
-    },
-    onContentBound : function() { 
-        let data = this.data;
+export class MonsterBox {
+    constructor(args) {
+        this.container = Lite.append(args.container, html);
+        let data = this.data = args.data;
+
         this.toggleVisibility();
         this.bindNameTextCollection('#monster-traits', data.Traits);
         this.bindNameTextCollection('#monster-actions', data.Actions);
         this.bindNameTextCollection('#monster-reactions', data.Reactions);
         this.bindNameTextCollection('#monster-legendary-actions', data.LegendaryActions);
         this.bindNameTextCollection('#monster-items', data.Items);
-    },
+    }
+
     /* Hides elements with no content */
-    toggleVisibility : function() { 
+    toggleVisibility() { 
         let vm = this;
         let data = vm.data;
         let hide = (id) => vm.container.querySelector('#' + id).parentElement.style.display = 'none';
@@ -31,8 +31,9 @@ export let vm = lite.extend({
         if(!data.Reactions.length) vm.container.querySelector('#monster-reactions').style.display = 'none';
         if(!data.LegendaryActions.length) vm.container.querySelector('#monster-legendary-actions').style.display = 'none' ;
         if(!data.Items.length) vm.container.querySelector('#monster-items').style.display = 'none';
-    },
-    addNameTextItem : function(name, text) { 
+    }
+
+    addNameTextItem(name, text) { 
         let div = document.createElement('div');
         let label = div.appendChild(document.createElement('em'));
         let description = div.appendChild(document.createElement('span'));
@@ -40,8 +41,9 @@ export let vm = lite.extend({
         label.innerHTML = name + '. ';
         description.innerHTML = text;
         return div;
-    },
-    bindNameTextCollection : function(containerId, data) { 
+    }
+
+    bindNameTextCollection(containerId, data) { 
         let vm = this;
         if(!data) { return; }
 
@@ -50,5 +52,6 @@ export let vm = lite.extend({
             div.appendChild(vm.addNameTextItem(item.Name, item.Text));
         })
     }
-});
-export let MonsterBox = vm;
+}
+
+export let View = MonsterBox;
