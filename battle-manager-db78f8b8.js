@@ -1,6 +1,6 @@
-import { l as lite, G as Gridify } from './index.js';
-import { m as monsters, M as MonsterBox } from './monsterbox-39ae281b.js';
-import { m as modal } from './modal-6001e400.js';
+import { L as Lite, G as Gridify } from './index.js';
+import { m as monsters, M as MonsterBox } from './monsterbox-8f4e7c81.js';
+import { M as Modal } from './modal-cb19b092.js';
 
 var html$1 = "<div id=\"battle-manager\">\r\n    <div id=\"left\">\r\n        <div>\r\n            <button id=\"btnShowAddParticipantModal\" class=\"btn-primary\">+Add Participant</button>\r\n        </div>\r\n        <div>\r\n            <div id=\"battle-table-container\"></div>\r\n        </div>\r\n    </div>\r\n    <div id=\"right\">\r\n        <div id=\"dice-container\"></div>\r\n    </div>\r\n</div>";
 
@@ -280,17 +280,17 @@ var autoComplete = function () {
   });else if (typeof module !== 'undefined' && module.exports) module.exports = autoComplete;else window.autoComplete = autoComplete;
 })();
 
-var view$1 = lite.extend({
-  name: 'add-participant',
-  content: html,
-  onContentBound: function onContentBound() {
-    var view = this;
-    view.setElements();
-    view.elements.init.value = view.rollD20();
-    view.setAutoComplete();
-    view.elements.init.focus();
-  },
-  setElements: function setElements() {
+class AddParticipant {
+  constructor(args) {
+    this.container = Lite.append(args.container, html);
+    this.onParticipantAdded = args.onParticipantAdded;
+    this.setElements();
+    this.elements.init.value = this.rollD20();
+    this.setAutoComplete();
+    this.elements.init.focus();
+  }
+
+  setElements() {
     var vm = this;
     vm.elements = {
       init: '#txtInit',
@@ -309,8 +309,9 @@ var view$1 = lite.extend({
     vm.elements.name.addEventListener('keypress', vm.onNameKeyPress.bind(this));
     vm.elements.hp.addEventListener('keypress', vm.onHpKeyPress.bind(this));
     vm.elements.count.addEventListener('keypress', vm.onCountKeyPress.bind(this));
-  },
-  setAutoComplete: function setAutoComplete() {
+  }
+
+  setAutoComplete() {
     var monsterNames = Object.keys(monsters);
     new autoComplete({
       selector: '#add-participant-modal #txtName',
@@ -322,13 +323,16 @@ var view$1 = lite.extend({
         });
         suggest(matches);
       },
-      onSelect: function onSelect(e) {
+
+      onSelect(e) {
         // Force .onNameChanged to be called
         e.target.dispatchEvent(new Event('change'));
       }
+
     });
-  },
-  getParticipant: function getParticipant() {
+  }
+
+  getParticipant() {
     var vm = this;
     return {
       init: vm.elements.init.value,
@@ -336,13 +340,15 @@ var view$1 = lite.extend({
       name: vm.elements.name.value,
       hp: vm.elements.hp.value
     };
-  },
-  onHpKeyPress: function onHpKeyPress(e) {
+  }
+
+  onHpKeyPress(e) {
     if (e.keyCode === 13) {
       this.addParticipant();
     }
-  },
-  onNameChanged: function onNameChanged(e) {
+  }
+
+  onNameChanged(e) {
     var vm = this;
     vm.elements.add.disabled = !vm.isValid();
     var monster = monsters[e.target.value];
@@ -350,32 +356,38 @@ var view$1 = lite.extend({
     if (monster) {
       vm.setMonster(monster);
     }
-  },
-  onNameKeyPress: function onNameKeyPress(e) {
+  }
+
+  onNameKeyPress(e) {
     // Press enter twice on name to submit
     if (e.keyCode === 13) {
       if (e.target.enterPressed) {
         this.addParticipant();
       } else e.target.enterPressed = true;
     } else e.target.enterPressed = false;
-  },
-  onCountKeyPress: function onCountKeyPress(e) {
+  }
+
+  onCountKeyPress(e) {
     if (e.keyCode === 13) {
       this.addParticipant();
     }
-  },
-  setMonster: function setMonster(monster) {
+  }
+
+  setMonster(monster) {
     var vm = this;
     vm.elements.init.value = vm.rollD20() + Math.floor((monster.Stats.Dex - 10) / 2);
     vm.elements.hp.value = +/\d+/.exec(monster.Defenses.HP)[0];
-  },
-  onAddParticipantClicked: function onAddParticipantClicked() {
+  }
+
+  onAddParticipantClicked() {
     this.addParticipant();
-  },
-  isValid: function isValid() {
+  }
+
+  isValid() {
     return !!this.elements.name.value;
-  },
-  addParticipant: function addParticipant() {
+  }
+
+  addParticipant() {
     var vm = this;
 
     if (!vm.isValid()) {
@@ -392,24 +404,29 @@ var view$1 = lite.extend({
       vm.onParticipantAdded(participant);
     }
 
-    new modal().hide();
-  },
-  onParticipantAdded: function onParticipantAdded() {},
-  rollD20: function rollD20() {
+    new Modal().hide();
+  }
+
+  onParticipantAdded() {}
+
+  rollD20() {
     return Math.floor(Math.random() * 20) + 1;
   }
-});
-var AddParticipant = view$1;
 
-var view = lite.extend({
-  content: ' ',
-  initialize: function initialize() {
+}
+
+class ParticipantGrid {
+  constructor(args) {
+    this.parent = args.parent;
+    this.container = args.container;
+    this.data = args.data;
     this.drawGrid();
-  },
-  drawGrid: function drawGrid() {
+  }
+
+  drawGrid() {
     var vm = this;
     vm.grid = new Gridify({
-      container: 'battle-table-container',
+      container: vm.container,
       id: 'battle-table',
       data: vm.data,
       columns: [{
@@ -462,28 +479,31 @@ var view = lite.extend({
       className: 'table small'
     });
     vm.grid.sort('init');
-  },
-  numberSort: function numberSort(a, b) {
+  }
+
+  numberSort(a, b) {
     if (a === b) {
       return 0;
     }
 
     return +a > +b ? 1 : -1;
-  },
-  onNameClick: function onNameClick(e) {
+  }
+
+  onNameClick(e) {
     var monster = monsters[e.target.value];
 
     if (!monster) {
       return;
     }
 
-    new modal({
-      body: new MonsterBox({
-        data: monster
-      })
+    var modal = new Modal();
+    new MonsterBox({
+      container: modal.body,
+      data: monster
     });
-  },
-  tdInit: function tdInit(td) {
+  }
+
+  tdInit(td) {
     var vm = this;
     var input = document.createElement('input');
     input.value = td.value;
@@ -496,8 +516,9 @@ var view = lite.extend({
       vm.grid.sort('init');
     });
     return input;
-  },
-  tdId: function tdId(td) {
+  }
+
+  tdId(td) {
     var input = document.createElement('input');
     input.value = td.value;
     input.style = td.style.cssText;
@@ -506,8 +527,9 @@ var view = lite.extend({
       td.value = input.value;
     });
     return input;
-  },
-  tdHP: function tdHP(td) {
+  }
+
+  tdHP(td) {
     var input = document.createElement('input');
     input.value = td.value;
     input.style = td.style.cssText;
@@ -516,8 +538,9 @@ var view = lite.extend({
       td.value = input.value;
     });
     return input;
-  },
-  tdRemoveButton: function tdRemoveButton(td) {
+  }
+
+  tdRemoveButton(td) {
     var vm = this;
     var button = document.createElement('button');
     button.innerHTML = '-';
@@ -529,47 +552,52 @@ var view = lite.extend({
     });
     return button;
   }
-});
-var ParticipantsGrid = view;
 
-var vm = lite.extend({
-  content: html$1,
-  initialize: function initialize() {
+}
+
+class BattleManager {
+  constructor(args) {
+    this.container = Lite.append(args.container, html$1);
     this.data = [];
     this.addEventListeners();
-  },
-  addEventListeners: function addEventListeners() {
+  }
+
+  addEventListeners() {
     var vm = this;
     document.getElementById('btnShowAddParticipantModal').addEventListener('click', vm.btnShowAddParticipantModalClicked.bind(vm));
-  },
-  btnShowAddParticipantModalClicked: function btnShowAddParticipantModalClicked() {
+  }
+
+  btnShowAddParticipantModalClicked() {
     var vm = this;
-    new modal({
-      body: new AddParticipant({
-        parent: vm,
-        onParticipantAdded: vm.onParticipantAdded.bind(vm)
-      })
+    var modal = new Modal();
+    new AddParticipant({
+      container: modal.body,
+      onParticipantAdded: vm.onParticipantAdded.bind(vm)
     });
-  },
-  onParticipantAdded: function onParticipantAdded(participantData) {
+  }
+
+  onParticipantAdded(participantData) {
     var vm = this;
     vm.data.push(participantData);
     vm.drawGrid();
     document.getElementById('btnShowAddParticipantModal').focus();
-  },
-  drawGrid: function drawGrid() {
+  }
+
+  drawGrid() {
     var vm = this;
 
     if (!vm.data.length) {
       return;
     }
 
-    new ParticipantsGrid({
+    new ParticipantGrid({
       parent: vm,
       container: 'battle-table-container',
       data: vm.data
     });
   }
-});
 
-export { vm };
+}
+var View = BattleManager;
+
+export { BattleManager, View };

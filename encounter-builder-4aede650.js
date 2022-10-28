@@ -1,5 +1,5 @@
-import { l as lite, G as Gridify } from './index.js';
-import { p as pagination } from './pagination-00c90425.js';
+import { L as Lite, G as Gridify } from './index.js';
+import { P as Pagination } from './pagination-bffe264d.js';
 
 var EncounterBuilder = function EncounterBuilder() {
   var builder = this;
@@ -422,15 +422,15 @@ var html = "<div id=\"encounter-builder\">\r\n    <div class=\"grid\">\r\n      
     CR filters not working below 1
 */
 
-var vm = lite.extend({
-  content: html,
-  initialize: function initialize() {
-    var vm = this;
-    vm.setElements();
-    vm.setEventListeners();
-    vm.initializeBuilder();
-  },
-  setElements: function setElements() {
+class EncounterBuilderView {
+  constructor(args) {
+    this.container = Lite.append(args.container, html);
+    this.setElements();
+    this.setEventListeners();
+    this.initializeBuilder();
+  }
+
+  setElements() {
     var vm = this;
     vm.elements = {
       crMax: '#crMax',
@@ -445,8 +445,9 @@ var vm = lite.extend({
     for (var k in vm.elements) {
       vm.elements[k] = vm.container.querySelector(vm.elements[k]);
     }
-  },
-  setEventListeners: function setEventListeners() {
+  }
+
+  setEventListeners() {
     var vm = this;
 
     var setOnChange = function setOnChange(el, callback) {
@@ -485,13 +486,15 @@ var vm = lite.extend({
         return e.preventDefault();
       }
     });
-  },
-  initializeBuilder: function initializeBuilder() {
+  }
+
+  initializeBuilder() {
     var vm = this;
     vm.encounterBuilder = new EncounterBuilder();
     vm.builderArgs = vm.defaultArgs();
-  },
-  defaultArgs: function defaultArgs() {
+  }
+
+  defaultArgs() {
     var vm = this;
     var args = {
       players: [],
@@ -513,14 +516,16 @@ var vm = lite.extend({
     args.monsterCountRange.min = +vm.elements.monsterCountMin.value;
     args.monsterCountRange.max = +vm.elements.monsterCountMax.value;
     return args;
-  },
-  generateEncounter: function generateEncounter() {
+  }
+
+  generateEncounter() {
     var vm = this;
     var encounters = vm.encounterBuilder.getEncounters(vm.builderArgs);
     encounters = vm.prepareOutput(encounters);
     vm.writeOutput(encounters);
-  },
-  prepareOutput: function prepareOutput(encounters) {
+  }
+
+  prepareOutput(encounters) {
     encounters.forEach(encounter => {
       // Get a count of how many times each CR occurs
       var crs = {};
@@ -545,8 +550,9 @@ var vm = lite.extend({
       encounter.crsString = crsStrings.sort((a, b) => a <= b).join(', ');
     });
     return encounters;
-  },
-  writeOutput: function writeOutput(encounters) {
+  }
+
+  writeOutput(encounters) {
     var numberSort = function numberSort(a, b) {
       return +a >= +b ? 1 : -1;
     };
@@ -591,12 +597,14 @@ var vm = lite.extend({
 
     });
     var pageContainer = grid.html.querySelector('#output-table-grid-paging');
-    new pagination({
+    new Pagination({
       container: pageContainer,
       grid: grid,
       data: grid.paging.data
     });
   }
-});
 
-export { vm };
+}
+var View = EncounterBuilderView;
+
+export { EncounterBuilderView, View };

@@ -1,5 +1,5 @@
-import { l as lite, G as Gridify } from './index.js';
-import { p as pagination } from './pagination-00c90425.js';
+import { L as Lite, G as Gridify } from './index.js';
+import { P as Pagination } from './pagination-bffe264d.js';
 
 // A big thanks to whoever set up http://tinyurl.com/dndappfiles
 // Found from https://www.reddit.com/r/DnD/comments/2yirik/after_hours_of_cleaning_here_are_the_complete/
@@ -1289,22 +1289,27 @@ for (var k in importedItems) {
   items[k] = importedItems[k];
 }
 
-var table = lite.extend({
-  content: '<div id="items-grid"></div>',
-  initialize: function initialize() {
-    var itemsArray = this.getItemsArray(items);
-    this.buildItemsGrid(itemsArray);
-  },
-  getItemsArray: function getItemsArray(items) {
+class ItemLookup {
+  constructor(args) {
+    this.container = Lite.append(args.container, "<div id='items-grid'></div>");
+    var itemArray = this.getItemArray(items);
+    this.buildItemGrid(itemArray);
+  }
+
+  getItemArray(items) {
     var itemsArray = [];
 
     for (var k in items) {
-      itemsArray.push(items[k]);
+      var item = items[k];
+      if (!item.Value) item.Value = '';
+      if (!item.Weight) item.Weight = '';
+      itemsArray.push(item);
     }
 
     return itemsArray;
-  },
-  buildItemsGrid: function buildItemsGrid(itemsArray) {
+  }
+
+  buildItemGrid(itemsArray) {
     var vm = this;
     vm.grid = new Gridify({
       container: 'items-grid',
@@ -1348,13 +1353,14 @@ var table = lite.extend({
 
     });
     var pageContainer = vm.grid.html.querySelector('#items-grid-grid-paging');
-    new pagination({
+    new Pagination({
       container: pageContainer,
       grid: vm.grid,
       data: vm.grid.paging.data
     });
-  },
-  numberSort: function numberSort(a, b) {
+  }
+
+  numberSort(a, b) {
     a = +a || 0;
     b = +b || 0;
 
@@ -1363,8 +1369,9 @@ var table = lite.extend({
     }
 
     return a > b ? 1 : -1;
-  },
-  getCoinValue: function getCoinValue(val) {
+  }
+
+  getCoinValue(val) {
     var coinValues = {
       cp: 1,
       sp: 10,
@@ -1381,8 +1388,9 @@ var table = lite.extend({
     }
 
     return +value || -1;
-  },
-  coinSort: function coinSort(a, b) {
+  }
+
+  coinSort(a, b) {
     a = this.getCoinValue(a);
     b = this.getCoinValue(b);
 
@@ -1390,6 +1398,7 @@ var table = lite.extend({
       return 0;
     } else return a > b ? 1 : -1;
   }
-});
 
-export { table };
+}
+
+export { ItemLookup };

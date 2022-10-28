@@ -1,15 +1,16 @@
-import { l as lite, G as Gridify } from './index.js';
-import { m as monsters, M as MonsterBox } from './monsterbox-39ae281b.js';
-import { p as pagination } from './pagination-00c90425.js';
-import { m as modal } from './modal-6001e400.js';
+import { L as Lite, G as Gridify } from './index.js';
+import { m as monsters, M as MonsterBox } from './monsterbox-8f4e7c81.js';
+import { P as Pagination } from './pagination-bffe264d.js';
+import { M as Modal } from './modal-cb19b092.js';
 
-var table = lite.extend({
-  content: '<div id="monsters-grid">Test 2</div>',
-  initialize: function initialize() {
+class MonsterLookup {
+  constructor(args) {
+    this.container = Lite.append(args.container, "<div id='monsters-grid'>Monsters Loaded</div>");
     var monsterArray = this.prepareMonsters(monsters);
     this.buildGrid(monsterArray);
-  },
-  prepareMonsters: function prepareMonsters(monsters) {
+  }
+
+  prepareMonsters(monsters) {
     var monsterArray = [];
 
     for (var m in monsters) {
@@ -17,8 +18,9 @@ var table = lite.extend({
     }
 
     return monsterArray;
-  },
-  buildGrid: function buildGrid(monsterArray) {
+  }
+
+  buildGrid(monsterArray) {
     var vm = this;
     vm.grid = new Gridify({
       container: 'monsters-grid',
@@ -30,11 +32,11 @@ var table = lite.extend({
         className: 'td-text-long',
         style: 'width: 200px; text-decoration:underline',
         sort: true,
-        click: e => {
-          new modal({
-            body: new MonsterBox({
-              data: monsters[e.target.innerHTML]
-            })
+        click: ev => {
+          var modal = new Modal();
+          new MonsterBox({
+            container: modal.body,
+            data: monsters[ev.target.innerHTML]
           });
         }
       }, {
@@ -87,13 +89,14 @@ var table = lite.extend({
 
     });
     var pageContainer = vm.grid.html.querySelector('#monsters-grid-grid-paging');
-    new pagination({
+    new Pagination({
       container: pageContainer,
       grid: vm.grid,
       data: vm.grid.paging.data
     });
-  },
-  crSort: function crSort(a, b) {
+  }
+
+  crSort(a, b) {
     var parse = cr => cr.indexOf('/') === -1 ? +cr : 1 / cr.split('/')[1];
 
     a = parse(a);
@@ -104,17 +107,20 @@ var table = lite.extend({
     }
 
     return a > b ? 1 : -1;
-  },
-  crFilter: function crFilter(cellValue, filterValue) {
+  }
+
+  crFilter(cellValue, filterValue) {
     if (+filterValue === 1) {
       return +cellValue === 1;
     }
 
-    return ('' + cellValue).substr(0, filterValue.length) === filterValue;
-  },
-  nameFilter: function nameFilter(cellValue, filterValue) {
+    return ('' + cellValue).slice(0, filterValue.length) === filterValue;
+  }
+
+  nameFilter(cellValue, filterValue) {
     return cellValue.toLowerCase().includes(filterValue.toLowerCase());
   }
-});
 
-export { table };
+}
+
+export { MonsterLookup };
