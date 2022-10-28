@@ -1,16 +1,17 @@
-import { lite } from "lite";
+import { Lite } from 'lite';
 import html from './header.html'
-import { dice } from '../dice/dice-header.js'
+import { DiceHeader } from '../dice/dice-header.js'
 
-export let header = lite.extend({
-    container : document.getElementById('header-container'),
-    content : html,
-    initialize : function() {
-        // Need onContentbound event back
+export class Header {
+
+    constructor() {
+        Lite.append('header-container', html);
         this.addEventListeners();
-        new dice({ container : 'dice-header-container' });
-    },
-    addEventListeners : function() { 
+
+        new DiceHeader({ container : 'dice-header-container' });
+    }
+
+    addEventListeners() {
         let navItems = document.querySelectorAll('.nav-right > .nav-item');
         
         navItems.forEach(nav => {
@@ -20,4 +21,4 @@ export let header = lite.extend({
             });
         });
     }
-});
+}

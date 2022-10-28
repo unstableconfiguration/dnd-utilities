@@ -1,12 +1,16 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import { Gridify } from 'gridify';
 
-export let log = lite.extend({
-    content : `<div id='log-container' style='max-height:20rem; overflow-y:scroll'></div>`,
-    initialize : function()  {
+export class DiceLog { 
+    constructor(args) {
+        this.container = Lite.append(args.container, `<div id='log-container' style='max-height:20rem; overflow-y:scroll'></div>`);
+        this.parent = args.parent;
+        this.data = args.data;
+
         this.updateLog();
-    },
-    updateLog : function() { 
+    }
+
+    updateLog() { 
         let vm = this;
         vm.data[0].rolls = vm.getRolls(vm.data[0]);
         
@@ -27,8 +31,9 @@ export let log = lite.extend({
                 }
             }
         });
-    },
-    getRolls : function(log) { 
+    }
+
+    getRolls(log) { 
         // Advantage has 2 dice ops, one of which is a dud so we skip it
         let diceOp = log.operations.filter(op => op.name == 'dice').slice(-1)[0];
         if(!diceOp) { return ''; }
@@ -38,12 +43,15 @@ export let log = lite.extend({
         }).join(', ')
 
         return rolls
-    },
-    onRollClicked : function(e) {
-        document.getElementById('dice-input').value = e.target.innerHTML;
+    }
+
+    
+    onRollClicked(ev) {
+        document.getElementById('dice-input').value = ev.target.innerHTML;
         document.getElementById('dice-input').focus();
-    },
-    tdRemoveButton : function(td) { 
+    }
+
+    tdRemoveButton(td) { 
         let vm = this;
 
         let button = document.createElement('button');
@@ -58,4 +66,6 @@ export let log = lite.extend({
 
         return button
     }
-});
+}
+
+
