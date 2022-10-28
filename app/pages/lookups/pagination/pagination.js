@@ -1,49 +1,56 @@
-import { lite } from 'lite'
+import { Lite } from 'lite'
 import html from './pagination.html'
 
-export let pagination = lite.extend({
-    content : html,
-    initialize : function() {
-        let vm = this;
-        vm.setElements();
-        vm.addEventListeners();
-        
-        // After filtering, reset page count
+export class Pagination {
+    constructor(args) {
+        this.container = Lite.append(args.container, html);
+        this.grid = args.grid;
+        this.data = args.data;
+    
+        this.setElements();
+        this.addEventListeners();
+
+        // Convert to function
         let filter = this.grid.filters.filter;
-        this.grid.filters.filter = function(...args) { 
+        this.grid.filters.filter = (...args) => {
             filter(...args);
-            vm.updateElements();
+            this.updateElements();
         }
-        
-        vm.updateElements();
-    },
-    setElements : function() { 
+
+        this.updateElements();
+    }
+
+    setElements() { 
         let vm = this;
         vm.elements = {
             btnPrev : vm.container.querySelector('#btnPrev'),
             btnNext : vm.container.querySelector("#btnNext"),
             display : vm.container.querySelector('#pagination-text')
         };
-    },
-    addEventListeners : function() { 
+    }
+
+    addEventListeners() { 
         this.elements.btnPrev.addEventListener('click', this.onPrevButtonClick.bind(this));
         this.elements.btnNext.addEventListener('click', this.onNextButtonClick.bind(this))
-    },
-    onPrevButtonClick : function(e) { 
+    }
+
+    onPrevButtonClick(ev) { 
         this.data.currentPage--;
         this.grid.page(this.data.currentPage);
         
         this.updateElements();
-    },
-    onNextButtonClick : function(e) { 
+    }
+
+    onNextButtonClick(ev) { 
         this.data.currentPage++;
         this.grid.page(this.data.currentPage);
 
         this.updateElements();
-    },
-    updateElements : function() { 
+    }
+
+    updateElements() { 
         this.elements.btnPrev.classList.toggle("disabled", this.data.currentPage == 1);
         this.elements.btnNext.classList.toggle("disabled", this.data.currentPage == this.data.visiblePages);
         this.elements.display.innerHTML = "Page " + this.data.currentPage + " of " + this.data.visiblePages;
     }
-});
+}

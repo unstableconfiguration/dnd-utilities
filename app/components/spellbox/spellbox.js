@@ -1,9 +1,12 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 //import { spells } from '../../../';
 import html from './spellbox.html';
 
-export let vm = lite.extend({
-    content : html,
-    initialize : function() {}
-});
-export let SpellBox = vm;
+export class SpellBox {
+    constructor(args) {
+        this.container = Lite.append(args.container, html);
+        this.data = args.data;
+        console.warn('todo: re-implement data binding spellbox.js')
+    }
+}
+export let View = SpellBox;

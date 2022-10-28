@@ -1,17 +1,19 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import { spells } from '../../../../../5e/spells.js';
 import { Gridify } from 'gridify';
-import { pagination } from '../../pagination/pagination.js';
-import { modal } from '../../../../components/modal/modal.js';
+import { Pagination } from '../../pagination/pagination.js';
+import { Modal } from '../../../../components/modal/modal.js';
 import { SpellBox } from '../../../../components/spellbox/spellbox';
 
-export let table = lite.extend({
-    content : '<div id="spells-grid">Test</div>',
-    initialize : function() { 
-        let spellsArray = this.prepareSpells(spells);
-        this.buildGrid(spellsArray);
-    },
-    prepareSpells : function(spells) {
+export class SpellsLookup {
+    constructor(args) {
+        this.container = Lite.append(args.container, `<div id='spells-grid'>Spells Grid Loaded</div>`);
+
+        let spellsArray = this.#prepareSpells(spells);
+        this.#buildGrid(spellsArray);
+    }
+
+    #prepareSpells(spells) {
         let spellsArray = [];
         for(let k in spells) {
             let spell = spells[k];
@@ -19,8 +21,9 @@ export let table = lite.extend({
             spellsArray.push(spell);
         }
         return spellsArray;
-    },
-    buildGrid : function(spellsArray) { 
+    }
+
+    #buildGrid(spellsArray) { 
         let vm = this;
         vm.grid = new Gridify({
             container : 'spells-grid',
@@ -32,18 +35,19 @@ export let table = lite.extend({
                     style : 'width:200px; text-align:left; text-decoration:underline; white-space:nowrap; overflow:hidden;',
                     sort : true,
                     filter : true,
-                    click : (e) => {
-                        new modal({ 
-                            body : new SpellBox({
-                                data : spells[e.target.innerHTML]
-                            })
-                        });
+                    click : (ev) => {
+                        let modal = new Modal();
+                        new SpellBox({
+                            container : modal.body,
+                            data : spells[ev.target.innerHTML]
+                        })
+
                     } 
                 },
                 { field : 'Level', header : 'Level', filter : true, sort : true, style: 'width:80px;' },
                 { field : 'School', header : 'School', filter : true, sort : true, style : 'width:100px; text-align:left;'},
                 { field : 'CastingTime', header : 'Cast Time', filter : true, sort : true, style: 'width:125px; text-align:left;' },
-                { field : 'Ritual', header : "Ritual", filter : vm.getRitualFilter(), style : 'width:50px;' },
+                { field : 'Ritual', header : "Ritual", filter : vm.#getRitualFilter(), style : 'width:50px;' },
                 { field : 'Range', header : 'Range', filter : true, sort : true, style: 'width:100px; text-align:left; white-space:nowrap; overflow:hidden;' },
                 { field : 'Duration', header : 'Duration', filter : true, sort : true, style: 'width:125px; text-align:left; white-space:nowrap; overflow:hidden;' } 
             ],
@@ -66,9 +70,10 @@ export let table = lite.extend({
             }
         });
         let pageContainer = vm.grid.html.querySelector('#spells-grid-grid-paging');
-        new pagination({ container : pageContainer, grid : vm.grid, data : vm.grid.paging.data });
-    },
-    getRitualFilter : function() { 
+        new Pagination({ container : pageContainer, grid : vm.grid, data : vm.grid.paging.data });
+    }
+
+    #getRitualFilter() { 
         let vm = this;
         let checkBox = document.createElement('input');
         checkBox.type = 'checkbox';
@@ -88,4 +93,5 @@ export let table = lite.extend({
             compare : compare
         }
     }
-});
+}
+
