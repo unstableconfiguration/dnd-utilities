@@ -1,24 +1,24 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import { EncounterBuilder } from './encounterBuilder.js';
 import { Gridify } from 'gridify';
-import { pagination } from '../lookups/pagination/pagination.js';
+import { Pagination } from '../lookups/pagination/pagination.js';
 import html from './encounter-builder.html';
 
 /* 
     CR filters not working below 1
 */
 
-export let vm = lite.extend({
-    content : html,
-    initialize : function() { 
-        let vm = this;
+export class EncounterBuilderView { 
+    constructor(args) { 
+        this.container = Lite.append(args.container, html);
 
-        vm.setElements();
-        vm.setEventListeners();
-        
-        vm.initializeBuilder();
-    },
-    setElements : function() { 
+        this.setElements();
+        this.setEventListeners();
+
+        this.initializeBuilder();
+    }
+
+    setElements() { 
         let vm = this;
         vm.elements = {
             crMax : '#crMax',
@@ -32,8 +32,9 @@ export let vm = lite.extend({
         for(let k in vm.elements) { 
             vm.elements[k] = vm.container.querySelector(vm.elements[k]);
         }
-    },
-    setEventListeners : function() {
+    }
+
+    setEventListeners() {
         let vm = this;
 
         let setOnChange = function(el, callback) {
@@ -66,14 +67,15 @@ export let vm = lite.extend({
         vm.elements.monsterCountMax.addEventListener('keypress', e => { 
             if(isNaN(String.fromCharCode(e.charCode))) { return e.preventDefault(); }
         });
+    }
 
-    },
-    initializeBuilder : function() {
+    initializeBuilder() {
         let vm = this;
         vm.encounterBuilder = new EncounterBuilder();
         vm.builderArgs = vm.defaultArgs();
-    },
-    defaultArgs : function() {
+    }
+
+    defaultArgs() {
         let vm = this;
         let args = {
             players : [], // [{ level : 0}]
@@ -90,14 +92,16 @@ export let vm = lite.extend({
         args.monsterCountRange.max = +vm.elements.monsterCountMax.value;
 
         return args;
-    },
-    generateEncounter : function() { 
+    }
+
+    generateEncounter() { 
         let vm = this;
         let encounters = vm.encounterBuilder.getEncounters(vm.builderArgs);
         encounters = vm.prepareOutput(encounters);
         vm.writeOutput(encounters);        
-    },
-    prepareOutput : function(encounters) { 
+    }
+
+    prepareOutput(encounters) { 
         encounters.forEach(encounter => { 
             // Get a count of how many times each CR occurs
             let crs = {}
@@ -124,8 +128,9 @@ export let vm = lite.extend({
         });
 
         return encounters;
-    },
-    writeOutput : function(encounters) { 
+    }
+    
+    writeOutput(encounters) { 
         let numberSort = function(a, b) { return +a >= +b ? 1 : -1 };
         let wildcardFilter = (cellVal, filterVal) => cellVal.includes(filterVal);
         
@@ -149,8 +154,10 @@ export let vm = lite.extend({
             },
         });
         let pageContainer = grid.html.querySelector('#output-table-grid-paging');
-        new pagination({ container : pageContainer, grid : grid, data : grid.paging.data });
-    
+        new Pagination({ container : pageContainer, grid : grid, data : grid.paging.data });
     }
-});
+}
+
+export let View = EncounterBuilderView;
+
 
