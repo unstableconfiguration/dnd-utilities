@@ -21,9 +21,9 @@ export class Lookups {
     }
 
     #loadTab = {
-        'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellsLookup({ container : container })) },
+        'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
         'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
-        //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.table({ container : container })) }
+        'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }
     }
 }
 export let View = Lookups;

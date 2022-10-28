@@ -1,20 +1,29 @@
-import { lite } from 'lite';
+import { Lite } from 'lite';
 import { Gridify } from 'gridify';
 import { items } from '../../../../../5e/items.js';
-import { pagination } from '../../pagination/pagination.js';
+import { Pagination } from '../../pagination/pagination.js';
 
-export let table = lite.extend({
-    content : '<div id="items-grid"></div>',
-    initialize : function() { 
-        let itemsArray = this.getItemsArray(items);
-        this.buildItemsGrid(itemsArray);
-    },
-    getItemsArray : function(items) { 
+export class ItemLookup { 
+    constructor(args) {
+        this.container = Lite.append(args.container, `<div id='items-grid'></div>`);
+
+        let itemArray = this.getItemArray(items);
+        this.buildItemGrid(itemArray);
+    }
+
+    getItemArray(items) { 
         let itemsArray = [];
-        for(let k in items) { itemsArray.push(items[k]); }
+        for(let k in items) { 
+            let item = items[k];
+            if(!item.Value) item.Value = '';
+            if(!item.Weight) item.Weight = '';
+
+            itemsArray.push(item); 
+        }
         return itemsArray;
-    },
-    buildItemsGrid : function(itemsArray) {
+    }
+
+    buildItemGrid(itemsArray) {
         let vm = this;
         vm.grid = new Gridify( { 
             container : 'items-grid',
@@ -37,29 +46,31 @@ export let table = lite.extend({
             }
         });
         let pageContainer = vm.grid.html.querySelector('#items-grid-grid-paging');
-        new pagination({ container : pageContainer, grid : vm.grid, data : vm.grid.paging.data });
-    }, 
-    numberSort : function(a, b) {
+        new Pagination({ container : pageContainer, grid : vm.grid, data : vm.grid.paging.data });
+    }
+
+    numberSort(a, b) {
         a = +a || 0;
         b = +b || 0;
         if(a === b) { return 0; }
         return a > b ? 1 : -1;
-    }, 
-    getCoinValue : function(val) {
+    }
+
+    getCoinValue(val) {
         let coinValues = { cp : 1, sp : 10, ep : 50, gp : 100, pp : 1000 };
         let value = +val.replace(/[^\d\.]/g, '');
         for(let cv in coinValues) {
             if(val.includes(cv)) { value = value * coinValues[cv]; }
         }
         return +value || -1;
-    }, 
-    coinSort : function(a, b) { 
+    }
+    
+    coinSort(a, b) { 
         a = this.getCoinValue(a);
         b = this.getCoinValue(b);
 
         if(a === b) { return 0; }
         else return a > b ? 1 : -1;
     }
-});
-
+}
 

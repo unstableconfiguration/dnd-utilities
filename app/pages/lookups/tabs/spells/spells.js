@@ -5,7 +5,7 @@ import { Pagination } from '../../pagination/pagination.js';
 import { Modal } from '../../../../components/modal/modal.js';
 import { SpellBox } from '../../../../components/spellbox/spellbox';
 
-export class SpellsLookup {
+export class SpellLookup {
     constructor(args) {
         this.container = Lite.append(args.container, `<div id='spells-grid'>Spells Grid Loaded</div>`);
 
