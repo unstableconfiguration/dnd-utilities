@@ -6,7 +6,8 @@ export class SpellBox {
     constructor(args) {
         this.container = Lite.append(args.container, html);
         this.data = args.data;
-        console.warn('todo: re-implement data binding spellbox.js')
+
+        Lite.bindings.bind('spellbox', this.data);
     }
 }
 export let View = SpellBox;

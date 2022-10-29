@@ -13,6 +13,11 @@ export class MonsterBox {
         this.bindNameTextCollection('#monster-reactions', data.Reactions);
         this.bindNameTextCollection('#monster-legendary-actions', data.LegendaryActions);
         this.bindNameTextCollection('#monster-items', data.Items);
+
+        window.data = this.data;
+        
+
+        window.proxy = Lite.bindings.bind('monsterbox', this.data);
     }
 
     /* Hides elements with no content */
