@@ -10,6 +10,7 @@ Lite.router.addRoutes([
     { route : 'lookups', value : () => { import('../pages/lookups/lookups.js').then(load); } },
     { route : 'battle-manager', value : () => { import('../pages/battle-manager/battle-manager.js').then(load); } },
     { route : 'encounter-builder', value : () => { import('../pages/encounter-builder/encounter-builder.js').then(load); } },
+    { route : 'character-sheets', value : () => { import('../pages/character-sheets/character-sheets.js').then(load); } }
 ]);
 
 Lite.router.onHashChange = function(value) {
