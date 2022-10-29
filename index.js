@@ -382,9 +382,154 @@ class HeaderUtilities {
 
 }
 
+var _getProxyHandler = /*#__PURE__*/new WeakSet();
+
+var _activateSetters = /*#__PURE__*/new WeakSet();
+
+var _setNested = /*#__PURE__*/new WeakSet();
+
+var _getElement = /*#__PURE__*/new WeakSet();
+
+var _setValue = /*#__PURE__*/new WeakSet();
+
+var _addEventListeners$1 = /*#__PURE__*/new WeakSet();
+
+var _getContainer = /*#__PURE__*/new WeakSet();
+
+class DataBinding {
+  constructor() {
+    _getContainer.add(this);
+
+    _addEventListeners$1.add(this);
+
+    _setValue.add(this);
+
+    _getElement.add(this);
+
+    _setNested.add(this);
+
+    _activateSetters.add(this);
+
+    _getProxyHandler.add(this);
+  }
+
+  bind(container, data) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    container = _classPrivateMethodGet(this, _getContainer, _getContainer2).call(this, container);
+    var proxy = new Proxy(data, _classPrivateMethodGet(this, _getProxyHandler, _getProxyHandler2).call(this, container, options));
+
+    _classPrivateMethodGet(this, _addEventListeners$1, _addEventListeners2$1).call(this, container, data, options);
+
+    _classPrivateMethodGet(this, _activateSetters, _activateSetters2).call(this, data, proxy);
+
+    return proxy;
+  }
+
+}
+
+function _getProxyHandler2(container, options) {
+  var binding = this;
+  return {
+    get(target, key) {
+      return Reflect.get(target, key);
+    },
+
+    set(target, key, value) {
+      var element = _classPrivateMethodGet(binding, _getElement, _getElement2).call(binding, container, key, options);
+
+      _classPrivateMethodGet(binding, _setValue, _setValue2).call(binding, element, key, options, value);
+
+      return key.includes('.') ? _classPrivateMethodGet(binding, _setNested, _setNested2).call(binding, target, key, value) : Reflect.set(target, key, value);
+    }
+
+  };
+}
+
+function _activateSetters2(data, proxy) {
+  var keyBase = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+  if (keyBase) keyBase = keyBase + '.';
+
+  for (var key in data) {
+    key = keyBase + key; // get value by accumulator
+
+    var value = key.split('.').reduce((acc, p) => {
+      return acc[p];
+    }, proxy);
+    proxy[key] = value;
+    if (typeof value == 'object') _classPrivateMethodGet(this, _activateSetters, _activateSetters2).call(this, value, proxy, key);
+  }
+}
+
+function _setNested2(target, key, value) {
+  var props = key.split('.');
+  var base = Reflect.get(target, props[0]);
+  var nested = props.slice(1, -1).reduce((acc, p) => {
+    return acc[p];
+  }, base);
+  Reflect.set(nested, [props.slice(-1)], value);
+  return Reflect.set(target, props[0], base);
+}
+
+function _getElement2(container, key, options) {
+  var _options$key;
+
+  var selector = "[name=\"".concat(key, "\"]");
+
+  if ((_options$key = options[key]) !== null && _options$key !== void 0 && _options$key.selector) {
+    selector = options[key].selector;
+    if (typeof selector == 'function') selector = selector(key);
+  }
+
+  return container.querySelector(selector);
+}
+
+function _setValue2(element, key, options, value) {
+  if (element) {
+    var _options$key2;
+
+    var htmlValue = (_options$key2 = options[key]) !== null && _options$key2 !== void 0 && _options$key2.set ? options[key].set(value) : value;
+    if ('value' in element) element.value = htmlValue;else element.innerHTML = htmlValue;
+  }
+}
+
+function _addEventListeners2$1(container, data, options) {
+  var _this = this;
+
+  var _loop = function _loop(key) {
+    var element = _classPrivateMethodGet(_this, _getElement, _getElement2).call(_this, container, key, options);
+
+    if (element && 'value' in element) {
+      element.addEventListener('change', ev => {
+        var _options$key3;
+
+        var value = (_options$key3 = options[key]) !== null && _options$key3 !== void 0 && _options$key3.get ? options[key].get(ev.target.value) : ev.target.value;
+        data[key] = value;
+      });
+    }
+  };
+
+  for (var key in data) {
+    _loop(key);
+  }
+}
+
+function _getContainer2(container) {
+  if (container instanceof HTMLElement) return container;
+  var element = container;
+
+  if (typeof container == 'string') {
+    element = document.getElementById(container);
+    if (!element) element = document.querySelector(container);
+  }
+
+  if (!element instanceof HTMLElement) throw "container must be HTMLElement or a valid #id or css selector.";
+  return element;
+}
+
 Lite.head = new HeaderUtilities();
 Lite.xhr = new XHR();
 Lite.router = new Router();
+Lite.bindings = new DataBinding();
 
 var main = document.getElementById('main-content');
 
@@ -396,22 +541,22 @@ Lite.router.initialize();
 Lite.router.addRoutes([{
   route: '',
   value: () => {
-    import('./lookups-ec706b85.js').then(load);
+    import('./lookups-6943f3eb.js').then(load);
   }
 }, {
   route: 'lookups',
   value: () => {
-    import('./lookups-ec706b85.js').then(load);
+    import('./lookups-6943f3eb.js').then(load);
   }
 }, {
   route: 'battle-manager',
   value: () => {
-    import('./battle-manager-db78f8b8.js').then(load);
+    import('./battle-manager-32d98abe.js').then(load);
   }
 }, {
   route: 'encounter-builder',
   value: () => {
-    import('./encounter-builder-4aede650.js').then(load);
+    import('./encounter-builder-fb2d427c.js').then(load);
   }
 }]);
 

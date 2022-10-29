@@ -1,6 +1,6 @@
 import { L as Lite, _ as _classPrivateMethodGet, G as Gridify } from './index.js';
-import { P as Pagination } from './pagination-bffe264d.js';
-import { M as Modal } from './modal-cb19b092.js';
+import { P as Pagination } from './pagination-55d9b1b4.js';
+import { M as Modal } from './modal-3222c59f.js';
 
 var condensedPhb = [{
   "name": "Acid Splash",
@@ -4621,13 +4621,13 @@ condensedXge.forEach(s => {
   spells[s.name] = convertSpell(s);
 });
 
-var html = "<div>\r\n    <h6 data-field=\"Name\"></h6>\r\n    <div><span>Level </span><span data-field=\"Level\"></span><span> </span><span data-field=\"School\"></span></div>\r\n    <div><span style=\"font-weight:bold\">Casting Time: </span><span id=\"CastingTime\" data-field></span></div>\r\n    <div><span style=\"font-weight:bold\">Range: </span><span id=\"Range\" data-field></span></div>\r\n    <div><span style=\"font-weight:bold\">Components: </span><span id=\"Components\" data-field></span></div>\r\n    <div><span style=\"font-weight:bold\">Duration: </span><span id=\"Duration\" data-field></span></div>\r\n    <p id=\"Description\" data-field></p>\r\n</div>";
+var html = "<div id=\"spellbox\">\r\n    <h6 name=\"Name\"></h6>\r\n    <div><span>Level </span><span name=\"Level\"></span><span> </span><span name=\"School\"></span></div>\r\n    <div><span style=\"font-weight:bold\">Casting Time: </span><span id=\"CastingTime\" name=\"CastingTime\"></span></div>\r\n    <div><span style=\"font-weight:bold\">Range: </span><span id=\"Range\" name=\"Range\"></span></div>\r\n    <div><span style=\"font-weight:bold\">Components: </span><span id=\"Components\" name=\"Components\"></span></div>\r\n    <div><span style=\"font-weight:bold\">Duration: </span><span id=\"Duration\" name=\"Duration\"></span></div>\r\n    <p id=\"Description\" name=\"Description\"></p>\r\n</div>";
 
 class SpellBox {
   constructor(args) {
     this.container = Lite.append(args.container, html);
     this.data = args.data;
-    console.warn('todo: re-implement data binding spellbox.js');
+    Lite.bindings.bind('spellbox', this.data);
   }
 
 }

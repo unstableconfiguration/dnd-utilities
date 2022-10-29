@@ -14,17 +14,17 @@ class Lookups {
       writable: true,
       value: {
         'spells': container => {
-          import('./spells-d2992015.js').then(t => new t.SpellLookup({
+          import('./spells-12101586.js').then(t => new t.SpellLookup({
             container: container
           }));
         },
         'monsters': container => {
-          import('./monsters-ebcdcc3e.js').then(t => new t.MonsterLookup({
+          import('./monsters-de4ffc90.js').then(t => new t.MonsterLookup({
             container: container
           }));
         },
         'items': container => {
-          import('./items-7b46c6dc.js').then(t => new t.ItemLookup({
+          import('./items-f519f3af.js').then(t => new t.ItemLookup({
             container: container
           }));
         }

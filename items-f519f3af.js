@@ -1,5 +1,5 @@
 import { L as Lite, G as Gridify } from './index.js';
-import { P as Pagination } from './pagination-bffe264d.js';
+import { P as Pagination } from './pagination-55d9b1b4.js';
 
 // A big thanks to whoever set up http://tinyurl.com/dndappfiles
 // Found from https://www.reddit.com/r/DnD/comments/2yirik/after_hours_of_cleaning_here_are_the_complete/
