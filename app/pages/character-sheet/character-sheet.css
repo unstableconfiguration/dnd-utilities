@@ -1,0 +1,64 @@
+
+.character { 
+    text-align: left
+}
+
+#character-sheet #name {
+    color : darkred;
+    font-size : large;
+    font-weight:bold;
+}
+
+#character-sheet .red-left {
+    color : darkred;
+    font-weight:bold;
+}
+
+#character-sheet .grey-left {
+    font-style:italic;
+    font-weight:bold;
+}
+
+#character-sheet .divider {
+    border-top:solid thin darkred;
+    margin-top : 5px;
+    padding-bottom : 5px;
+}
+
+#character-sheet .stat-label {
+    color :darkred;
+    display:inline-block;
+    font-weight:bold;
+    text-align:center;
+    width: 60px;
+}
+
+#character-sheet .stat-value {
+    color : darkred;
+    display:inline-block;
+    text-align:center;
+    width:60px;
+}
+
+#character-sheet #sections {
+    border-left: solid thin;
+    padding-left:8px;
+}
+
+#character-sheet #sections .section span:nth-child(2){
+    display:inline;
+}
+
+#character-sheet #sections .section ul span:first-child{
+    width:50px;
+}
+
+#character-sheet #sections .section ul span:nth-child(2){
+    display:inline-block;
+    text-align:right;
+    width:20px;
+}
+
+#character-sheet #sections .section table {
+    border-spacing:0;
+}
