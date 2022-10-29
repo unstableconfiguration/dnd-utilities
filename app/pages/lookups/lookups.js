@@ -11,7 +11,7 @@ export class Lookups {
 
     #addEventListeners() { 
         let vm = this;
-        let tabs = document.querySelectorAll('.tab-container > ul > li');
+        let tabs = this.container.querySelectorAll('.tab-container > ul > li');
         let tableContainer = this.container.querySelector('#table-container');
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {

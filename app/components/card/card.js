@@ -9,6 +9,9 @@ export class Card {
         this.title = options.title;
         this.body = options.body;
 
+        if(options.click)
+            this.container.addEventListener('click', options.click);
+
         this.bindData();
     }
 

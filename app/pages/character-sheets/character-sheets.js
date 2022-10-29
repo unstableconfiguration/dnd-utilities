@@ -6,20 +6,19 @@ export class CharacterSheets {
     constructor(options) { 
         this.container = Lite.append(options.container, html);
 
+        // for route
+        // #character-sheets from top nav
+        // #character-sheet/{name}
+
         let test = this.container.querySelector('#test');
         new Card({
             container : test,
             body : 'body test',
             title : 'title test',
-            image : 'https://picsum.photos/id/237/200/300/?blur=2'
+            image : 'https://picsum.photos/id/237/200/300/?blur=2',
+            click() { window.location.hash = '#character-sheet/barbican-brady' }
         })
 
-       let test2 = this.container.querySelector('#test2');
-        new Card({
-            container : test2,
-            body : 'body test 2',
-            title : 'title test 2'
-        })
     }
 
     // we need a way to show names to click on
