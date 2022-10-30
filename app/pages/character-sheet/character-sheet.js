@@ -5,6 +5,7 @@ import { Stats } from './stats/stats.js'
 import { Background } from './background/background.js'
 import { Notes } from './notes/notes.js'
 import { Skills } from './skills/skills.js'
+import { Items } from './items/items'
 
 export class CharacterSheet { 
     constructor(options) {
@@ -78,6 +79,7 @@ export class CharacterSheet {
             background(container) { new Background({ container : container, character : view.character }); },
             notes(container) { new Notes({ container : container, character : view.character }); },
             skills(container) { new Skills({ container : container, character : view.character }); },
+            items(container) { new Items({ container : container, character : view.character }); }
             //'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
             //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
             //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }
