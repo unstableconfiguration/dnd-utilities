@@ -11,10 +11,8 @@ import { Spells } from './spells/spells'
 export class CharacterSheet { 
     constructor(options) {
         this.container = Lite.append(options.container, html);
-
-        this.name = location.hash.split('/').slice(1).join('/');
         Lite.head.addCss('./css/character-sheet.css');
-       
+
         this.#addEventListeners();
 
         this.#loadCharacter();
@@ -22,30 +20,20 @@ export class CharacterSheet {
         this.#toggleTabs();
     }
 
-    // so that's not gonna work, we need this to be a module
-
     #loadCharacter() {
-        let name = 'one-trick' // this.#getCharacterName();
+        let name = 'one-trick' // location.hash.replace('#character-sheet/', '');
         let character = Characters[name];
 
         this.character = character;
-        // bind data 
-            // since we load the views on demand, we need to pass the character to them
-    }
-
-
-    #getCharacterName() {
-        return location.hash.replace('#character-sheet/', '');
     }
 
     #addEventListeners() { 
         let view = this;
         let tabs = view.container.querySelectorAll('.tab-container > ul > li');
         
-
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
-                let container = view.#toggleContainer(tab.id);
+                view.#toggleContainer(tab.id);
             });
         });
     }
@@ -69,7 +57,6 @@ export class CharacterSheet {
         // show container
         let container = view.container.querySelector('#' + id + '-container');
         container.removeAttribute('hidden');
-        return container;
     }
 
     #loadTabs() {

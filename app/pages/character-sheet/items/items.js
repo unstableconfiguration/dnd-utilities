@@ -46,7 +46,8 @@ export class Items {
                 { field : 'Count', header : 'Count', style : 'text-align:right' },
                 { field : 'Value', header : 'Value', sort: view.#coinSort, style : 'text-align:center' },
                 { field : 'Weight', header : 'Weight', style : 'text-align:right', sort : view.#numberSort }
-            ]
+            ],
+            className : 'table small'
         });
     }
 

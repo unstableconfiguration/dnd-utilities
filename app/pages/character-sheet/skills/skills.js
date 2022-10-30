@@ -32,7 +32,7 @@ export class Skills {
                 { field : 'Trained', header : 'Trained', style : 'text-align:center', sort : true },
                 { field : 'Bonus', header : 'Bonus', style : 'text-align:right', sort : view.#numberSort }
             ],
-            className : 'table small',
+            className : 'table small'
         });
     }
 

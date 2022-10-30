@@ -18,7 +18,6 @@ export class Spells {
         return spells;
     }
 
-    // filters not even loading. 
     #bindGrid() {
         let view = this;
         let data = this.#getGridData();
@@ -47,7 +46,16 @@ export class Spells {
                 { field : 'Ritual', header : 'Ritual', filter : view.#getRitualFilter()  },
                 { field : 'Range', header : 'Range', filter : true },
                 { field : 'Duration', header : 'Duration', filter : true } 
-            ]
+            ],
+            className : 'table small',
+            onHeaderCreated(thead, options) {
+                thead.querySelectorAll('input[type="text"]')
+                    .forEach(i => i.className = "input-xsmall");
+            },
+            onHeaderCellCreated(th, options) { 
+                let sortIcon = th.querySelector('.sort');
+                if(sortIcon) { sortIcon.className = 'fa fa-sort'; } 
+            }
         });
     }
 
