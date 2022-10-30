@@ -1,10 +1,10 @@
 import babel from '@rollup/plugin-babel'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
-import html from 'rollup-plugin-html'
 import resolve from 'rollup-plugin-node-resolve'
 import serve from 'rollup-plugin-serve'
 import postcss from 'rollup-plugin-postcss'
+import { string } from 'rollup-plugin-string'
 
 export default {
     input : 'index.js',
@@ -26,9 +26,13 @@ export default {
                 ], dest : 'dist/css' }
             ]
         }),
-        html({
-			include: '**/*.html'
-		}),
+        string({
+            include : [
+                '**/*.html',
+                '**/*.md'
+            ],
+            exclude : '**/index.html'
+        }),
         postcss({
             plugins: []
         }),

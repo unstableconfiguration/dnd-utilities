@@ -1,6 +1,7 @@
 import html from './character-sheet.html'
 import { Lite } from 'lite'
 import { Characters } from '../../../5e/characters.js'
+import { Notes } from './notes/notes.js';
 
 export class CharacterSheet { 
     constructor(options) {
@@ -48,9 +49,12 @@ export class CharacterSheet {
     }
 
     #toggleTabs() {
+        console.log(this.CharacterSheet)
 
         if(!this.character.Background) 
             this.container.querySelector('.tab-container #background').setAttribute('hidden', '');
+        if(!this.character.Notes)
+            this.container.querySelector('.tab-container #notes').setAttribute('hidden', '');
     }
 
     #toggleContainer(id) { 
@@ -69,7 +73,7 @@ export class CharacterSheet {
         return {
             stats(container) { import('./stats/stats.js').then(t => new t.Stats({ container : container, character : view.character })); },
             background(container) { import('./background/background.js').then(t => new t.Background({ container : container, character : view.character })); },
-            
+            notes(container) { import('./notes/notes.js').then(t => new Notes({ container : container, character : view.character })); },
             //'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
             //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
             //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }

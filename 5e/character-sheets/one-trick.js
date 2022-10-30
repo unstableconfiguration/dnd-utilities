@@ -1,4 +1,5 @@
 import { Character } from '../character.js';
+import notes from '../character-notes/one-trick.md';
 // Height : 6'
 // Weight: 165
 
@@ -114,9 +115,7 @@ export let OneTrick = new Character({
         , 'Jug' : 1
         , '' : 0
     },
-    Background : null
-    
-    /*{
+    Background : {
         Trait : `I'm always picking things up, absently fiddling with
                 them, and sometimes accidentally breaking them.`
         ,Ideal : `Staying fascinated and pursuing the esoteric is wealth in itself.`
@@ -125,6 +124,8 @@ export let OneTrick = new Character({
         ,Background : ""
         ,Description : ""
         ,Feature : ""
-    }*/
+    }
 
 });
+
+OneTrick.Notes = notes;
