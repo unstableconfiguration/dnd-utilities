@@ -6,6 +6,10 @@ export class CharacterSheet {
         this.container = Lite.append(options.container, html);
 
         this.name = location.hash.split('/').slice(1).join('/');
+        Lite.head.addCss('./css/character-sheet.css');
+
+        // load one trick
+        // test bindings
         
         this.#addEventListeners();
     }
