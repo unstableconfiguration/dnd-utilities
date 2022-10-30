@@ -1,10 +1,9 @@
-import html from './background.html'
 import { Lite } from 'lite'
 import { marked } from 'marked'
 
 export class Background {
     constructor(options) {
-        this.container = Lite.append(options.container, html);
+        this.container = Lite.append(options.container, `<div id='background'></div>`);
         this.character = options.character;
 
         this.#bindData();

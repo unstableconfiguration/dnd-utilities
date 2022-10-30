@@ -1,7 +1,10 @@
 import html from './character-sheet.html'
 import { Lite } from 'lite'
 import { Characters } from '../../../5e/characters.js'
-import { Notes } from './notes/notes.js';
+import { Stats } from './stats/stats.js'
+import { Background } from './background/background.js'
+import { Notes } from './notes/notes.js'
+import { Skills } from './skills/skills.js'
 
 export class CharacterSheet { 
     constructor(options) {
@@ -71,9 +74,10 @@ export class CharacterSheet {
     get #loadTab() {
         let view = this;
         return {
-            stats(container) { import('./stats/stats.js').then(t => new t.Stats({ container : container, character : view.character })); },
-            background(container) { import('./background/background.js').then(t => new t.Background({ container : container, character : view.character })); },
-            notes(container) { import('./notes/notes.js').then(t => new Notes({ container : container, character : view.character })); },
+            stats(container) { new Stats({ container : container, character : view.character }); },
+            background(container) { new Background({ container : container, character : view.character }); },
+            notes(container) { new Notes({ container : container, character : view.character }); },
+            skills(container) { new Skills({ container : container, character : view.character }); },
             //'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
             //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
             //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }
