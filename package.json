@@ -17,7 +17,8 @@
     "cirrus-ui": "^0.6.2-patch-1",
     "dice": "git+https://github.com/unstableconfiguration/dice.git",
     "gridify": "git+https://github.com/unstableconfiguration/gridify.git",
-    "lite": "git+https://github.com/unstableconfiguration/lite.git"
+    "lite": "git+https://github.com/unstableconfiguration/lite.git",
+    "marked": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

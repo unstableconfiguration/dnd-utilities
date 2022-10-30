@@ -15,6 +15,7 @@ export class CharacterSheet {
         this.#addEventListeners();
 
         this.#loadCharacter();
+        this.#toggleTabs();
     }
 
     // so that's not gonna work, we need this to be a module
@@ -44,6 +45,12 @@ export class CharacterSheet {
                 view.#loadTab[tab.id](container);
             });
         });
+    }
+
+    #toggleTabs() {
+
+        if(!this.character.Background) 
+            this.container.querySelector('.tab-container #background').setAttribute('hidden', '');
     }
 
     #toggleContainer(id) { 

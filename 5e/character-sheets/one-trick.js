@@ -114,7 +114,9 @@ export let OneTrick = new Character({
         , 'Jug' : 1
         , '' : 0
     },
-    Background : {
+    Background : null
+    
+    /*{
         Trait : `I'm always picking things up, absently fiddling with
                 them, and sometimes accidentally breaking them.`
         ,Ideal : `Staying fascinated and pursuing the esoteric is wealth in itself.`
@@ -123,6 +125,6 @@ export let OneTrick = new Character({
         ,Background : ""
         ,Description : ""
         ,Feature : ""
-    }
+    }*/
 
 });

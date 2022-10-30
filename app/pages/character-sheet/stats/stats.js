@@ -77,7 +77,6 @@ export class Stats {
     }
 
     #hide(container) {
-        console.log(container)
         if(!(container instanceof HTMLElement)) 
             container = this.container.querySelector('#' + container);
         container.setAttribute('hidden', '');
