@@ -1,11 +1,12 @@
 import html from './character-sheet.html'
 import { Lite } from 'lite'
 import { Characters } from '../../../5e/characters.js'
-import { Stats } from './stats/stats.js'
-import { Background } from './background/background.js'
-import { Notes } from './notes/notes.js'
-import { Skills } from './skills/skills.js'
+import { Stats } from './stats/stats'
+import { Background } from './background/background'
+import { Notes } from './notes/notes'
+import { Skills } from './skills/skills'
 import { Items } from './items/items'
+import { Spells } from './spells/spells'
 
 export class CharacterSheet { 
     constructor(options) {
@@ -13,13 +14,11 @@ export class CharacterSheet {
 
         this.name = location.hash.split('/').slice(1).join('/');
         Lite.head.addCss('./css/character-sheet.css');
-
-        // load one trick
-        // test bindings
-        
+       
         this.#addEventListeners();
 
         this.#loadCharacter();
+        this.#loadTabs();
         this.#toggleTabs();
     }
 
@@ -47,7 +46,6 @@ export class CharacterSheet {
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 let container = view.#toggleContainer(tab.id);
-                view.#loadTab[tab.id](container);
             });
         });
     }
@@ -59,6 +57,8 @@ export class CharacterSheet {
             this.container.querySelector('.tab-container #background').setAttribute('hidden', '');
         if(!this.character.Notes)
             this.container.querySelector('.tab-container #notes').setAttribute('hidden', '');
+        if(!this.character.Spells)
+            this.container.querySelector('.tabs-container #spells)').setAttribute('hidden', '');
     }
 
     #toggleContainer(id) { 
@@ -72,18 +72,14 @@ export class CharacterSheet {
         return container;
     }
 
-    get #loadTab() {
+    #loadTabs() {
         let view = this;
-        return {
-            stats(container) { new Stats({ container : container, character : view.character }); },
-            background(container) { new Background({ container : container, character : view.character }); },
-            notes(container) { new Notes({ container : container, character : view.character }); },
-            skills(container) { new Skills({ container : container, character : view.character }); },
-            items(container) { new Items({ container : container, character : view.character }); }
-            //'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
-            //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
-            //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }
-        }
+        new Stats({ container : 'stats-container', character : view.character }); 
+        new Background({ container : 'background-container', character : view.character }); 
+        new Notes({ container : 'notes-container', character : view.character }); 
+        new Skills({ container : 'skills-container', character : view.character }); 
+        new Items({ container : 'items-container', character : view.character }); 
+        new Spells({ container : 'spells-container', character : view.character });
     }
 }
 

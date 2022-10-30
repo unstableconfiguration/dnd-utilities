@@ -44,7 +44,7 @@ export class Items {
             columns : [
                 { field : 'Name', header : 'Name', style : 'text-align:left', sort : true },
                 { field : 'Count', header : 'Count', style : 'text-align:right' },
-                { field : 'Value', header : 'Value', sort: view.coinSort, style : 'text-align:center' },
+                { field : 'Value', header : 'Value', sort: view.#coinSort, style : 'text-align:center' },
                 { field : 'Weight', header : 'Weight', style : 'text-align:right', sort : view.#numberSort }
             ]
         });
@@ -53,5 +53,28 @@ export class Items {
     #numberSort(a, b) {
         if(+a === +b) { return 0; }
         else return +a > +b ? 1 : -1;
+    }
+
+    #coinSort(a, b) { 
+        let coinValues = [
+            { suffix : 'cp', rate : 1 },
+            { suffix : 'sp', rate : 10 },
+            { suffix : 'ep', rate : 50 },
+            { suffix : 'gp', rate : 100 },
+            { suffix : 'pp', rate : 1000 },
+        ];
+        
+        let convertToCopper = function(value) { 
+            let conversion = coinValues.find(v => value.includes(v.suffix));
+            if(!conversion) { return -1; }
+            value = +value.replace(conversion.suffix, '');
+            value = value * conversion.rate;
+            return value;
+        }
+        
+        a = convertToCopper(a);
+        b = convertToCopper(b);
+        if(a === b) { return 0; }
+        return a > b ? 1 : -1;
     }
 }
