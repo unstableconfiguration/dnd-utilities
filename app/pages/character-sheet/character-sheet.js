@@ -1,5 +1,6 @@
 import html from './character-sheet.html'
 import { Lite } from 'lite'
+import { Characters } from '../../../5e/characters.js'
 
 export class CharacterSheet { 
     constructor(options) {
@@ -12,6 +13,24 @@ export class CharacterSheet {
         // test bindings
         
         this.#addEventListeners();
+
+        this.#loadCharacter();
+    }
+
+    // so that's not gonna work, we need this to be a module
+
+    #loadCharacter() {
+        let name = 'one-trick' // this.#getCharacterName();
+        let character = Characters[name];
+
+        this.character = character;
+        // bind data 
+            // since we load the views on demand, we need to pass the character to them
+    }
+
+
+    #getCharacterName() {
+        return location.hash.replace('#character-sheet/', '');
     }
 
     #addEventListeners() { 
@@ -38,13 +57,16 @@ export class CharacterSheet {
         return container;
     }
 
-    #loadTab = {
-        stats(container) { import('./stats/stats.js').then(t => new t.Stats({ container : container })); },
-        background(container) { import('./background/background.js').then(t => new t.Background({ container : container })); },
-        
-        //'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
-        //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
-        //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }
+    get #loadTab() {
+        let view = this;
+        return {
+            stats(container) { import('./stats/stats.js').then(t => new t.Stats({ container : container, character : view.character })); },
+            background(container) { import('./background/background.js').then(t => new t.Background({ container : container, character : view.character })); },
+            
+            //'spells' : (container) => { import('./tabs/spells/spells.js').then(t => new t.SpellLookup({ container : container })) },
+            //'monsters' : (container) => { import('./tabs/monsters/monsters.js').then(t => new t.MonsterLookup({ container : container })) },
+            //'items' : (container) => { import('./tabs/items/items.js').then(t => new t.ItemLookup({ container : container })) }
+        }
     }
 }
 

@@ -44,10 +44,10 @@ export class Character {
         this.#setDefenses(char.Defenses);
         this.#setSkills(char.Skills);
 
-        char.Features = data.Features;
-        char.Actions = data.Actions;
-        char.Reactions = data.Reactions;
-        char.Background = data.Background;
+        this.Features = char.Features;
+        this.Actions = char.Actions;
+        this.Reactions = char.Reactions;
+        this.Background = char.Background;
 
         this.#setSpells(char.Spells);
         this.#setItems(char.Items);
@@ -86,7 +86,7 @@ export class Character {
                 this.Defensese.Saves[save] += defenses.Saves[save].Bonus;
         }
 
-        this.defenses.HP = this.#getHp();
+        this.Defenses.HP = this.#getHp();
     }
 
     #getHp() { 
@@ -136,7 +136,9 @@ export class Character {
         for(let name in charItems) {
             if(!items[name]) console.log(name + ' not found in items db');
 
-            let item = Object.assign({}, items[name]);
+            let item = items[name] ?
+                 Object.assign({}, items[name])
+                 : { Name : name, Weight : 0, Cost : 0 };
             item.Count = charItems[name];
             item.baseWeight = item.Weight || 0;
             item.Weight = Math.floor(((item.baseWeight * item.Count) * 10)) / 10;
