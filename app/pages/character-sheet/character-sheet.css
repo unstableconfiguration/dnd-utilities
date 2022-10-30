@@ -21,7 +21,7 @@
 
 #character-sheet .divider {
     border-top:solid thin darkred;
-    margin-top : 5px;
+    margin : 5px 0px;
     padding-bottom : 5px;
 }
 

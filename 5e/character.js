@@ -53,7 +53,7 @@ export class Character {
         this.#setItems(char.Items);
     }
 
-    #getBonus(abilityScore) { return Math.floor((abilityScore - 10) / 2 ); }
+    getBonus(abilityScore) { return Math.floor((abilityScore - 10) / 2 ); }
     #setClassLevels(charClasses) {
         let level = 0;
         this.Classes = {};
@@ -70,12 +70,12 @@ export class Character {
             Resistances : defenses.Resistances || '',
             Immunities : defenses.ConditionImmunities || '',
             Saves : {
-                Strength : this.#getBonus(this.Stats.Strength),
-                Dexterity : this.#getBonus(this.Stats.Dexterity),
-                Constitution : this.#getBonus(this.Stats.Strength),
-                Intelligence : this.#getBonus(this.Stats.Intelligence),
-                Wisdom : this.#getBonus(this.Stats.Wisdom),
-                Charisma : this.#getBonus(this.Stats.Charisma)     
+                Strength : this.getBonus(this.Stats.Strength),
+                Dexterity : this.getBonus(this.Stats.Dexterity),
+                Constitution : this.getBonus(this.Stats.Strength),
+                Intelligence : this.getBonus(this.Stats.Intelligence),
+                Wisdom : this.getBonus(this.Stats.Wisdom),
+                Charisma : this.getBonus(this.Stats.Charisma)     
             }
         }
 
@@ -100,7 +100,7 @@ export class Character {
             
 
         })
-        hp += this.#getBonus(this.Stats.Constitution) *  this.Level;
+        hp += this.getBonus(this.Stats.Constitution) *  this.Level;
         return hp;
     }
 
@@ -119,7 +119,7 @@ export class Character {
                 Expertise : charSkill?.Expertise || false
             }
 
-            let bonus = this.#getBonus(this.Stats[ability]);
+            let bonus = this.getBonus(this.Stats[ability]);
             if(this.Skills[name].Trained) bonus += this.Proficiency;
             if(this.Skills[name].Expertise) bonus += this.Proficiency;
             this.Skills[name].Bonus = bonus;
