@@ -18,7 +18,12 @@ export default {
         copy({
             targets : [
                 { src : 'index.html', dest : 'dist' },
-                { src : 'favicon.ico', dest :'dist' }
+                { src : 'favicon.ico', dest :'dist' },
+                { src : [
+                    'app/**/*.css',
+                    'app/**/**/*.css',
+                    'app/**/**/**/*.css'
+                ], dest : 'dist/css' }
             ]
         }),
         html({
