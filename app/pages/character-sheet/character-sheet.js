@@ -39,8 +39,6 @@ export class CharacterSheet {
     }
 
     #toggleTabs() {
-        console.log(this.CharacterSheet)
-
         if(!this.character.Background) 
             this.container.querySelector('.tab-container #background').setAttribute('hidden', '');
         if(!this.character.Notes)

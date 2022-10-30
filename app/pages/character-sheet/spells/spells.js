@@ -22,7 +22,7 @@ export class Spells {
         let view = this;
         let data = this.#getGridData();
 
-        new Gridify({
+        this.grid = new Gridify({
             container : 'spells-container',
             data : data,
             columns : [
@@ -60,20 +60,23 @@ export class Spells {
     }
 
     #getRitualFilter() { 
+        let view = this;
         let checkBox = document.createElement('input');
         checkBox.type = 'checkbox';
         checkBox.addEventListener('click', (e) => {
             e.target.value = e.target.checked;
+            view.grid.filter();
         });
-    
-        let rule = function(cellValue, checked) { 
-            return checked == 'true' ? cellValue === 'Yes' : true;
+
+        let compare = function(columnValue, filterValue) {
+            return filterValue == 'true'
+                ? columnValue == 'Yes'
+                : true;
         }
-    
+
         return { 
             control : checkBox,
-            event : 'click',
-            rule : rule
+            compare : compare
         }
     }
 }
