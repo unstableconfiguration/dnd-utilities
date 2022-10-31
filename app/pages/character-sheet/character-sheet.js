@@ -18,10 +18,11 @@ export class CharacterSheet {
         this.#loadCharacter();
         this.#loadTabs();
         this.#toggleTabs();
+        this.#toggleContainer('stats')
     }
 
     #loadCharacter() {
-        let name = 'one-trick' // location.hash.replace('#character-sheet/', '');
+        let name = location.hash.replace('#character-sheet/', '');
         let character = Characters[name];
 
         this.character = character;

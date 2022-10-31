@@ -1,5 +1,7 @@
+import { BarbicanBrady } from './character-sheets/barbican-brady';
 import { OneTrick } from './character-sheets/one-trick';
 
 export const Characters =  {
-    'one-trick' : OneTrick
+    'barbican-brady' : BarbicanBrady
+    , 'one-trick' : OneTrick
 }

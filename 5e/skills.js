@@ -1,6 +1,6 @@
 export let skills = {};
 skills.Athletics = 'Strength';
-['Acrobatics', 'Slight of Hand', 'Stealth'].forEach((s) => {
+['Acrobatics', 'Sleight of Hand', 'Stealth'].forEach((s) => {
     skills[s] = 'Dexterity';
 });
 ['Arcana', 'History', 'Investigation', 'Nature', 'Religion'].forEach((s) => {

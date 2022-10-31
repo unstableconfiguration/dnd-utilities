@@ -4,8 +4,13 @@ import { Card } from '../../components/card/card.js'
 
 let characters = [
     {
+        name : 'Barbican Brady', 
+        description : 'wandering professional wrestler',
+        url : '#character-sheet/barbican-brady',
+    },
+    {
         name : 'One Trick',
-        description : 'description of one trick',
+        description : 'Tabaxi adventurer',
         url : '#character-sheet/one-trick'
     }
 ];
