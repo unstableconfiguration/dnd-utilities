@@ -541,22 +541,32 @@ Lite.router.initialize();
 Lite.router.addRoutes([{
   route: '',
   value: () => {
-    import('./lookups-6943f3eb.js').then(load);
+    import('./lookups-bfcde57f.js').then(load);
   }
 }, {
   route: 'lookups',
   value: () => {
-    import('./lookups-6943f3eb.js').then(load);
+    import('./lookups-bfcde57f.js').then(load);
   }
 }, {
   route: 'battle-manager',
   value: () => {
-    import('./battle-manager-32d98abe.js').then(load);
+    import('./battle-manager-75dfffd0.js').then(load);
   }
 }, {
   route: 'encounter-builder',
   value: () => {
-    import('./encounter-builder-fb2d427c.js').then(load);
+    import('./encounter-builder-36709d99.js').then(load);
+  }
+}, {
+  route: 'character-sheets',
+  value: () => {
+    import('./character-sheets-d8a71a4b.js').then(load);
+  }
+}, {
+  route: 'character-sheet/{name}',
+  value: () => {
+    import('./character-sheet-f55ed4a1.js').then(load);
   }
 }]);
 
@@ -568,9 +578,9 @@ Lite.router.onHashChange = function (value) {
   }
 };
 
-var html$1 = "<div class=\"header u-unselectable header-animated\">\r\n    <div class=\"header-brand\">\r\n        <div class=\"nav-item no-hover\">\r\n            <a><h6 class=\"title\">D&D Utilities</h6></a>\r\n        </div>\r\n    </div>\r\n    <div class=\"header-nav\" id=\"header-menu\">\r\n        <div class=\"nav-left\">\r\n            <div class=\"nav-item text-center\">\r\n                <a target=\"_blank\" href=\"https://github.com/unstableconfiguration/dnd-utilities\">\r\n                    <span class=\"icon\">\r\n                        <i class=\"fab fa-wrapper fa-github\" aria-hidden=\"true\"></i>\r\n                    </span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n        <div class=\"nav-center\">\r\n            <div class=\"nav-item\" id=\"dice-header-container\">\r\n                <span class=\"icon\">\r\n                    <i class=\"fas fa-dice-d20\"></i>\r\n                </span>        \r\n            </div>\r\n        </div>\r\n        <div class=\"nav-right\">\r\n            <div class=\"nav-item active\">\r\n                <a href=\"#lookups\">Lookups</a>\r\n            </div>\r\n            <div class=\"nav-item\">\r\n                <a href=\"#battle-manager\">Battle Manager</a>\r\n            </div>\r\n            <div class=\"nav-item\">\r\n                <a href=\"#encounter-builder\">Encounter Builder</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
+var html$1 = "<div class='header u-unselectable header-animated'>\r\n    <div class='header-brand'>\r\n        <div class='nav-item no-hover'>\r\n            <a><h6 class='title'>D&D Utilities</h6></a>\r\n        </div>\r\n    </div>\r\n    <div class='header-nav' id='header-menu'>\r\n        <div class='nav-left'>\r\n            <div class='nav-item text-center'>\r\n                <a target='_blank' href='https://github.com/unstableconfiguration/dnd-utilities'>\r\n                    <span class='icon'>\r\n                        <i class='fab fa-wrapper fa-github' aria-hidden='true'></i>\r\n                    </span>\r\n                </a>\r\n            </div>\r\n        </div>\r\n        <div class='nav-center'>\r\n            <div class='nav-item' id='dice-header-container'>\r\n                <span class='icon'>\r\n                    <i class='fas fa-dice-d20'></i>\r\n                </span>        \r\n            </div>\r\n        </div>\r\n        <div class='nav-right'>\r\n            <div class='nav-item active'>\r\n                <a href='#lookups'>Lookups</a>\r\n            </div>\r\n            <div class='nav-item'>\r\n                <a href='#character-sheets'>Characters</a>\r\n            </div>\r\n            <div class='nav-item'>\r\n                <a href='#battle-manager'>Battle Manager</a>\r\n            </div>\r\n            <div class='nav-item'>\r\n                <a href='#encounter-builder'>Encounter Builder</a>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
 
-var html = "<div class=\"form-group\">  \r\n    <label class=\"form-group-input\">\r\n        <span class=\"icon\">\r\n            <i class=\"fas fa-dice-d20\"></i>\r\n        </span>\r\n    </label>\r\n    \r\n    <input id=\"dice-input\" class=\"form-group-input input-small w-50\" type=\"text\" placeholder=\"1d6\">\r\n    \r\n\r\n    <div class=\"list-dropdown dropdown-right\">\r\n        <button id=\"dice-output\" class=\"form-group-btn btn-small btn-dropdown\">    \r\n            =\r\n        </button>\r\n        <div id=\"dice-output-log\" class=\"menu\">\r\n        </div>\r\n    </div>  \r\n    \r\n</div>";
+var html = "<div class='form-group'>  \r\n    <label class='form-group-input'>\r\n        <span class='icon'>\r\n            <i class=\"fas fa-dice-d20\"></i>\r\n        </span>\r\n    </label>\r\n    \r\n    <input id='dice-input' class='form-group-input input-small w-50' type='text' placeholder='1d6'>\r\n    </input>\r\n\r\n    <div class=\"list-dropdown dropdown-right\">\r\n        <button id='dice-output' class=\"form-group-btn btn-small btn-dropdown\">    \r\n            =\r\n        </button>\r\n        <div id='dice-output-log' class=\"menu\">\r\n        </div>\r\n    </div>  \r\n    \r\n</div>";
 
 var optionDefaults = {
   /* Human readable name for the operation. */

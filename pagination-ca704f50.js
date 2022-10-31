@@ -1,6 +1,6 @@
 import { L as Lite } from './index.js';
 
-var html = "<div class=\"pagination\">\r\n    <div class=\"pagination-item\"><a id=\"btnPrev\" class=\"disabled\">Prev</a></div>\r\n    <div style=\"min-width:150px\" class=\"pagination-item\"><span id=\"pagination-text\">Page 1 of 100</span></div>\r\n    <div class=\"pagination-item\"><a id=\"btnNext\">Next</a></div>\r\n</div>";
+var html = "<div class=\"pagination\">\r\n    <div class=\"pagination-item\"><a id='btnPrev' class=\"disabled\">Prev</a></div>\r\n    <div style=\"min-width:150px\" class=\"pagination-item\"><span id='pagination-text'>Page 1 of 100</span></div>\r\n    <div class=\"pagination-item\"><a id='btnNext'>Next</a></div>\r\n</div>";
 
 class Pagination {
   constructor(args) {

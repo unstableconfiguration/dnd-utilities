@@ -1,6 +1,6 @@
 import { L as Lite, _ as _classPrivateMethodGet, a as _classPrivateFieldGet } from './index.js';
 
-var html = "<style>\r\n    #table-container .td-text-long {\r\n        /* Overriding cirrus .table */\r\n        text-align:left !important; \r\n        overflow: hidden;\r\n        white-space: nowrap;\r\n    }\r\n</style>\r\n<div class=\"tab-container\">\r\n    <ul>\r\n        <li id=\"spells\"><div class=\"tab-item-content\">Spells</div></li>\r\n        <li id=\"monsters\"><div class=\"tab-item-content\">Monsters</div></li>\r\n        <li id=\"items\"><div class=\"tab-item-content\">Items</div></li>\r\n    </ul>\r\n</div>\r\n<div id=\"table-container\">\r\n\r\n</div>";
+var html = "<style>\r\n    #table-container .td-text-long {\r\n        /* Overriding cirrus .table */\r\n        text-align:left !important; \r\n        overflow: hidden;\r\n        white-space: nowrap;\r\n    }\r\n</style>\r\n<div class=\"tab-container\">\r\n    <ul>\r\n        <li id='spells'><div class=\"tab-item-content\">Spells</div></li>\r\n        <li id='monsters'><div class=\"tab-item-content\">Monsters</div></li>\r\n        <li id='items'><div class=\"tab-item-content\">Items</div></li>\r\n    </ul>\r\n</div>\r\n<div id='table-container'>\r\n\r\n</div>";
 
 var _addEventListeners = /*#__PURE__*/new WeakSet();
 
@@ -14,17 +14,17 @@ class Lookups {
       writable: true,
       value: {
         'spells': container => {
-          import('./spells-12101586.js').then(t => new t.SpellLookup({
+          import('./spells-2973a270.js').then(t => new t.SpellLookup({
             container: container
           }));
         },
         'monsters': container => {
-          import('./monsters-de4ffc90.js').then(t => new t.MonsterLookup({
+          import('./monsters-7f89d7e9.js').then(t => new t.MonsterLookup({
             container: container
           }));
         },
         'items': container => {
-          import('./items-f519f3af.js').then(t => new t.ItemLookup({
+          import('./items-87457784.js').then(t => new t.ItemLookup({
             container: container
           }));
         }
@@ -42,7 +42,7 @@ class Lookups {
 
 function _addEventListeners2() {
   var vm = this;
-  var tabs = document.querySelectorAll('.tab-container > ul > li');
+  var tabs = this.container.querySelectorAll('.tab-container > ul > li');
   var tableContainer = this.container.querySelector('#table-container');
   tabs.forEach(tab => {
     tab.addEventListener('click', function () {
