@@ -97,8 +97,8 @@ export let BarbicanBrady = new Character({
         , '' : 0
     },
     Background : {
-        Trait : `I'm always looking to ply my trade and test myself against others.`
-        , Ideal : `I like to inspire the crowd and let them share in feelings of heroism.`
+        Trait : `I'm always looking to test my strength against others.`
+        , Ideal : `I like to inspire people and let them share in feelings of heroism.`
         , Bond : `Win or lose, I feel cameraderie with anyone who will matches with me.`
         , Flaw : `I like to 'play the heel' in my performances, often playing a local lord or authority.`
         , Background : `Carnival Wrestler`
