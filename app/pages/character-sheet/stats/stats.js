@@ -30,7 +30,7 @@ export class Stats {
                 + (value < 10 ? '' : '+')
                 + this.character.getBonus(value);
 
-        Stats.Strength = setStatBonus(stats.Strength);
+        stats.Strength = setStatBonus(stats.Strength);
         stats.Dexterity = setStatBonus(stats.Dexterity);
         stats.Constitution = setStatBonus(stats.Constitution);
         stats.Intelligence = setStatBonus(stats.Intelligence);
