@@ -1,6 +1,6 @@
 import { L as Lite, G as Gridify } from './index.js';
-import { m as monsters, M as MonsterBox } from './monsterbox-278ddc3c.js';
-import { M as Modal } from './modal-74c39af9.js';
+import { m as monsters, M as MonsterBox } from './monsterbox-a2832662.js';
+import { M as Modal } from './modal-545b9909.js';
 
 var html$1 = "<div id='battle-manager'>\r\n    <div id='left'>\r\n        <div>\r\n            <button id=\"btnShowAddParticipantModal\" class=\"btn-primary\">+Add Participant</button>\r\n        </div>\r\n        <div>\r\n            <div id='battle-table-container'></div>\r\n        </div>\r\n    </div>\r\n    <div id='right'>\r\n        <div id='dice-container'></div>\r\n    </div>\r\n</div>";
 
@@ -12,37 +12,31 @@ var html = "<style>\r\n    .autocomplete-suggestions {\r\n        text-align: le
     GitHub: https://github.com/Pixabay/JavaScript-autoComplete
     License: http://www.opensource.org/licenses/mit-license.php
 */
+
 var autoComplete = function () {
   // "use strict";
   function autoComplete(options) {
-    if (!document.querySelector) return; // helpers
+    if (!document.querySelector) return;
 
+    // helpers
     function hasClass(el, className) {
       return el.classList ? el.classList.contains(className) : new RegExp('\\b' + className + '\\b').test(el.className);
     }
-
     function addEvent(el, type, handler) {
       if (el.attachEvent) el.attachEvent('on' + type, handler);else el.addEventListener(type, handler);
     }
-
     function removeEvent(el, type, handler) {
       // if (el.removeEventListener) not working in IE11
       if (el.detachEvent) el.detachEvent('on' + type, handler);else el.removeEventListener(type, handler);
     }
-
     function live(elClass, event, cb, context) {
       addEvent(context || document, event, function (e) {
         var found,
-            el = e.target || e.srcElement;
-
-        while (el && !(found = hasClass(el, elClass))) {
-          el = el.parentElement;
-        }
-
+          el = e.target || e.srcElement;
+        while (el && !(found = hasClass(el, elClass))) el = el.parentElement;
         if (found) cb.call(el, e);
       });
     }
-
     var o = {
       selector: 0,
       source: 0,
@@ -60,46 +54,40 @@ var autoComplete = function () {
       },
       onSelect: function onSelect(e, term, item) {}
     };
-
     for (var k in options) {
       if (options.hasOwnProperty(k)) o[k] = options[k];
-    } // init
+    }
 
-
+    // init
     var elems = typeof o.selector == 'object' ? [o.selector] : document.querySelectorAll(o.selector);
-
     for (var i = 0; i < elems.length; i++) {
-      var that = elems[i]; // create suggestions container "sc"
+      var that = elems[i];
 
+      // create suggestions container "sc"
       that.sc = document.createElement('div');
       that.sc.className = 'autocomplete-suggestions ' + o.menuClass;
       that.autocompleteAttr = that.getAttribute('autocomplete');
       that.setAttribute('autocomplete', 'off');
       that.cache = {};
       that.last_val = '';
-
       that.updateSC = function (resize, next) {
         var rect = that.getBoundingClientRect();
         that.sc.style.left = Math.round(rect.left + (window.pageXOffset || document.documentElement.scrollLeft) + o.offsetLeft) + 'px';
         that.sc.style.top = Math.round(rect.bottom + (window.pageYOffset || document.documentElement.scrollTop) + o.offsetTop) + 'px';
         that.sc.style.width = Math.round(rect.right - rect.left) + 'px'; // outerWidth
-
         if (!resize) {
           that.sc.style.display = 'block';
-
           if (!that.sc.maxHeight) {
             that.sc.maxHeight = parseInt((window.getComputedStyle ? getComputedStyle(that.sc, null) : that.sc.currentStyle).maxHeight);
           }
-
           if (!that.sc.suggestionHeight) that.sc.suggestionHeight = that.sc.querySelector('.autocomplete-suggestion').offsetHeight;
           if (that.sc.suggestionHeight) if (!next) that.sc.scrollTop = 0;else {
             var scrTop = that.sc.scrollTop,
-                selTop = next.getBoundingClientRect().top - that.sc.getBoundingClientRect().top;
+              selTop = next.getBoundingClientRect().top - that.sc.getBoundingClientRect().top;
             if (selTop + that.sc.suggestionHeight - that.sc.maxHeight > 0) that.sc.scrollTop = selTop + that.sc.suggestionHeight + scrTop - that.sc.maxHeight;else if (selTop < 0) that.sc.scrollTop = selTop + scrTop;
           }
         }
       };
-
       addEvent(window, 'resize', that.updateSC);
       document.body.appendChild(that.sc);
       live('autocomplete-suggestion', 'mouseleave', function (e) {
@@ -122,14 +110,12 @@ var autoComplete = function () {
           that.sc.style.display = 'none';
         }
       }, that.sc);
-
       that.blurHandler = function () {
         try {
           var over_sb = document.querySelector('.autocomplete-suggestions:hover');
         } catch (e) {
           var over_sb = 0;
         }
-
         if (!over_sb) {
           that.last_val = that.value;
           that.sc.style.display = 'none';
@@ -140,40 +126,29 @@ var autoComplete = function () {
           that.focus();
         }, 20);
       };
-
       addEvent(that, 'blur', that.blurHandler);
-
       var suggest = function suggest(data) {
         var val = that.value;
         that.cache[val] = data;
-
         if (data.length && val.length >= o.minChars) {
           var s = '';
-
-          for (var i = 0; i < data.length; i++) {
-            s += o.renderItem(data[i], val);
-          }
-
+          for (var i = 0; i < data.length; i++) s += o.renderItem(data[i], val);
           that.sc.innerHTML = s;
           that.updateSC(0);
         } else that.sc.style.display = 'none';
       };
-
       that.keydownHandler = function (e) {
-        var key = window.event ? e.keyCode : e.which; // down (40), up (38)
-
+        var key = window.event ? e.keyCode : e.which;
+        // down (40), up (38)
         if ((key == 40 || key == 38) && that.sc.innerHTML) {
           var next,
-              sel = that.sc.querySelector('.autocomplete-suggestion.selected');
-
+            sel = that.sc.querySelector('.autocomplete-suggestion.selected');
           if (!sel) {
             next = key == 40 ? that.sc.querySelector('.autocomplete-suggestion') : that.sc.childNodes[that.sc.childNodes.length - 1]; // first : last
-
             next.className += ' selected';
             that.value = next.getAttribute('data-val');
           } else {
             next = key == 40 ? sel.nextSibling : sel.previousSibling;
-
             if (next) {
               sel.className = sel.className.replace('selected', '');
               next.className += ' selected';
@@ -184,17 +159,17 @@ var autoComplete = function () {
               next = 0;
             }
           }
-
           that.updateSC(0, next);
           return false;
-        } // esc
+        }
+        // esc
         else if (key == 27) {
           that.value = that.last_val;
           that.sc.style.display = 'none';
-        } // enter
+        }
+        // enter
         else if (key == 13 || key == 9) {
           var sel = that.sc.querySelector('.autocomplete-suggestion.selected');
-
           if (sel && that.sc.style.display != 'none') {
             o.onSelect(e, sel.getAttribute('data-val'), sel);
             setTimeout(function () {
@@ -203,37 +178,29 @@ var autoComplete = function () {
           }
         }
       };
-
       addEvent(that, 'keydown', that.keydownHandler);
-
       that.keyupHandler = function (e) {
         var key = window.event ? e.keyCode : e.which;
-
         if (!key || (key < 35 || key > 40) && key != 13 && key != 27) {
           var val = that.value;
-
           if (val.length >= o.minChars) {
             if (val != that.last_val) {
               that.last_val = val;
               clearTimeout(that.timer);
-
               if (o.cache) {
                 if (val in that.cache) {
                   suggest(that.cache[val]);
                   return;
-                } // no requests if previous suggestions were empty
-
-
+                }
+                // no requests if previous suggestions were empty
                 for (var i = 1; i < val.length - o.minChars; i++) {
                   var part = val.slice(0, val.length - i);
-
                   if (part in that.cache && !that.cache[part].length) {
                     suggest([]);
                     return;
                   }
                 }
               }
-
               that.timer = setTimeout(function () {
                 o.source(val, suggest);
               }, o.delay);
@@ -244,18 +211,15 @@ var autoComplete = function () {
           }
         }
       };
-
       addEvent(that, 'keyup', that.keyupHandler);
-
       that.focusHandler = function (e) {
         that.last_val = '\n';
         that.keyupHandler(e);
       };
-
       if (!o.minChars) addEvent(that, 'focus', that.focusHandler);
-    } // public destroy method
+    }
 
-
+    // public destroy method
     this.destroy = function () {
       for (var i = 0; i < elems.length; i++) {
         var that = elems[i];
@@ -270,10 +234,8 @@ var autoComplete = function () {
       }
     };
   }
-
   return autoComplete;
 }();
-
 (function () {
   if (typeof define === 'function' && define.amd) define('autoComplete', function () {
     return autoComplete;
@@ -289,7 +251,6 @@ class AddParticipant {
     this.setAutoComplete();
     this.elements.init.focus();
   }
-
   setElements() {
     var vm = this;
     vm.elements = {
@@ -299,18 +260,15 @@ class AddParticipant {
       count: '#txtCount',
       add: '#btnAddParticipant'
     };
-
     for (var k in vm.elements) {
       vm.elements[k] = vm.container.querySelector(vm.elements[k]);
     }
-
     vm.elements.add.addEventListener('click', vm.onAddParticipantClicked.bind(this));
     vm.elements.name.addEventListener('change', vm.onNameChanged.bind(this));
     vm.elements.name.addEventListener('keypress', vm.onNameKeyPress.bind(this));
     vm.elements.hp.addEventListener('keypress', vm.onHpKeyPress.bind(this));
     vm.elements.count.addEventListener('keypress', vm.onCountKeyPress.bind(this));
   }
-
   setAutoComplete() {
     var monsterNames = Object.keys(monsters);
     new autoComplete({
@@ -323,15 +281,12 @@ class AddParticipant {
         });
         suggest(matches);
       },
-
       onSelect(e) {
         // Force .onNameChanged to be called
         e.target.dispatchEvent(new Event('change'));
       }
-
     });
   }
-
   getParticipant() {
     var vm = this;
     return {
@@ -341,23 +296,19 @@ class AddParticipant {
       hp: vm.elements.hp.value
     };
   }
-
   onHpKeyPress(e) {
     if (e.keyCode === 13) {
       this.addParticipant();
     }
   }
-
   onNameChanged(e) {
     var vm = this;
     vm.elements.add.disabled = !vm.isValid();
     var monster = monsters[e.target.value];
-
     if (monster) {
       vm.setMonster(monster);
     }
   }
-
   onNameKeyPress(e) {
     // Press enter twice on name to submit
     if (e.keyCode === 13) {
@@ -366,53 +317,40 @@ class AddParticipant {
       } else e.target.enterPressed = true;
     } else e.target.enterPressed = false;
   }
-
   onCountKeyPress(e) {
     if (e.keyCode === 13) {
       this.addParticipant();
     }
   }
-
   setMonster(monster) {
     var vm = this;
     vm.elements.init.value = vm.rollD20() + Math.floor((monster.Stats.Dex - 10) / 2);
     vm.elements.hp.value = +/\d+/.exec(monster.Defenses.HP)[0];
   }
-
   onAddParticipantClicked() {
     this.addParticipant();
   }
-
   isValid() {
     return !!this.elements.name.value;
   }
-
   addParticipant() {
     var vm = this;
-
     if (!vm.isValid()) {
       return;
     }
-
     for (var i = 1; i <= +vm.elements.count.value; i++) {
       var participant = vm.getParticipant();
-
       if (vm.elements.count.value > 1) {
         participant.id = participant.id + ' ' + i;
       }
-
       vm.onParticipantAdded(participant);
     }
-
     new Modal().hide();
   }
-
   onParticipantAdded() {}
-
   rollD20() {
     return Math.floor(Math.random() * 20) + 1;
   }
-
 }
 
 class ParticipantGrid {
@@ -422,7 +360,6 @@ class ParticipantGrid {
     this.data = args.data;
     this.drawGrid();
   }
-
   drawGrid() {
     var vm = this;
     vm.grid = new Gridify({
@@ -458,17 +395,14 @@ class ParticipantGrid {
             td.innerText = '';
             td.appendChild(vm.tdInit(td));
             break;
-
           case 'id':
             td.innerText = '';
             td.appendChild(vm.tdId(td));
             break;
-
           case 'hp':
             td.innerText = '';
             td.appendChild(vm.tdHP(td));
             break;
-
           case 'remove':
             td.innerText = '';
             td.appendChild(vm.tdRemoveButton(td));
@@ -480,29 +414,23 @@ class ParticipantGrid {
     });
     vm.grid.sort('init');
   }
-
   numberSort(a, b) {
     if (a === b) {
       return 0;
     }
-
     return +a > +b ? 1 : -1;
   }
-
   onNameClick(e) {
     var monster = monsters[e.target.value];
-
     if (!monster) {
       return;
     }
-
     var modal = new Modal();
     new MonsterBox({
       container: modal.body,
       data: monster
     });
   }
-
   tdInit(td) {
     var vm = this;
     var input = document.createElement('input');
@@ -510,14 +438,13 @@ class ParticipantGrid {
     input.style = td.style.cssText;
     input.className = 'input-xsmall';
     input.addEventListener('change', () => {
-      td.value = input.value; // sort twice so we stay descending
-
+      td.value = input.value;
+      // sort twice so we stay descending
       vm.grid.sort('init');
       vm.grid.sort('init');
     });
     return input;
   }
-
   tdId(td) {
     var input = document.createElement('input');
     input.value = td.value;
@@ -528,7 +455,6 @@ class ParticipantGrid {
     });
     return input;
   }
-
   tdHP(td) {
     var input = document.createElement('input');
     input.value = td.value;
@@ -539,7 +465,6 @@ class ParticipantGrid {
     });
     return input;
   }
-
   tdRemoveButton(td) {
     var vm = this;
     var button = document.createElement('button');
@@ -552,7 +477,6 @@ class ParticipantGrid {
     });
     return button;
   }
-
 }
 
 class BattleManager {
@@ -561,12 +485,10 @@ class BattleManager {
     this.data = [];
     this.addEventListeners();
   }
-
   addEventListeners() {
     var vm = this;
     document.getElementById('btnShowAddParticipantModal').addEventListener('click', vm.btnShowAddParticipantModalClicked.bind(vm));
   }
-
   btnShowAddParticipantModalClicked() {
     var vm = this;
     var modal = new Modal();
@@ -575,28 +497,23 @@ class BattleManager {
       onParticipantAdded: vm.onParticipantAdded.bind(vm)
     });
   }
-
   onParticipantAdded(participantData) {
     var vm = this;
     vm.data.push(participantData);
     vm.drawGrid();
     document.getElementById('btnShowAddParticipantModal').focus();
   }
-
   drawGrid() {
     var vm = this;
-
     if (!vm.data.length) {
       return;
     }
-
     new ParticipantGrid({
       parent: vm,
       container: 'battle-table-container',
       data: vm.data
     });
   }
-
 }
 var View = BattleManager;
 

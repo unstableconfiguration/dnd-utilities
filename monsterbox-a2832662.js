@@ -15086,8 +15086,9 @@ var strahd = [{
   "senses": "darkvision 60 ft."
 }];
 
-var monsters = {};
+//import * as wat  from './imports/monster-sanitizer.js';
 
+var monsters = {};
 var Monster = function Monster(data) {
   this.Alignment = data.Alignment;
   this.ChallengeRating = data.ChallengeRating;
@@ -15121,31 +15122,26 @@ var Monster = function Monster(data) {
   this.Reactions = data.Reactions || [];
   this.Traits = data.Traits || [];
   this.Items = data.Items || [];
-}; // add to sanitizer and re-import later
+};
 
-
+// add to sanitizer and re-import later
 var getResist = function getResist(resist, name) {
   if (!resist) return undefined;
-
   if (!Array.isArray(resist)) {
     console.log('problem', resist);
   }
-
   resist = resist.map(r => {
     if (r.special) {
       r = r.special;
     }
-
     if (typeof r === 'object') {
       //console.log(r, name);
       r = r.resist.join(', ') + r.note;
     }
-
     return r;
   });
   return resist.join('; ');
 };
-
 var loadMonsters = function loadMonsters(monsterSet) {
   for (var m in monsterSet) {
     var monster = monsterSet[m];
@@ -15186,12 +15182,11 @@ var loadMonsters = function loadMonsters(monsterSet) {
       Reactions: monster.reaction,
       //.map(r => { return { Name : r.name, Text : r.text }}),
       LegendaryActions: monster.legendary //.map(l => { return { Name : l.name, Text : l.text }})
-
     });
+
     monsters[monster.Name] = monster;
   }
 };
-
 loadMonsters(monsterManual);
 loadMonsters(volos);
 loadMonsters(mordenkainens);
@@ -15212,15 +15207,12 @@ class MonsterBox {
     window.data = this.data;
     window.proxy = Lite.bindings.bind('monsterbox', this.data);
   }
+
   /* Hides elements with no content */
-
-
   toggleVisibility() {
     var vm = this;
     var data = vm.data;
-
     var hide = id => vm.container.querySelector('#' + id).parentElement.style.display = 'none';
-
     if (!data.Languages) hide('Languages');
     if (!data.Defenses.Saves) hide('Saves');
     if (!data.Senses) hide('Senses');
@@ -15233,7 +15225,6 @@ class MonsterBox {
     if (!data.LegendaryActions.length) vm.container.querySelector('#monster-legendary-actions').style.display = 'none';
     if (!data.Items.length) vm.container.querySelector('#monster-items').style.display = 'none';
   }
-
   addNameTextItem(name, text) {
     var div = document.createElement('div');
     var label = div.appendChild(document.createElement('em'));
@@ -15243,20 +15234,16 @@ class MonsterBox {
     description.innerHTML = text;
     return div;
   }
-
   bindNameTextCollection(containerId, data) {
     var vm = this;
-
     if (!data) {
       return;
     }
-
     var div = vm.container.querySelector(containerId);
     data.forEach(item => {
       div.appendChild(vm.addNameTextItem(item.Name, item.Text));
     });
   }
-
 }
 
 export { MonsterBox as M, monsters as m };

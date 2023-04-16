@@ -4580,8 +4580,9 @@ var condensedXge = [{
   "description": "You move like the wind. Until the spell ends, your movement doesn't provoke opportunity attacks.\nOnce before the spell ends, you can give yourself advantage on one weapon attack roll on your turn. That attack deals an extra 1d8 force damage on a hit. Whether you hit or miss, your walking speed increases by 30 feet until the end of that turn."
 }];
 
-var spells = {};
+//import * as x from './imports/spells-sanitizer'
 
+var spells = {};
 var Spell = function Spell(data) {
   this.CastingTime = data.CastingTime;
   this.Components = data.Components;
@@ -4593,7 +4594,6 @@ var Spell = function Spell(data) {
   this.School = data.School;
   return this;
 };
-
 var convertSpell = function convertSpell(spell) {
   //console.log(spell)
   return new Spell({
@@ -4608,7 +4608,6 @@ var convertSpell = function convertSpell(spell) {
     School: spell.school
   });
 };
-
 condensedPhb.forEach(s => {
   spells[s.name] = convertSpell(s);
 });
@@ -4627,7 +4626,6 @@ class SpellBox {
     this.data = args.data;
     Lite.bindings.bind('spellbox', this.data);
   }
-
 }
 
 export { SpellBox as S, spells as s };

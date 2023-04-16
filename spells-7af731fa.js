@@ -1,43 +1,30 @@
-import { L as Lite, _ as _classPrivateMethodGet, G as Gridify } from './index.js';
-import { s as spells, S as SpellBox } from './spellbox-6973dd1c.js';
-import { P as Pagination } from './pagination-ca704f50.js';
-import { M as Modal } from './modal-74c39af9.js';
+import { _ as _classPrivateMethodInitSpec, L as Lite, b as _classPrivateMethodGet, G as Gridify } from './index.js';
+import { s as spells, S as SpellBox } from './spellbox-d50b5bf8.js';
+import { P as Pagination } from './pagination-204483a5.js';
+import { M as Modal } from './modal-545b9909.js';
 
 var _prepareSpells = /*#__PURE__*/new WeakSet();
-
 var _buildGrid = /*#__PURE__*/new WeakSet();
-
 var _getRitualFilter = /*#__PURE__*/new WeakSet();
-
 class SpellLookup {
   constructor(args) {
-    _getRitualFilter.add(this);
-
-    _buildGrid.add(this);
-
-    _prepareSpells.add(this);
-
+    _classPrivateMethodInitSpec(this, _getRitualFilter);
+    _classPrivateMethodInitSpec(this, _buildGrid);
+    _classPrivateMethodInitSpec(this, _prepareSpells);
     this.container = Lite.append(args.container, "<div id='spells-grid'>Spells Grid Loaded</div>");
-
     var _spellsArray = _classPrivateMethodGet(this, _prepareSpells, _prepareSpells2).call(this, spells);
-
     _classPrivateMethodGet(this, _buildGrid, _buildGrid2).call(this, _spellsArray);
   }
-
 }
-
 function _prepareSpells2(spells) {
   var spellsArray = [];
-
   for (var k in spells) {
     var spell = spells[k];
     spell.Ritual = !!spell.Ritual ? 'Yes' : 'No';
     spellsArray.push(spell);
   }
-
   return spellsArray;
 }
-
 function _buildGrid2(spellsArray) {
   var vm = this;
   vm.grid = new Gridify({
@@ -97,26 +84,21 @@ function _buildGrid2(spellsArray) {
     },
     className: 'table small',
     style: 'table-layout:fixed',
-
     onTableCellCreated(td, options) {
       if (td.style.overflow === 'hidden') {
         td.title = td.innerText;
         td.innerText = td.innerText.replace('Concentration, up to', 'Concen...');
       }
     },
-
     onHeaderCreated(thead, options) {
       thead.querySelectorAll('input[type="text"]').forEach(i => i.className = "input-xsmall");
     },
-
     onHeaderCellCreated(th, options) {
       var sortIcon = th.querySelector('.sort');
-
       if (sortIcon) {
         sortIcon.className = 'fa fa-sort';
       }
     }
-
   });
   var pageContainer = vm.grid.html.querySelector('#spells-grid-grid-paging');
   new Pagination({
@@ -125,7 +107,6 @@ function _buildGrid2(spellsArray) {
     data: vm.grid.paging.data
   });
 }
-
 function _getRitualFilter2() {
   var vm = this;
   var checkBox = document.createElement('input');
@@ -134,11 +115,9 @@ function _getRitualFilter2() {
     e.target.value = e.target.checked;
     vm.grid.filter();
   });
-
   var compare = function compare(columnValue, filterValue) {
     return filterValue == 'true' ? columnValue == 'Yes' : true;
   };
-
   return {
     control: checkBox,
     compare: compare

@@ -1,6 +1,6 @@
 import { L as Lite, G as Gridify } from './index.js';
-import { i as items } from './items-7818512a.js';
-import { P as Pagination } from './pagination-ca704f50.js';
+import { i as items } from './items-6e6a6772.js';
+import { P as Pagination } from './pagination-204483a5.js';
 
 class ItemLookup {
   constructor(args) {
@@ -8,20 +8,16 @@ class ItemLookup {
     var itemArray = this.getItemArray(items);
     this.buildItemGrid(itemArray);
   }
-
   getItemArray(items) {
     var itemsArray = [];
-
     for (var k in items) {
       var item = items[k];
       if (!item.Value) item.Value = '';
       if (!item.Weight) item.Weight = '';
       itemsArray.push(item);
     }
-
     return itemsArray;
   }
-
   buildItemGrid(itemsArray) {
     var vm = this;
     vm.grid = new Gridify({
@@ -51,19 +47,15 @@ class ItemLookup {
       },
       style: 'table-layout:fixed;',
       className: 'table small',
-
       onHeaderCreated(thead, options) {
         thead.querySelectorAll('input[type="text"]').forEach(i => i.className = "input-xsmall");
       },
-
       onHeaderCellCreated(th, options) {
         var sortIcon = th.querySelector('.sort');
-
         if (sortIcon) {
           sortIcon.className = 'fa fa-sort';
         }
       }
-
     });
     var pageContainer = vm.grid.html.querySelector('#items-grid-grid-paging');
     new Pagination({
@@ -72,18 +64,14 @@ class ItemLookup {
       data: vm.grid.paging.data
     });
   }
-
   numberSort(a, b) {
     a = +a || 0;
     b = +b || 0;
-
     if (a === b) {
       return 0;
     }
-
     return a > b ? 1 : -1;
   }
-
   getCoinValue(val) {
     var coinValues = {
       cp: 1,
@@ -93,25 +81,20 @@ class ItemLookup {
       pp: 1000
     };
     var value = +val.replace(/[^\d\.]/g, '');
-
     for (var cv in coinValues) {
       if (val.includes(cv)) {
         value = value * coinValues[cv];
       }
     }
-
     return +value || -1;
   }
-
   coinSort(a, b) {
     a = this.getCoinValue(a);
     b = this.getCoinValue(b);
-
     if (a === b) {
       return 0;
     } else return a > b ? 1 : -1;
   }
-
 }
 
 export { ItemLookup };

@@ -1,7 +1,7 @@
 import { L as Lite, G as Gridify } from './index.js';
-import { m as monsters, M as MonsterBox } from './monsterbox-278ddc3c.js';
-import { P as Pagination } from './pagination-ca704f50.js';
-import { M as Modal } from './modal-74c39af9.js';
+import { m as monsters, M as MonsterBox } from './monsterbox-a2832662.js';
+import { P as Pagination } from './pagination-204483a5.js';
+import { M as Modal } from './modal-545b9909.js';
 
 class MonsterLookup {
   constructor(args) {
@@ -9,17 +9,13 @@ class MonsterLookup {
     var monsterArray = this.prepareMonsters(monsters);
     this.buildGrid(monsterArray);
   }
-
   prepareMonsters(monsters) {
     var monsterArray = [];
-
     for (var m in monsters) {
       monsterArray.push(monsters[m]);
     }
-
     return monsterArray;
   }
-
   buildGrid(monsterArray) {
     var vm = this;
     vm.grid = new Gridify({
@@ -68,25 +64,20 @@ class MonsterLookup {
       },
       style: 'table-layout:fixed;',
       className: 'table small',
-
       onTableCellCreated(td, options) {
         if (td.style.overflow === 'hidden') {
           td.title = td.innerText;
         }
       },
-
       onHeaderCreated(thead, options) {
         thead.querySelectorAll('input[type="text"]').forEach(i => i.className = "input-xsmall");
       },
-
       onHeaderCellCreated(th, options) {
         var sortIcon = th.querySelector('.sort');
-
         if (sortIcon) {
           sortIcon.className = 'fa fa-sort';
         }
       }
-
     });
     var pageContainer = vm.grid.html.querySelector('#monsters-grid-grid-paging');
     new Pagination({
@@ -95,32 +86,24 @@ class MonsterLookup {
       data: vm.grid.paging.data
     });
   }
-
   crSort(a, b) {
     var parse = cr => cr.indexOf('/') === -1 ? +cr : 1 / cr.split('/')[1];
-
     a = parse(a);
     b = parse(b);
-
     if (a == b) {
       return 0;
     }
-
     return a > b ? 1 : -1;
   }
-
   crFilter(cellValue, filterValue) {
     if (+filterValue === 1) {
       return +cellValue === 1;
     }
-
     return ('' + cellValue).slice(0, filterValue.length) === filterValue;
   }
-
   nameFilter(cellValue, filterValue) {
     return cellValue.toLowerCase().includes(filterValue.toLowerCase());
   }
-
 }
 
 export { MonsterLookup };

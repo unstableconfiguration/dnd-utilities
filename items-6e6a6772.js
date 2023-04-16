@@ -1,6 +1,7 @@
 // A big thanks to whoever set up http://tinyurl.com/dndappfiles
 // Found from https://www.reddit.com/r/DnD/comments/2yirik/after_hours_of_cleaning_here_are_the_complete/
 // by /u/afluffygrue
+
 var importedItems = {
   "Copper": {
     "Name": "Copper",
@@ -1281,9 +1282,6 @@ var importedItems = {
 };
 
 var items = {};
-
-for (var k in importedItems) {
-  items[k] = importedItems[k];
-}
+for (var k in importedItems) items[k] = importedItems[k];
 
 export { items as i };

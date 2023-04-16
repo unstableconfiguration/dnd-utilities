@@ -1,10 +1,10 @@
 import { L as Lite, G as Gridify } from './index.js';
-import { P as Pagination } from './pagination-ca704f50.js';
+import { P as Pagination } from './pagination-204483a5.js';
 
 var EncounterBuilder = function EncounterBuilder() {
   var builder = this;
-  /* Read-only values and look up tables based on book definitions */
 
+  /* Read-only values and look up tables based on book definitions */
   Object.defineProperties(builder, {
     xpThresholds: {
       value: {
@@ -189,17 +189,13 @@ var EncounterBuilder = function EncounterBuilder() {
       writable: false
     }
   });
-
   builder.getEncounters = function (args) {
     args = builder._setDefaults(args);
-
     var groupThresholdRange = builder._getGroupThresholdRange(args.players, args.difficulty);
-
     args.crRange.max = builder._getCRCieling(groupThresholdRange, args.crRange);
     args.crRange.min = builder._getCRFloor(args.crRange);
     return builder._getEncounters(args.players.length, groupThresholdRange, args.monsterCountRange, args.crRange);
   };
-
   builder._setDefaults = function (args) {
     args = JSON.parse(JSON.stringify(args));
     var encounterArgs = {};
@@ -215,11 +211,9 @@ var EncounterBuilder = function EncounterBuilder() {
     encounterArgs.difficulty = args.difficulty || 'Medium';
     return encounterArgs;
   };
-
   builder._getGroupThresholdRange = function (players, difficulty) {
     return players.reduce((accumulator, player) => {
       var playerXPThreshold = builder._getPlayerThresholdRange(player, difficulty);
-
       accumulator.min += playerXPThreshold.min;
       accumulator.max += playerXPThreshold.max;
       return accumulator;
@@ -228,9 +222,8 @@ var EncounterBuilder = function EncounterBuilder() {
       max: 0
     });
   };
+
   /* If our crRange.max exceeds our xpRange.max, we can lower it to filter out monsters of overly high CRs */
-
-
   builder._getCRCieling = function (xpRange, crRange) {
     for (var i = crRange.max; i > 0; i--) {
       if (builder.challengeRatingXPValues[crRange.max] > xpRange.max) {
@@ -239,14 +232,12 @@ var EncounterBuilder = function EncounterBuilder() {
         break;
       }
     }
-
     return crRange.max;
   };
+
   /* To avoid wasting cycles on too-weak monsters, crRange.min must be at least 1/10th the xp of crRange.max
       This gets a lot more generous as levels increase, and mostly serves to filter out CR 0-.5 early as those 
       quickly become one-hit-kills */
-
-
   builder._getCRFloor = function (crRange) {
     for (var i = crRange.min; i <= crRange.max; i++) {
       if (builder.challengeRatingXPValues[crRange.min] < builder.challengeRatingXPValues[crRange.max] / 10) {
@@ -255,22 +246,17 @@ var EncounterBuilder = function EncounterBuilder() {
         break;
       }
     }
-
     return crRange.min;
   };
-
   builder._getPlayerThresholdRange = function (player, difficulty) {
     var playerXPThreshold = {
       min: 0,
       max: 0
     };
-
     if (!player.level) {
       return playerXPThreshold;
     }
-
     var lowerDifficulty = 'Easy';
-
     if (difficulty === 'Deadly') {
       lowerDifficulty = 'Hard';
     } else if (difficulty === 'Hard') {
@@ -278,27 +264,20 @@ var EncounterBuilder = function EncounterBuilder() {
     } else if (difficulty === 'Medium') {
       lowerDifficulty = 'Easy';
     }
-
     playerXPThreshold.max = builder.xpThresholds[player.level][difficulty];
-
     if (difficulty === 'Easy') {
       playerXPThreshold.min = Math.round(playerXPThreshold.max * .75);
     } else {
       playerXPThreshold.min = builder.xpThresholds[player.level][lowerDifficulty];
     }
-
     return playerXPThreshold;
   };
-
   builder._getMultiplier = function (playerCount, monsterCount) {
     var fightSize = builder._getFightSize(playerCount, monsterCount);
-
     return builder.xpMultipliers[fightSize];
   };
-
   builder._getFightSize = function (playerCount, monsterCount) {
     var fightSize = 0;
-
     if (monsterCount === 1) {
       fightSize = 1;
     } else if (monsterCount === 2) {
@@ -312,98 +291,81 @@ var EncounterBuilder = function EncounterBuilder() {
     } else if (monsterCount >= 15) {
       fightSize = 6;
     }
-
     if (playerCount <= 2 && fightSize < 6) {
       fightSize++;
     } else if (playerCount >= 6 && fightSize > 1) {
       fightSize--;
     }
-
     return fightSize;
   };
-
   builder._getEncounters = function (playerCount, xpRange, countRange, crRange) {
     var encounters = [];
-
     for (var monsterCount = countRange.min; monsterCount <= countRange.max; monsterCount++) {
       var xpMultiplier = builder._getMultiplier(playerCount, monsterCount);
-
       var encounter = {
         count: monsterCount,
         crRange: crRange,
         xpCost: 0,
         crs: Array(monsterCount).fill(crRange.min)
       };
-
       for (var loopMax = 10000; loopMax > 0; loopMax--) {
         encounter = builder._getNextEncounter(encounter);
         encounter.xpCost = builder._getEncounterCost(encounter.crs, xpMultiplier);
-
         if (encounter.xpCost > xpRange.min && encounter.xpCost <= xpRange.max) {
           encounters.push(JSON.parse(JSON.stringify(encounter)));
         }
+
         /* Performance improvement. Once we have exceeded the xp budget we'll always exceed it with our highest value. */
-
-
         if (encounter.xpCost > xpRange.max) {
           encounter.crRange.max = builder._lowerChallengeRating(encounter.crRange.max);
         }
-
         if (encounter.crs[0] >= encounter.crRange.max) {
           break;
         }
       }
     }
-
     return encounters;
   };
-
   builder._lowerChallengeRating = function (cr) {
     if (cr > 0) return builder.challengeRatings[builder.challengeRatings.indexOf(cr) - 1];
     return cr;
   };
-
   builder._raiseChallengeRating = function (cr) {
     if (cr < 30) return builder.challengeRatings[builder.challengeRatings.indexOf(cr) + 1];
     return cr;
   };
+
   /* "Counts" through the possible arrangements of challenge ratings. 
       Starts at the rightmost (idx = .length -1) value in the array. 
           If that value is less than the max cr, it increases it by 1 and exits. 
           If the value is at max cr, it recursively attempts the same thing to the next item
   */
-
-
   builder._getNextEncounter = function (encounter) {
     var iterateEncounter = function iterateEncounter(idx) {
       var value = encounter.crs[idx];
-
       if (value < encounter.crRange.max) {
         encounter.crs[idx] = builder._raiseChallengeRating(value);
       } else {
         if (idx <= 0) {
           return;
         }
-
         iterateEncounter(idx - 1);
+
         /* Performance tweak. 
             Once a value iterates, there is no reason for values to its right to be of 
             a lower value than it. */
-
         for (var i = idx - 1; i < encounter.crs.length; i++) {
           encounter.crs[i] = encounter.crs[idx - 1];
         }
       }
     };
-
     iterateEncounter(encounter.crs.length - 1);
     return encounter;
   };
+
   /* Get Encounter Cost 
       Looks up the XP values for the provided challenge ratings and sums their values. 
   */
-
-
   builder._getEncounterCost = function () {
     var crs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var xpMultiplier = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
@@ -412,7 +374,6 @@ var EncounterBuilder = function EncounterBuilder() {
     }, 0);
     return xpSum * xpMultiplier;
   };
-
   return builder;
 };
 
@@ -429,7 +390,6 @@ class EncounterBuilderView {
     this.setEventListeners();
     this.initializeBuilder();
   }
-
   setElements() {
     var vm = this;
     vm.elements = {
@@ -441,28 +401,23 @@ class EncounterBuilderView {
       partySize: '#party-size',
       partyLevel: '#party-level'
     };
-
     for (var k in vm.elements) {
       vm.elements[k] = vm.container.querySelector(vm.elements[k]);
     }
   }
-
   setEventListeners() {
     var vm = this;
-
     var setOnChange = function setOnChange(el, callback) {
       el.addEventListener('change', e => {
         callback(e.target.value);
         vm.generateEncounter();
       });
     };
-
     setOnChange(vm.elements.crMax, v => vm.builderArgs.crRange.max = +v);
     setOnChange(vm.elements.crMin, v => vm.builderArgs.crRange.min = +v);
     setOnChange(vm.elements.monsterCountMax, v => vm.builderArgs.monsterCountRange.max = +v);
     setOnChange(vm.elements.monsterCountMin, v => vm.builderArgs.monsterCountRange.min = +v);
     setOnChange(vm.elements.difficulty, v => vm.builderArgs.difficulty = v);
-
     var getPlayers = function getPlayers() {
       var size = +vm.elements.partySize.value;
       var level = +vm.elements.partyLevel.value;
@@ -472,10 +427,10 @@ class EncounterBuilderView {
         };
       });
     };
-
     setOnChange(vm.elements.partySize, v => vm.builderArgs.players = getPlayers());
-    setOnChange(vm.elements.partyLevel, v => vm.builderArgs.players = getPlayers()); // block non-numerics on min/max
+    setOnChange(vm.elements.partyLevel, v => vm.builderArgs.players = getPlayers());
 
+    // block non-numerics on min/max
     vm.elements.monsterCountMin.addEventListener('keypress', function (e) {
       if (isNaN(String.fromCharCode(e.charCode))) {
         return e.preventDefault();
@@ -487,13 +442,11 @@ class EncounterBuilderView {
       }
     });
   }
-
   initializeBuilder() {
     var vm = this;
     vm.encounterBuilder = new EncounterBuilder();
     vm.builderArgs = vm.defaultArgs();
   }
-
   defaultArgs() {
     var vm = this;
     var args = {
@@ -517,48 +470,42 @@ class EncounterBuilderView {
     args.monsterCountRange.max = +vm.elements.monsterCountMax.value;
     return args;
   }
-
   generateEncounter() {
     var vm = this;
     var encounters = vm.encounterBuilder.getEncounters(vm.builderArgs);
     encounters = vm.prepareOutput(encounters);
     vm.writeOutput(encounters);
   }
-
   prepareOutput(encounters) {
     encounters.forEach(encounter => {
       // Get a count of how many times each CR occurs
       var crs = {};
       encounter.crs.forEach(cr => {
         crs[cr] = crs[cr] ? crs[cr] + 1 : 1;
-      }); // Prepare them as display strings
-
+      });
+      // Prepare them as display strings
       var crsStrings = [];
-
       for (var cr in crs) {
         crsStrings.push('CR' + cr + ' x' + crs[cr]);
-      } // Replace decimals with fractions i.e. 0.135 => 1/8
-
-
+      }
+      // Replace decimals with fractions i.e. 0.135 => 1/8
       crsStrings = crsStrings.map(str => {
         str = str.replace('0.135', '1/8');
         str = str.replace('0.25', '1/4');
         str = str.replace('0.5', '1/2');
         return str;
-      }); // Sort them and join them to a single string
+      });
 
+      // Sort them and join them to a single string
       encounter.crsString = crsStrings.sort((a, b) => a <= b).join(', ');
     });
     return encounters;
   }
-
   writeOutput(encounters) {
     var numberSort = function numberSort(a, b) {
       return +a >= +b ? 1 : -1;
     };
-
     var wildcardFilter = (cellVal, filterVal) => cellVal.includes(filterVal);
-
     var grid = new Gridify({
       container: 'output-table',
       data: encounters,
@@ -582,19 +529,15 @@ class EncounterBuilderView {
         rows: 10
       },
       className: 'table small',
-
       onHeaderCellCreated(th, options) {
         var sortIcon = th.querySelector('.sort');
-
         if (sortIcon) {
           sortIcon.className = 'fa fa-sort';
         }
       },
-
       onHeaderCreated(thead, options) {
         thead.querySelectorAll('input[type="text"]').forEach(i => i.className = "input-xsmall");
       }
-
     });
     var pageContainer = grid.html.querySelector('#output-table-grid-paging');
     new Pagination({
@@ -603,7 +546,6 @@ class EncounterBuilderView {
       data: grid.paging.data
     });
   }
-
 }
 var View = EncounterBuilderView;
 
