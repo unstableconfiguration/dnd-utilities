@@ -102,18 +102,17 @@ export let OneTrick = new Character({
         
     },
     Items : {
-        'Rod of the Pact Keeper' : 1 
-        , 'Gold' : 20 
-        , 'Studded Leather' : 1
-        , 'Bag of Holding' : 1
-        , 'Traveler\'s clothes' : 1
+        //'Rod of the Pact Keeper' : 1 
+        'Gold' : 20 
+        //, 'Studded Leather' : 1
+        //, 'Bag of Holding' : 1
+        , 'Traveler\'s Clothes' : 1
         , 'Fine Clothes' : 3
-        , 'Silk Rope' : 2
+        , 'Silk Rope (50 feet)' : 2
         , 'Explorer\'s Pack' : 1
         , 'Fishing Tackle' : 2
         , 'Grappling Hook' : 2
         , 'Jug' : 1
-        , '' : 0
     },
     Background : {
         Trait : `I'm always picking things up, absently fiddling with

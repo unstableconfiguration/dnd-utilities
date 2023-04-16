@@ -19,11 +19,11 @@ export let BarbicanBrady = new Character({
         Charisma : 14 
     },
     Classes : [
+        // Todo: level to 4
         { Name : 'Bard', Level : 3, Archetype : 'Valor' }
     ],
     Defenses : {
-        //HP :
-        AC : '18 (breastplate)', // may need to upgrade
+        AC : '16 (breastplate)',// 14 + 2 dex
         Immunities : '',
         Resistances : '',
         ConditionImmunities : '',
@@ -67,6 +67,7 @@ export let BarbicanBrady = new Character({
             he is not already proficient with. `,
         'Song of Rest' : `Brady and friendly creatures that gain hit points during a short rest can gain an additional d6 hit points.`
     },
+    // Todo: know spell components so we know when we need a focus
     Spells : [
         // Cantrips
         'Prestidigitation', 'Light',
@@ -85,17 +86,57 @@ export let BarbicanBrady = new Character({
         'Grapple' : `Make a grapple check (Athletics) contested by the opponent's athletics or acrobatics check.`        
     },
     Items : {
-        'Gold' : 20 
-        , 'Studded Leather' : 1
-        , 'Bag of Holding' : 1
-        , 'Traveler\'s clothes' : 1
-        , 'Fine Clothes' : 3
-        , 'Silk Rope' : 2
-        , 'Explorer\'s Pack' : 1
-        , 'Fishing Tackle' : 2
-        , 'Grappling Hook' : 2
-        , 'Jug' : 1
-        , '' : 0
+        // Todo: split these into objects 
+            // key for looking up in item dictionary 
+            // display text to override base name
+            // count defaulting to 1
+
+        // Weapons and Armor
+        'Handaxe' : 1
+        , 'Longsword' : 1 // Longsword of vengeance, cursed +1 longsword2
+        , 'Crowbar' : 1 // Excallibar
+        , 'Breastplate' : 1
+
+        // Adventuring Kit
+        , 'Backpack' : 1
+        , 'Map or Scroll Case' : 1
+        , 'Chalk' : 2
+        , 'Grappling Hook' : 1
+        , 'Hammer' : 1
+        , 'Silk Rope (50 feet)' : 1
+        , 'Piton' : 10
+
+        // Food 
+        , 'Book' : 1 // regional edible plants 
+        , 'Fishing Tackle' : 1
+        , 'Flask' : 2
+        , 'Tinderbox' : 1
+        , 'Mess Kit' : 1
+        , 'Iron Pot': 1
+        , 'Jug' : 1 
+        , 'Waterskin' : 1
+        
+        // Grooming
+        , 'Traveler\'s Clothes' : 1
+        , 'Fine Clothes' : 1
+        , 'Disguise Kit' : 1
+        //, 'Razor' : 1
+        //, 'Stropping Leather' : 1
+        , 'Soap' : 1
+        , 'Steel Mirror' : 1
+        , 'Whetstone' : 1
+        
+        // Bedding 
+        , 'Tent' : 1
+        , 'Bedroll' : 1
+        , 'Blanket' : 1
+
+        // Writing
+        , 'Sealing Wax' : 5
+        , 'Ink' : 1
+        , 'Ink Pen' : 2
+        , 'Paper' : 5
+       
     },
     Background : {
         Trait : `I'm always looking to test my strength against others.`
@@ -103,7 +144,7 @@ export let BarbicanBrady = new Character({
         , Bond : `Win or lose, I feel cameraderie with anyone who will match with me.`
         , Flaw : `I can tend to think with my muscles and neglect better tools.`
         , Background : `Carnival Wrestler`
-        , Description : `Travelling carnivals often have a master and one or more journeymen wrestlers that can spar with the locals. `
+        , Description : `Traveling carnivals often have a master and one or more journeymen wrestlers that can spar with the locals. `
         , Feature : `Tool Proficiency, disguise kit. `
     }
 });

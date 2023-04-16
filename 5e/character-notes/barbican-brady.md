@@ -51,13 +51,12 @@ Haunted house story:
     Legosi family. Take bella to the abbot. Margaret the maid. Boris the son. 
 
 Equipment:
-* Quarterstaff
-* Kukri (hand axe)
-* Breastplate
+* Rations : 5 day
 * Longsword magical (unidentified, unattuned1)
     sword of vengeance, tuned, cursed 
     -disadvantage with weapons other than sword 
     -on damage taken must make wis save or attack enemy
+
 Group-Items:
 * 159gp
 * Treasure Items:
@@ -75,44 +74,6 @@ Group-Items:
     * Chained Book from Lagosi Dungeon    
     * Flesh-Golem Guide
         
-Backpack:  
-* Adventuring-Kit
-    * Chalk (2pc);
-    * Crowbar
-    * Grappling Hook
-    * Hammer
-    * Rope (silk, 50ft)
-    * Piton (10)
-    * Traveller's Clothes
-
-* Food Kit:
-    * Book (regional edible plants)
-    * Fishing Tackle
-    * Flask
-    * Flint and Steel
-    * Mess Kit
-    * Pot
-    * Jug
-    * Waterskin
-
-* Grooming
-    * Fine Clothes
-    * Disguise Kit.
-    * Razor
-    * Stropping Leather
-    * Steel Mirror
-    * Soap (1lb cake)
-        
-* Sleeping
-    * Tent
-    * Bedroll
-    * Blanket
-
-* Writing Set
-    * Sealing Wax (5)
-    * Ink (1 oz)
-    * Pen
-    * Paper (5)
     
 Gems of the legendary fay
 * Red Gem of mountain fey 
