@@ -13,6 +13,8 @@ People:
 * Vistani:
     * Stanimir:. Wealthy, rings on fingers, first caravan we get introduced to. 
     * Madame Eva: Stanimir suggested we should meet her as an elder of the Vistani..
+    * Petra: Traded with him at Vistani Camp by "The Pool" 
+    * 89.
 * Sir Legosi - painting in manor regional noble
     Heraldry: White on black shield, four wolves in corners \
     Knight of the order of the silver dragon
@@ -27,9 +29,12 @@ People:
 * Ismark Golyanovich?. - Burgomeister of Barovia
     -- Been under attack. Offering 10gp/party member (60gp) to help fight off the wolves. 
 * Irena? - Sister of Ismark
-
+    * (from eva) Her soul - She shares the same sword as Tatiana- the woman who Strahd Loved, but who was meant to marry his Brother. It is said that she died after his death, unwilling to marry Strahd.  
 * Erik the Bartender
     -- Put up with our shit
+
+* Priest Donovich
+* Jasper Audience
 
 Places:
     Barovia: Village in a valley between two valley.
@@ -48,22 +53,20 @@ Haunted house story:
 Equipment:
 * Quarterstaff
 * Kukri (hand axe)
-* Studded Leather
+* Breastplate
 * Longsword magical (unidentified, unattuned1)
     sword of vengeance, tuned, cursed 
     -disadvantage with weapons other than sword 
     -on damage taken must make wis save or attack enemy
 Group-Items:
-* 310gp
+* 159gp
 * Treasure Items:
-    * Gold Necklace "EL" - from Legosi dungeon
     * Topaz Neckllace -- very fine topaz, few hundred gp
-    * Holy Symbol of the Morning Lord ~100gp
-* Longsword - nice looking longsword - needs some upkeep
-* Scrolls
-    * Bless
-    * Spiritual Weapon 
-    * Protection From Poiton
+        550 trade 450 straight gold
+* Magical Items/Reagents:
+    * Bead of force 400gp 
+        * 5x Charge
+    * Pearl Earring -- Constitutes 100Gp Pearl    
 * Misc
     * Maps - 
         * Borovia
@@ -94,7 +97,7 @@ Backpack:
 
 * Grooming
     * Fine Clothes
-    * Disguise Kit
+    * Disguise Kit.
     * Razor
     * Stropping Leather
     * Steel Mirror
@@ -111,6 +114,24 @@ Backpack:
     * Pen
     * Paper (5)
     
-    
+Gems of the legendary fay
+* Red Gem of mountain fey 
+* Wizard master of stars.
+Seek the lone tower for the master of the red gem
 
+Green Gem 
+Strong with the spirit of animals and birds 
+Seek the raven 
 
+bLUE gEM
+Tied to swamp fey
+The dragon's keep
+
+The Fanes of Barovia: Phamphlet 
+
+Velachi 
+Festival of Blazing Sun 
+Blue Water Inn
+Black water Tavern
+Winery Not workin?\
+    Champagne du Lestat

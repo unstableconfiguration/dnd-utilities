@@ -7,7 +7,7 @@ export let BarbicanBrady = new Character({
     Alignment : 'Chaotic Good',
     Speed : 30,
     Senses : '',
-    Languages : 'common, -look up languages',
+    Languages : 'common, Orc',
     Stats : {
         // Base Stats: 15, 13, 13, 13, 11, 8
         // +1 all for human
@@ -23,7 +23,7 @@ export let BarbicanBrady = new Character({
     ],
     Defenses : {
         //HP :
-        AC : '14 (studded leather)', // may need to upgrade
+        AC : '18 (breastplate)', // may need to upgrade
         Immunities : '',
         Resistances : '',
         ConditionImmunities : '',
@@ -61,6 +61,8 @@ export let BarbicanBrady = new Character({
             <br>* Add it to the result of one ability check, attack roll, or saving throw. 
             <br>* Add it to a weapon damage roll. 
             <br>* Add it to their AC against an attack (after roll, before hit)`,
+        'Combat Inspiration' : `Bardic inspiration die can be used to add to the damage of an attack or as a reaction 
+            to boost AC against an attack.3`,
         'Jack of All Trades' : `Brady can add half his proficiency, rounded down, to any ability check he makes that 
             he is not already proficient with. `,
         'Song of Rest' : `Brady and friendly creatures that gain hit points during a short rest can gain an additional d6 hit points.`
@@ -83,8 +85,7 @@ export let BarbicanBrady = new Character({
         'Grapple' : `Make a grapple check (Athletics) contested by the opponent's athletics or acrobatics check.`        
     },
     Items : {
-        'Rod of the Pact Keeper' : 1 
-        , 'Gold' : 20 
+        'Gold' : 20 
         , 'Studded Leather' : 1
         , 'Bag of Holding' : 1
         , 'Traveler\'s clothes' : 1
@@ -99,13 +100,12 @@ export let BarbicanBrady = new Character({
     Background : {
         Trait : `I'm always looking to test my strength against others.`
         , Ideal : `I like to inspire people and let them share in feelings of heroism.`
-        , Bond : `Win or lose, I feel cameraderie with anyone who will matches with me.`
-        , Flaw : `I like to 'play the heel' in my performances, often playing a local lord or authority.`
+        , Bond : `Win or lose, I feel cameraderie with anyone who will match with me.`
+        , Flaw : `I can tend to think with my muscles and neglect better tools.`
         , Background : `Carnival Wrestler`
         , Description : `Travelling carnivals often have a master and one or more journeymen wrestlers that can spar with the locals. `
         , Feature : `Tool Proficiency, disguise kit. `
     }
-
 });
 
 BarbicanBrady.Notes = notes;
