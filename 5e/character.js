@@ -116,12 +116,15 @@ export class Character {
                 Name : name,
                 Ability : ability.substring(0, 3),
                 Trained : charSkill?.Trained || false,
-                Expertise : charSkill?.Expertise || false
+                Expertise : charSkill?.Expertise || false,
+                Bonus : charSkill?.Bonus || 0
             }
 
             let bonus = this.getBonus(this.Stats[ability]);
             if(this.Skills[name].Trained) bonus += this.Proficiency;
             if(this.Skills[name].Expertise) bonus += this.Proficiency;
+            // Allow for hard-coded bonuses
+            if(this.Skills[name].Bonus) bonus += this.Skills[name].Bonus;
             this.Skills[name].Bonus = bonus;
         }
     }

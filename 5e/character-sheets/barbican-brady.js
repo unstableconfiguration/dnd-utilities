@@ -41,14 +41,20 @@ export let BarbicanBrady = new Character({
         Persuasion : { Trained : true },
         Acrobatics : { Trained : true },
 
+        // Jack of all trades - proficiency /2 floored to non-trained
+        'Animal Handling' : { Bonus : 1 },
+        Arcana : { Bonus : 1 },
+        Deception : { Bonus : 1 },
+        History : { Bonus : 1 },
+        Intimidation : { Bonus : 1 },
+        Investigation : { Bonus : 1 },
+        Medicine : { Bonus : 1 },
+        Nature : { Bonus : 1 },
+        Perception : { Bonus : 1 },
+        Religion : { Bonus : 1 },
         'Sleight of Hand' : { Bonus : 1 },
         Stealth : { Bonus : 1 },
-        'Animal Handling' : { Bonus : 1 },
-        Medicine : { Bonus : 1 },
-        Perception : { Bonus : 1 },
         Survival : { Bonus : 1 },
-        Deception : { Bonus : 1 },
-        Intimidation : { Bonus : 1 }
     },
     Features : {
         'Spellcasting' : `Brady is a 3rd level spellcaster. His spellcasting ability modifier 
@@ -62,7 +68,7 @@ export let BarbicanBrady = new Character({
             <br>* Add it to a weapon damage roll. 
             <br>* Add it to their AC against an attack (after roll, before hit)`,
         'Combat Inspiration' : `Bardic inspiration die can be used to add to the damage of an attack or as a reaction 
-            to boost AC against an attack.3`,
+            to boost AC against an attack.`,
         'Jack of All Trades' : `Brady can add half his proficiency, rounded down, to any ability check he makes that 
             he is not already proficient with. `,
         'Song of Rest' : `Brady and friendly creatures that gain hit points during a short rest can gain an additional d6 hit points.`
@@ -125,7 +131,7 @@ export let BarbicanBrady = new Character({
         , 'Soap' : 1
         , 'Steel Mirror' : 1
         , 'Whetstone' : 1
-        
+
         // Bedding 
         , 'Tent' : 1
         , 'Bedroll' : 1
